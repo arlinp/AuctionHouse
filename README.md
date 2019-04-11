@@ -1,6 +1,6 @@
-# Mobile Agents Simulation
+# Auction House
 
-This java program is to simulate the spread of a fire across many interconnected nodes, and to test the "Mobile Agents" that monitor and attach themselves to each node. 
+This java program is to ...
 
 ## Getting Started
 
