@@ -36,12 +36,15 @@ public class ClientProxy {
         // string to read message from input
         String line = "";
 
+        System.out.println("type 'Over' to end the connection:");
+
         // keep reading until "Over" is input
         while (!line.equals("Over"))
         {
             try
             {
                 System.out.println("type a message to server:");
+
                 line = input.readLine();
                 out.writeUTF(line);
             }
