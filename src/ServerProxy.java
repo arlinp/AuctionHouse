@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 
-public class ServerProxy {
+public class ServerProxy implements BankRequests, Runnable {
 
     public static void main(String[] args) throws IOException {
 
