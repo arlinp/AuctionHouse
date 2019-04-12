@@ -46,7 +46,7 @@ public class AuctionHouseApp extends Application {
         enterButton.setOnAction(e -> {
 
             ClientProxy clientProxy = null;
-            ServerProxy bankProxy = new ServerProxy();
+            ServerProxy bankProxy = new ServerProxy(0);
 
             auctionHouse = new AuctionHouse();
 
@@ -88,7 +88,7 @@ public class AuctionHouseApp extends Application {
         ListView<String> itemlistView = new ListView<>();
         ObservableList<String> names = FXCollections.observableArrayList(getitemsList(new File("items.txt")));
 
-        itemScrollPane.setContent();
+        itemScrollPane.setContent(null);
 
         return new Scene(sceneRoot, 500, 500);
     }
@@ -96,8 +96,7 @@ public class AuctionHouseApp extends Application {
     private ArrayList<String> getitemsList(File file) {
 
         ArrayList<String> list = new ArrayList<>();
-
-        Bu
+        return list;
     }
 
     public static void main(String[] args) {
