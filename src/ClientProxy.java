@@ -4,7 +4,7 @@ import java.net.UnknownHostException;
 
 public class ClientProxy {
 
-    // initialize socket and input output streams
+    // Uninitialize socket and input output streams
     private Socket socket            = null;
     private DataInputStream  input   = null;
     private DataOutputStream out     = null;

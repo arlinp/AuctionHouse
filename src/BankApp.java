@@ -10,7 +10,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class BankApp extends Application {
+public class BankApp extends Application implements BankProcess {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setScene(introScene());
