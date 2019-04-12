@@ -3,6 +3,9 @@ import java.util.ArrayList;
 public class AuctionHouse implements AuctionProcess{
 
 
+    public AuctionHouse(ClientProxy bankProxy, ServerProxy auctionHouseServer) {
+    }
+
     /**
      * To place a bid
      *

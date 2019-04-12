@@ -41,14 +41,20 @@ public class AuctionHouseApp extends Application {
         TextField bankPortNum = new TextField();
 
         Button enterButton = new Button("Enter");
-//        enterButton.addEventHandler(MouseEvent.MOUSE_CLICKED, handleMakeAuctionHouse());
+//        enterButton.addEventHandler(
+//        MouseEvent.MOUSE_CLICKED, handleMakeAuctionHouse());
 
         enterButton.setOnAction(e -> {
 
-            ClientProxy clientProxy = null;
-            ServerProxy bankProxy = new ServerProxy(0);
+            String hostName = bankHostName.getText();
 
-            auctionHouse = new AuctionHouse();
+            ClientProxy bankProxy =
+                    new ClientProxy
+                            (bankHostName.getText(),
+                                    Integer.parseInt(bankPortNum.getText()));
+            ServerProxy ahServerProxy = new ServerProxy(2000);
+
+            auctionHouse = new AuctionHouse(bankProxy, ahServerProxy);
 
             window.setScene(auctionHouseScene());
         });
@@ -61,8 +67,12 @@ public class AuctionHouseApp extends Application {
         introRoot.add(new Text("bank host name:"), 1, 2);
         introRoot.add(bankHostName, 2, 2);
 
-        introRoot.add(new Text("bank portNumber"), 1, 3);
+        introRoot.add(new Text("bank portNumber: "), 1, 3);
         introRoot.add(bankPortNum, 2, 3);
+
+        introRoot.add(enterButton, 2, 4);
+
+        introRoot.add(new Text("Default AuctionHouse server on port: 2000"), 2, 7);
 
         return new Scene(introRoot, 500, 500);
     }
