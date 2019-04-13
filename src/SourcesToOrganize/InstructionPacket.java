@@ -1,3 +1,5 @@
+package SourcesToOrganize;
+
 public class InstructionPacket {
 
     boolean bankRequest;
