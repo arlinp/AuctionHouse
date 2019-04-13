@@ -1,6 +1,10 @@
+package SourcesToOrganize;
+
+import AuctionProxy.AuctionProcess;
+
 import java.util.ArrayList;
 
-public class AuctionHouse implements AuctionProcess{
+public class AuctionHouse implements AuctionProcess {
 
 
     public AuctionHouse(ClientProxy bankProxy, ServerProxy auctionHouseServer) {

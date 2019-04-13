@@ -1,0 +1,58 @@
+package AuctionProxy;
+import SourcesToOrganize.Bid;
+import SourcesToOrganize.ItemInfo;
+import SourcesToOrganize.Packet;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class AuctionRequest extends Packet implements Serializable {
+
+    // Things that are going to be send and returned
+    private AuctionInfo type;
+    private Bid bid = null;
+    private ItemInfo itemInfo = null;
+    private ArrayList<ItemInfo> items = null;
+    private boolean contains;
+    private int itemID;
+
+    public int getItemID() {
+        return itemID;
+    }
+
+    public void setItemID(int itemID) {
+        this.itemID = itemID;
+    }
+
+    public AuctionRequest(AuctionInfo type) {
+        this.type = type;
+        setStatus(true);
+    }
+
+    public AuctionInfo getType() { return type; }
+
+    public ItemInfo getItem() {
+        return itemInfo;
+    }
+
+    public ArrayList<ItemInfo> getItems() {
+        return items;
+    }
+
+
+    public void setBid(Bid bid) {
+        this.bid = bid;
+    }
+
+    public void setContains(boolean contains) {
+        this.contains = contains;
+    }
+
+    public void setItemInfo(ItemInfo itemInfo) {
+        this.itemInfo = itemInfo;
+    }
+
+    public void setItems(ArrayList<ItemInfo> items) {
+        this.items = items;
+    }
+}

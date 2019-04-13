@@ -67,14 +67,14 @@ This can be improved with a hop algorithm, but this is one of the better decentr
 The following is sample output of what our messaging infrastructure looks like. (We only allow the Base station to print, all Nodes/MobileAgents use the base station as a proxy)
 
 ```
-LOG: MA: 6 1 | Status: GREEN | Unique Packet ID: 9151
-LOG: MA: 5 0 | Status: GREEN | Unique Packet ID: 19890
-LOG: MA: 7 2 | Status: YELLOW | Unique Packet ID: 18498
-LOG: MA: 4 1 | Status: GREEN | Unique Packet ID: 13712
-LOG: MA: 7 0 | Status: YELLOW | Unique Packet ID: 10432
-LOG: MA: 3 0 | Status: GREEN | Unique Packet ID: 12790
-LOG: MA: 2 2 | Status: GREEN | Unique Packet ID: 3518
-LOG: MA: 7 0 | Status: RED | Unique Packet ID: 11835
+LOG: MA: 6 1 | Status: GREEN | Unique SourcesToOrganize.Packet ID: 9151
+LOG: MA: 5 0 | Status: GREEN | Unique SourcesToOrganize.Packet ID: 19890
+LOG: MA: 7 2 | Status: YELLOW | Unique SourcesToOrganize.Packet ID: 18498
+LOG: MA: 4 1 | Status: GREEN | Unique SourcesToOrganize.Packet ID: 13712
+LOG: MA: 7 0 | Status: YELLOW | Unique SourcesToOrganize.Packet ID: 10432
+LOG: MA: 3 0 | Status: GREEN | Unique SourcesToOrganize.Packet ID: 12790
+LOG: MA: 2 2 | Status: GREEN | Unique SourcesToOrganize.Packet ID: 3518
+LOG: MA: 7 0 | Status: RED | Unique SourcesToOrganize.Packet ID: 11835
 ```
 
 I hope you enjoy viewing our game and we wish you the best!

@@ -1,3 +1,7 @@
+package AuctionProxy;
+import SourcesToOrganize.Bid;
+import SourcesToOrganize.ItemInfo;
+
 import java.util.ArrayList;
 
 public interface AuctionProcess {
