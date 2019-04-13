@@ -46,17 +46,18 @@ public class AuctionHouseApp extends Application {
 
         enterButton.setOnAction(e -> {
 
+            /*
             String hostName = bankHostName.getText();
+            int portnum = Integer.parseInt(bankPortNum.getText();
 
-            ClientProxy bankProxy =
-                    new ClientProxy
-                            (bankHostName.getText(),
-                                    Integer.parseInt(bankPortNum.getText()));
+            ClientProxy bankProxy = new ClientProxy(hostName, portnum);
             ServerProxy ahServerProxy = new ServerProxy(2000);
 
             auctionHouse = new AuctionHouse(bankProxy, ahServerProxy);
 
             window.setScene(auctionHouseScene());
+            */
+            window.setScene(auctioningScene());
         });
 
         //configure root and add to it
@@ -77,6 +78,9 @@ public class AuctionHouseApp extends Application {
         return new Scene(introRoot, 500, 500);
     }
 
+    private Scene auctioningScene() {
+        return null;
+    }
 
 
     private EventHandler<MouseEvent> handleMakeAuctionHouse() {
