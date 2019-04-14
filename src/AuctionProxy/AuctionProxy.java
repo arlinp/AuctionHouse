@@ -27,12 +27,11 @@ public class AuctionProxy implements AuctionProcess {
             s = new Socket(hostname, port);
             System.out.println("Created the socket " + s.toString() + " " + s.getInputStream());
 
-            is = new ObjectInputStream(s.getInputStream());
-            System.out.println("Created the IS + " + is);
-
             os = new ObjectOutputStream(s.getOutputStream());
             System.out.println("Created the OS and IS");
 
+            is = new ObjectInputStream(s.getInputStream());
+            System.out.println("Created the IS + " + is);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -118,11 +117,11 @@ public class AuctionProxy implements AuctionProcess {
         AuctionRequest ar = new AuctionRequest(AuctionInfo.TEST);
 
         try {
-            ar.setTest(s);
+            ar.setItemID(1000);
             os.writeObject(ar);
             AuctionRequest newAr = (AuctionRequest) is.readObject();
-            System.out.println("I found the message: " + newAr + " AND " + newAr.getTest() + " " + newAr.getType());
-            return newAr.getTest();
+            System.out.println("I found the message: " + newAr + " AND " + newAr.getTest() + " " + newAr.getType() + " " + newAr.getItemID());
+            return "" + newAr.getTest();
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

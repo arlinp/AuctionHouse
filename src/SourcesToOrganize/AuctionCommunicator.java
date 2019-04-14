@@ -84,6 +84,7 @@ public class AuctionCommunicator implements Runnable{
         }
         try {
             System.out.println("CHECK FOR SETTING " + newAR.getTest());
+            newAR.setItemID(1234);
             os.writeObject(newAR);
 
             System.out.println("sent the message");

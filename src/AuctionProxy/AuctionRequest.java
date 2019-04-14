@@ -15,7 +15,7 @@ public class AuctionRequest extends Packet implements Serializable {
     private ArrayList<ItemInfo> items = null;
     private boolean contains = false;
     private int itemID = 0;
-    private String test = null;
+    private String test;
 
     public int getItemID() {
         return itemID;
