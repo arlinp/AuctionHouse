@@ -11,8 +11,9 @@ import SourcesToOrganize.ItemInfo;
 
 public class AuctionProxy implements AuctionProcess {
 
-    private ObjectInputStream is;
-    private ObjectOutputStream os;
+    private ObjectInputStream is = null;
+    private ObjectOutputStream os = null;
+    private Socket s;
 
     /**
      * Proxy design for the Auction House. Creates a socket from the passed parameters
@@ -20,23 +21,23 @@ public class AuctionProxy implements AuctionProcess {
      * @param hostname
      * @param port
      */
-    AuctionProxy(String hostname, int port) {
-        Socket s = null;
+    public AuctionProxy(String hostname, int port) {
+        System.out.println("Creating the proxy");
         try {
             s = new Socket(hostname, port);
+            System.out.println("Created the socket " + s.toString() + " " + s.getInputStream());
 
             is = new ObjectInputStream(s.getInputStream());
+            System.out.println("Created the IS + " + is);
+
             os = new ObjectOutputStream(s.getOutputStream());
+            System.out.println("Created the OS and IS");
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-//        while(!s.isClosed()) {
-//
-//            processMessage();
-//
-//        }
+        System.out.println("Created the proxy");
     }
 
 //    private void processMessage() {
@@ -48,10 +49,9 @@ public class AuctionProxy implements AuctionProcess {
      * To place a bid
      *
      * @param bid    Bid object that contains elements
-     * @param itemID Identifier of Item
      */
     @Override
-    public void bid(Bid bid, int itemID) {
+    public void bid(Bid bid) {
         // TODO itemID is redundant, as already contained in bid
         AuctionRequest ar = new AuctionRequest(AuctionInfo.BID);
         ar.setBid(bid);
@@ -107,5 +107,36 @@ public class AuctionProxy implements AuctionProcess {
         return null;
     }
 
+    /**
+     * Test String hello world
+     *
+     * @param s String to say
+     * @return String as a response
+     */
+    @Override
+    public String helloInternet(String s) {
+        AuctionRequest ar = new AuctionRequest(AuctionInfo.TEST);
 
+        try {
+            ar.setTest(s);
+            os.writeObject(ar);
+            AuctionRequest newAr = (AuctionRequest) is.readObject();
+            System.out.println("I found the message: " + newAr + " AND " + newAr.getTest() + " " + newAr.getType());
+            return newAr.getTest();
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("OH SHIT");
+        return null;
+    }
+
+
+    public void close() {
+        try {
+            s.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

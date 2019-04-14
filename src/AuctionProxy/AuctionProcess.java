@@ -10,9 +10,8 @@ public interface AuctionProcess {
      * To place a bid
      *
      * @param bid Bid object that contains elements
-     * @param itemID Identifier of Item
      */
-    void bid(Bid bid, int itemID);
+    void bid(Bid bid);
 
     /**
      * Gets the Item Info from the Item ID.
@@ -29,5 +28,11 @@ public interface AuctionProcess {
      */
     ArrayList<ItemInfo> getItems();
 
-
+    /**
+     * Test String hello world
+     *
+     * @param s String to say
+     * @return String as a response
+     */
+    String helloInternet(String s);
 }

@@ -13,8 +13,9 @@ public class AuctionRequest extends Packet implements Serializable {
     private Bid bid = null;
     private ItemInfo itemInfo = null;
     private ArrayList<ItemInfo> items = null;
-    private boolean contains;
-    private int itemID;
+    private boolean contains = false;
+    private int itemID = 0;
+    private String test = null;
 
     public int getItemID() {
         return itemID;
@@ -44,6 +45,10 @@ public class AuctionRequest extends Packet implements Serializable {
         this.bid = bid;
     }
 
+    public Bid getBid() {
+        return bid;
+    }
+
     public void setContains(boolean contains) {
         this.contains = contains;
     }
@@ -54,5 +59,14 @@ public class AuctionRequest extends Packet implements Serializable {
 
     public void setItems(ArrayList<ItemInfo> items) {
         this.items = items;
+    }
+
+
+    public String getTest() {
+        return test;
+    }
+
+    public void setTest(String test) {
+        this.test = "Shit";
     }
 }

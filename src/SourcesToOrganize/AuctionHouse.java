@@ -21,19 +21,34 @@ public class AuctionHouse implements AuctionProcess {
 //    private ObjectOutputStream os;
 //    private ObjectInputStream is;
     private ServerSocket s = null;
+    private ArrayList<ItemInfo> itemInfos;
 
-    AuctionHouse(int port) {
+
+
+
+    public AuctionHouse(int port) {
         items = new HashMap<Integer, Item>();
 
-        ServerSocket s = null;
+        ServerSocket ss = null;
         try {
-            s = new ServerSocket(port);
+            ss = new ServerSocket(port);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-//        new Thread(this).start();
+        while (true) {
+            try {
+                Socket s = ss.accept();
+                AuctionCommunicator ac = new AuctionCommunicator(s,this);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
+
+
 
     // TODO Research methods of socket storage
 //    /**
@@ -55,22 +70,23 @@ public class AuctionHouse implements AuctionProcess {
     /**
      * To place a bid
      *
-     * @param bid    Bid object that contains elements
-     * @param itemID Identifier of Item
+     * @param bid    Bid object that contains elementss
      */
     @Override
-    public void bid(Bid bid, int itemID) {
-        if (items.containsKey(bid.getItemID())) {
-            Item item = items.get(bid.getItemID());
+    public void bid(Bid bid) {
 
-//            if (bid.getAmount() > item.getAmount()) {
-//                if (bank.lock(bid.getAccountNumber(), bid.getAmount())) {
-//                    item.getBid().unlock(ID)
-//                    item.setBid(bid);
-//                }
-//            }
-
-        }
+        System.out.println("I theoretically bid");
+//        if (items.containsKey(bid.getItemID())) {
+//            Item item = items.get(bid.getItemID());
+//
+////            if (bid.getAmount() > item.getAmount()) {
+////                if (bank.lock(bid.getAccountNumber(), bid.getAmount())) {
+////                    item.getBid().unlock(ID)
+////                    item.setBid(bid);
+////                }
+////            }
+//
+//        }
     }
 
     /**
@@ -81,6 +97,7 @@ public class AuctionHouse implements AuctionProcess {
      */
     @Override
     public ItemInfo getItemInfo(int itemID) {
+        System.out.println("Returning Null for getItemInfo");
         return null;
     }
 
@@ -91,8 +108,26 @@ public class AuctionHouse implements AuctionProcess {
      */
     @Override
     public ArrayList<ItemInfo> getItems() {
+        System.out.println("Returning Null for getItems");
         return null;
     }
 
+    /**
+     * Test String hello world
+     *
+     * @param s String to say
+     * @return String as a response
+     */
+    @Override
+    public String helloInternet(String s) {
+        System.out.println("OMG he said: " + s);
 
+        String sss = "Got ur msg";
+        return sss;
+    }
+
+
+    public boolean isAlive() {
+        return true;
+    }
 }

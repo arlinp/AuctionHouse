@@ -1,6 +1,6 @@
 package BankProxy;
 
-import SourcesToOrganize.BankProxy;
+//import SourcesToOrganize.BankProxy;
 
 /**
  * Bank Functionality offered, which is to be implemented by the Bank and the ClientProxy/ServerProxy

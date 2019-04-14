@@ -1,9 +1,13 @@
 package BankProxy;
 
-import SourcesToOrganize.BankProxy;
+import BankProxy.BankProxy;
+import SourcesToOrganize.Packet;
 
-public class BankRequest {
+import java.io.Serializable;
+
+public class BankRequest extends Packet implements Serializable {
     public int getLock() {
         return 0;
     }
+
 }
