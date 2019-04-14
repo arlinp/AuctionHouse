@@ -1,5 +1,6 @@
 package SourcesToOrganize;
 
+import BankProxy.BankProcess;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;

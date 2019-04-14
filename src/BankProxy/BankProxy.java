@@ -1,4 +1,4 @@
-package SourcesToOrganize;
+package BankProxy;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
