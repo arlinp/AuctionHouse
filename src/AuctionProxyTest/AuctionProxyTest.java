@@ -21,6 +21,6 @@ public class AuctionProxyTest {
         System.out.println(auction.helloInternet("Hello bruh"));
         System.out.println("I said hello");
 
-//        auction.close();
+        auction.close();
     }
 }

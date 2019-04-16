@@ -57,7 +57,9 @@ public class AuctionProxy implements AuctionProcess {
 
         try {
             os.writeObject(ar);
-        } catch (IOException e) {
+            AuctionRequest newAr = (AuctionRequest) is.readObject();
+//            return newAr.getItem();
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -118,6 +120,7 @@ public class AuctionProxy implements AuctionProcess {
 
         try {
             ar.setItemID(1000);
+            ar.setTest(s);
             os.writeObject(ar);
             AuctionRequest newAr = (AuctionRequest) is.readObject();
             System.out.println("I found the message: " + newAr + " AND " + newAr.getTest() + " " + newAr.getType() + " " + newAr.getItemID());
@@ -126,16 +129,24 @@ public class AuctionProxy implements AuctionProcess {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println("OH SHIT");
         return null;
     }
 
 
     public void close() {
-        try {
-            s.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                s.close();
+                System.out.println("The server is shut down!");
+            } catch (IOException e) { /* failed */ }
+        }));
+
+
+//        try {
+//            s.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }

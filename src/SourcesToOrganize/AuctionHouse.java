@@ -50,22 +50,6 @@ public class AuctionHouse implements AuctionProcess {
 
 
 
-    // TODO Research methods of socket storage
-//    /**
-//     * The general contract of the method run is that it may
-//     * take any action whatsoever.
-//     *
-//     * @see Thread#run()
-//     */
-//    @Override
-//    public void run() {
-//        while (true) {
-//            Socket s1 = s.accept();
-//
-//
-//            s1.close();
-//        }
-//    }
 
     /**
      * To place a bid
