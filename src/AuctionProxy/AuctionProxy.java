@@ -55,6 +55,7 @@ public class AuctionProxy implements AuctionProcess {
         AuctionRequest ar = new AuctionRequest(AuctionInfo.BID);
         ar.setBid(bid);
 
+        // TODO Need to reimplement BID to project specification (e.g. Returns various decisions)
         try {
             os.writeObject(ar);
             AuctionRequest newAr = (AuctionRequest) is.readObject();
