@@ -4,9 +4,10 @@ import java.io.Serializable;
 
 public class Bid implements Serializable {
 
-    double amount;
-    int accountNumber;
-    int itemID;
+    private double amount;
+    private int accountNumber;
+    private int lockID;
+    private int itemID;
 
     Bid(double amount, int accountNumber, int itemID) {
         this.amount = amount;
@@ -30,4 +31,11 @@ public class Bid implements Serializable {
         this.itemID = itemID;
     }
 
+    public int getLockID() {
+        return lockID;
+    }
+
+    public void setLockID(int lockID) {
+        this.lockID = lockID;
+    }
 }

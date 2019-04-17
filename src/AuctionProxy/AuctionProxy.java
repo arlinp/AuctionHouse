@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import SourcesToOrganize.Bid;
-import SourcesToOrganize.ItemInfo;
+import AuctionHouse.ItemInfo;
 
 public class AuctionProxy implements AuctionProcess {
 

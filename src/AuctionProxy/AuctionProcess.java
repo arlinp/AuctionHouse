@@ -1,6 +1,6 @@
 package AuctionProxy;
 import SourcesToOrganize.Bid;
-import SourcesToOrganize.ItemInfo;
+import AuctionHouse.ItemInfo;
 
 import java.util.ArrayList;
 
