@@ -2,8 +2,6 @@ package AuctionHouse;
 
 import AuctionProxy.AuctionProcess;
 import SourcesToOrganize.Bid;
-import SourcesToOrganize.Item;
-import SourcesToOrganize.ItemInfo;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -48,7 +46,34 @@ public class AuctionHouse implements AuctionProcess {
         }
     }
 
+    /**
+     *
+     * @param item
+     * @return
+     */
+    private int addItem(Item item) {
+        items.put(item.getItemID(), item);
+        itemInfos.add(item.getItemInfo());
 
+        return 0;
+    }
+
+    /**
+     *
+     * @param itemID
+     * @return
+     */
+    private boolean removeItem(int itemID) {
+        return false;
+    }
+
+    /**
+     *
+     * @param itemID
+     */
+    private void updateItem(int itemID) {
+
+    }
 
 
     /**
@@ -59,7 +84,11 @@ public class AuctionHouse implements AuctionProcess {
     @Override
     public void bid(Bid bid) {
 
-        System.out.println("I theoretically bid");
+        Item item = items.get(bid.getItemID());
+
+        item.setBid(bid);
+
+//        System.out.println("I theoretically bid");
 //        if (items.containsKey(bid.getItemID())) {
 //            Item item = items.get(bid.getItemID());
 //
