@@ -10,6 +10,7 @@ import java.net.Socket;
  */
 public class BankProxy implements BankProcess {
 
+    private Socket s = null;
     private ObjectInputStream is;
     private ObjectOutputStream os;
 
@@ -19,13 +20,13 @@ public class BankProxy implements BankProcess {
      * @param hostname Hostname or IP
      * @param port Port number
      */
-    BankProxy(String hostname, int port) {
-        Socket s = null;
+    public BankProxy(String hostname, int port) {
+
         try {
             s = new Socket(hostname, port);
 
-            is = new ObjectInputStream(s.getInputStream());
             os = new ObjectOutputStream(s.getOutputStream());
+            is = new ObjectInputStream(s.getInputStream());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -162,7 +163,7 @@ public class BankProxy implements BankProcess {
 
     /**
      * Transfer funds of amount specified from ID1 to ID2
-     *  @param fromID Unique Identifier of Account1
+     * @param fromID Unique Identifier of Account1
      * @param toID   Unique Identifier of Account2
      * @param amount Amount of Money
      */
@@ -208,5 +209,16 @@ public class BankProxy implements BankProcess {
         }
 
         return false;
+    }
+
+    public void close() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                s.close();
+                System.out.println("shut down!");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }));
     }
 }

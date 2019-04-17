@@ -2,7 +2,7 @@ package SourcesToOrganize;
 
 public class Packet {
 
-    Boolean status;
+    Boolean status = false;
     // Troubleshooting stuff goes here
 
     public void setStatus(Boolean status) {

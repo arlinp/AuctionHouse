@@ -68,19 +68,19 @@ public class BankApp extends Application implements BankProcess {
      * @param amount    Amount of Money
      */
     @Override
-    public void addFunds(int AccountID, double amount) {
-
+    public boolean addFunds(int AccountID, double amount) {
+        return false;
     }
 
     /**
      * Removes the funds from the given account
-     *
-     * @param AccountID Unique Identifier of Account
+     *  @param AccountID Unique Identifier of Account
      * @param amount    Amount of Money
      */
     @Override
-    public void removeFunds(int AccountID, double amount) {
+    public boolean removeFunds(int AccountID, double amount) {
 
+        return false;
     }
 
     /**
@@ -98,36 +98,36 @@ public class BankApp extends Application implements BankProcess {
 
     /**
      * Unlocks the lock given by the identifier!
-     *
-     * @param AccountID Unique Identifier of Account
+     *  @param AccountID Unique Identifier of Account
      * @param lockID    Identifier of the lock
      */
     @Override
-    public void unlockFunds(int AccountID, int lockID) {
+    public boolean unlockFunds(int AccountID, int lockID) {
 
+        return false;
     }
 
     /**
      * Transfer funds of amount specified from ID1 to ID2
-     *
-     * @param fromID Unique Identifier of Account1
+     *  @param fromID Unique Identifier of Account1
      * @param toID   Unique Identifier of Account2
      * @param amount Amount of Money
      */
     @Override
-    public void transferFunds(int fromID, int toID, double amount) {
+    public boolean transferFunds(int fromID, int toID, double amount) {
 
+        return false;
     }
 
     /**
      * Transfer funds based on the lock within the account tied to the fromID
-     *
-     * @param fromID Unique Identifier of Account1
+     *  @param fromID Unique Identifier of Account1
      * @param toID   Unique Identifier of Account2
      * @param lockID Lock identifier
      */
     @Override
-    public void transferFunds(int fromID, int toID, int lockID) {
+    public boolean transferFunds(int fromID, int toID, int lockID) {
 
+        return false;
     }
 }

@@ -135,19 +135,14 @@ public class AuctionProxy implements AuctionProcess {
 
 
     public void close() {
-
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 s.close();
-                System.out.println("The server is shut down!");
-            } catch (IOException e) { /* failed */ }
+                System.out.println("shut down!");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }));
-
-
-//        try {
-//            s.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
+
 }
