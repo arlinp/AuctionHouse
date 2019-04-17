@@ -1,4 +1,4 @@
-package SourcesToOrganize;
+package AuctionHouse;
 
 import AuctionProxy.AuctionRequest;
 

@@ -21,7 +21,7 @@ public interface BankProcess {
      * @param AccountID Unique Identifier of Account
      * @param amount Amount of Money
      */
-    void addFunds(int AccountID, double amount);
+    boolean addFunds(int AccountID, double amount);
 
     /**
      * Removes the funds from the given account
@@ -29,7 +29,7 @@ public interface BankProcess {
      * @param AccountID Unique Identifier of Account
      * @param amount Amount of Money
      */
-    void removeFunds(int AccountID, double amount);
+    boolean removeFunds(int AccountID, double amount);
 
     /**
      * Locks a certain amount of money away for potential use, returns an
@@ -47,7 +47,7 @@ public interface BankProcess {
      * @param AccountID Unique Identifier of Account
      * @param lockID Identifier of the lock
      */
-    void unlockFunds(int AccountID, int lockID);
+    boolean unlockFunds(int AccountID, int lockID);
 
     /**
      * Transfer funds of amount specified from ID1 to ID2
@@ -56,7 +56,7 @@ public interface BankProcess {
      * @param toID Unique Identifier of Account2
      * @param amount Amount of Money
      */
-    void transferFunds(int fromID, int toID, double amount);
+    boolean transferFunds(int fromID, int toID, double amount);
 
     /**
      * Transfer funds based on the lock within the account tied to the fromID
@@ -65,7 +65,7 @@ public interface BankProcess {
      * @param toID Unique Identifier of Account2
      * @param lockID Lock identifier
      */
-    void transferFunds(int fromID, int toID, int lockID);
+    boolean transferFunds(int fromID, int toID, int lockID);
 
 
 }

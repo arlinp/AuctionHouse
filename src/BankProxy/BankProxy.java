@@ -31,17 +31,17 @@ public class BankProxy implements BankProcess {
             e.printStackTrace();
         }
 
-        while(!s.isClosed()) {
-
-            processMessage();
-
-        }
+//        while(!s.isClosed()) {
+//
+//            processMessage();
+//
+//        }
     }
 
-    // TODO Throw in separate thread, if there is even a use for this
-    private void processMessage() {
-
-    }
+//    // TODO Throw in separate thread, if there is even a use for this
+//    private void processMessage() {
+//
+//    }
 
 
     /**
@@ -52,29 +52,64 @@ public class BankProxy implements BankProcess {
      */
     @Override
     public double getBalance(int AccountID) {
+        BankRequest ar = new BankRequest(BankInfo.GETBALANCE);
+        ar.setID(AccountID);
+
+        try {
+            os.writeObject(ar);
+            BankRequest newAr = (BankRequest) is.readObject();
+            return newAr.getAmount();
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
     /**
      * Add the funds to the specified account number
-     *
-     * @param AccountID Unique Identifier of Account
+     *  @param AccountID Unique Identifier of Account
      * @param amount    Amount of Money
      */
     @Override
-    public void addFunds(int AccountID, double amount) {
+    public boolean addFunds(int AccountID, double amount) {
+        BankRequest ar = new BankRequest(BankInfo.ADD);
+        ar.setID(AccountID);
+        ar.setAmount(amount);
 
+        try {
+            os.writeObject(ar);
+            BankRequest newAr = (BankRequest) is.readObject();
+            return newAr.getStatus();
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     /**
      * Removes the funds from the given account
-     *
-     * @param AccountID Unique Identifier of Account
+     *  @param AccountID Unique Identifier of Account
      * @param amount    Amount of Money
      */
     @Override
-    public void removeFunds(int AccountID, double amount) {
+    public boolean removeFunds(int AccountID, double amount) {
+        BankRequest ar = new BankRequest(BankInfo.REMOVE);
+        ar.setID(AccountID);
+        ar.setAmount(amount);
 
+        try {
+            os.writeObject(ar);
+            BankRequest newAr = (BankRequest) is.readObject();
+            return newAr.getStatus();
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     /**
@@ -87,70 +122,91 @@ public class BankProxy implements BankProcess {
      */
     @Override
     public int lockFunds(int AccountID, double amount) {
-        BankRequest br = new BankRequest();
+        BankRequest br = new BankRequest(BankInfo.LOCK);
+        br.setID(AccountID);
+        br.setAmount(amount);
 
         try {
             os.writeObject(br);
             BankRequest response = (BankRequest) is.readObject();
-            return response.getLock();
+            return response.getLockNumber();
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
         return 0;
     }
 
     /**
      * Unlocks the lock given by the identifier!
-     *
-     * @param AccountID Unique Identifier of Account
+     *  @param AccountID Unique Identifier of Account
      * @param lockID    Identifier of the lock
      */
     @Override
-    public void unlockFunds(int AccountID, int lockID) {
-        BankRequest br = new BankRequest();
+    public boolean unlockFunds(int AccountID, int lockID) {
+        BankRequest br = new BankRequest(BankInfo.UNLOCK);
+        br.setID(AccountID);
+        br.setLockNumber(lockID);
 
         try {
             os.writeObject(br);
-        } catch (IOException e) {
+            BankRequest response = (BankRequest) is.readObject();
+            return response.getStatus();
+
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 
     /**
      * Transfer funds of amount specified from ID1 to ID2
-     *
-     * @param fromID Unique Identifier of Account1
+     *  @param fromID Unique Identifier of Account1
      * @param toID   Unique Identifier of Account2
      * @param amount Amount of Money
      */
     @Override
-    public void transferFunds(int fromID, int toID, double amount) {
-        BankRequest br = new BankRequest();
+    public boolean transferFunds(int fromID, int toID, double amount) {
+        BankRequest br = new BankRequest(BankInfo.TRANSFER);
+        br.setID(fromID);
+        br.setToID(toID);
+        br.setAmount(amount);
 
         try {
             os.writeObject(br);
-        } catch (IOException e) {
+            BankRequest response = (BankRequest) is.readObject();
+            return response.getStatus();
+
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 
     /**
      * Transfer funds based on the lock within the account tied to the fromID
-     *
-     * @param fromID Unique Identifier of Account1
+     *  @param fromID Unique Identifier of Account1
      * @param toID   Unique Identifier of Account2
      * @param lockID Lock identifier
      */
     @Override
-    public void transferFunds(int fromID, int toID, int lockID) {
-        BankRequest br = new BankRequest();
+    public boolean transferFunds(int fromID, int toID, int lockID) {
+        BankRequest br = new BankRequest(BankInfo.TRANSFER);
+        br.setID(fromID);
+        br.setToID(toID);
+        br.setLockNumber(lockID);
 
         try {
             os.writeObject(br);
-        } catch (IOException e) {
+            BankRequest response = (BankRequest) is.readObject();
+            return response.getStatus();
+
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 }

@@ -1,5 +1,6 @@
-package SourcesToOrganize;
+package Bank;
 
+import Bank.Bank;
 import BankProxy.BankRequest;
 
 import java.io.IOException;
@@ -7,16 +8,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-
-import static BankProxy.BankInfo.GETBALANCE;
-
 public class BankCommunicator implements Runnable {
 
     private Socket s;
     private Bank bank;
     private ObjectInputStream is;
     private ObjectOutputStream os;
-    private static boolean auctionCommDebug = true;
 
     /**
      * Thread for communication with a single socket
@@ -34,7 +31,7 @@ public class BankCommunicator implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (auctionCommDebug) System.out.println("Created auction communicator class for " + s.getRemoteSocketAddress());
+
         new Thread(this).start();
     }
 
@@ -51,7 +48,7 @@ public class BankCommunicator implements Runnable {
      */
     @Override
     public void run() {
-        if (auctionCommDebug) System.out.println("Starting thread for " + s.getInetAddress() + " on thread: " + Thread.currentThread().getName());
+        System.out.println("Starting thread for " + s.getInetAddress() + " on thread: " + Thread.currentThread().getName());
         while(s.isConnected() && bank.isAlive()) {
             try {
                 BankRequest br = (BankRequest) is.readObject();
@@ -70,24 +67,34 @@ public class BankCommunicator implements Runnable {
      */
     private void processMessage(BankRequest br) {
         System.out.println("THE TYPE OF REQUEST IS: " + br.getType());
-        BankRequest newAR = new BankRequest(br.getType());
+        BankRequest response = new BankRequest(br.getType());
         // TODO Implement the rest of this
         switch (br.getType()) {
             case GETBALANCE:
+                response.setAmount(bank.getBalance(br.getID()));
                 break;
             case ADD:
+                response.setStatus(bank.addFunds(br.getID(), br.getAmount()));
                 break;
             case REMOVE:
+                response.setStatus(bank.removeFunds(br.getID(),br.getAmount()));
+                break;
+            case LOCK:
+                response.setLockNumber(bank.lockFunds(br.getID(), br.getAmount()));
+                break;
+            case UNLOCK:
+                response.setStatus(bank.unlockFunds(br.getID(), br.getLockNumber()));
+                break;
+            case TRANSFER:
+                response.setStatus(bank.transferFunds(br.getID(), br.getToID(), br.getAmount()));
+                break;
+            case TRANSFERFROMLOCK:
+                response.setStatus(bank.transferFunds(br.getID(), br.getToID(), br.getLockNumber()));
                 break;
         }
         try {
 
-
-//            System.out.println("CHECK FOR SETTING " + newAR.getTest() + " " + newAR.getType() + " " + br.getType());
-//            newAR.setItemID(1234);
-//            newAR.setTest("Testing12");
-            os.writeObject(newAR);
-
+            os.writeObject(response);
             System.out.println("sent the message");
         } catch (IOException e) {
             e.printStackTrace();
