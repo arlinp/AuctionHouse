@@ -10,6 +10,11 @@ import java.util.HashMap;
 
 public class Bank implements BankProcess {
 
+    //UniqueID Counter
+    public static int counter;
+    private HashMap<Integer, Account> accounts;
+
+
     public Bank(int port) {
 
         ServerSocket ss = null;
@@ -45,7 +50,8 @@ public class Bank implements BankProcess {
     @Override
     public double getBalance(int AccountID) {
         System.out.println("Getting the balance for Account#: " + AccountID);
-        return 0;
+        Account account = accounts.get(AccountID);
+        return account.getBalance();
     }
 
     /**
@@ -57,7 +63,9 @@ public class Bank implements BankProcess {
     @Override
     public boolean addFunds(int AccountID, double amount) {
         System.out.println("Added $" + amount + " to the Account #: " + AccountID);
-        return false;
+        Account account = accounts.get(AccountID);
+        account.addFunds(amount);
+        return true;
     }
 
     /**
@@ -69,12 +77,16 @@ public class Bank implements BankProcess {
     @Override
     public boolean removeFunds(int AccountID, double amount) {
         System.out.println("Removed $" + amount + " to the Account #: " + AccountID);
-        return false;
+        Account account = accounts.get(AccountID);
+        account.removeFunds(amount);
+        return true;
     }
 
     /**
      * Locks a certain amount of money away for potential use, returns an
      * integer value that can be used for later use.
+     *
+     * (maybe whether a boolean as to if it was allowed?)
      *
      * @param AccountID Unique Identifier of Account
      * @param amount    Amount of Money
@@ -83,6 +95,9 @@ public class Bank implements BankProcess {
     @Override
     public int lockFunds(int AccountID, double amount) {
         System.out.println("Locked $" + amount + " from the Account #: " + AccountID);
+        Account account = accounts.get(AccountID);
+        account.lockFunds(amount);
+        //return account.lockFunds(amount);
         return 0;
     }
 
