@@ -70,6 +70,9 @@ public class BankCommunicator implements Runnable {
         BankRequest response = new BankRequest(br.getType());
         // TODO Implement the rest of this
         switch (br.getType()) {
+            case NEWACCOUNT:
+                response.setSuccess(bank.addAccount(br.getID()));
+                break;
             case GETBALANCE:
                 response.setAmount(bank.getBalance(br.getID()));
                 break;

@@ -11,7 +11,7 @@ public class Bank implements BankProcess {
 
     //UniqueID Counter
     public static int counter;
-    private HashMap<Integer, Account> accounts;
+    private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
 
 
     public Bank(int port) {
@@ -34,6 +34,17 @@ public class Bank implements BankProcess {
 
         }
     }
+
+    @Override
+    public boolean addAccount(int AccountID) {
+
+        if (accounts.containsKey(AccountID)) return false;
+
+        Account newAccount = new Account();
+        accounts.put(AccountID, newAccount);
+        return true;
+    }
+
 
     // TODO implement
     public boolean isAlive() {

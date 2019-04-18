@@ -13,6 +13,7 @@ public class BankRequest extends Packet implements Serializable {
     private int ID1;
     private double amount;
     private int lockNumber;
+    private boolean isSuccess;
 
     public BankRequest(BankInfo type) {
         this.type = type;
@@ -21,6 +22,14 @@ public class BankRequest extends Packet implements Serializable {
     // TODO Check usage
     public BankRequest() {
 
+    }
+
+    public void setSuccess(boolean success) {
+        isSuccess = success;
+    }
+
+    public boolean isSuccess() {
+        return isSuccess;
     }
 
     public int getLock() {

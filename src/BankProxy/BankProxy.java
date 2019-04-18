@@ -10,6 +10,7 @@ import java.net.Socket;
  */
 public class BankProxy implements BankProcess {
 
+
     private Socket s = null;
     private ObjectInputStream is;
     private ObjectOutputStream os;
@@ -44,6 +45,23 @@ public class BankProxy implements BankProcess {
 //
 //    }
 
+    @Override
+    public boolean addAccount(int AccountID) {
+
+        BankRequest ar = new BankRequest(BankInfo.NEWACCOUNT);
+        ar.setID(AccountID);
+
+        try{
+            os.writeObject(ar);
+            BankRequest newAr = (BankRequest) is.readObject();
+            return newAr.isSuccess();
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return true;
+
+    }
 
     /**
      * Get the balance of the Account number

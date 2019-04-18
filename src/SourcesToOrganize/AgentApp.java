@@ -25,13 +25,13 @@ public class AgentApp extends Application {
         input = inScanner.nextLine();
 
         //Initialize the bank and auction proxy
-        BankProxy bankProxy;
+        BankProxy bankProxy = null;
         AuctionProxy auctionProxy;
 
         if (input.equals("1")){
 
             bankProxy = new BankProxy("localHost", 2000);
-            auctionProxy = new AuctionProxy("localhost", 2001);
+//            auctionProxy = new AuctionProxy("localhost", 2001);
 
         }
 
@@ -56,6 +56,11 @@ public class AgentApp extends Application {
 
         //if bank, get balance
         if (input.equals("1")){
+
+            System.out.println("making new Account, ID=5");
+            bankProxy.addAccount(5);
+            double balance = bankProxy.getBalance(5);
+            System.out.println("account balance = " + balance);
 
         }
 
