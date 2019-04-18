@@ -8,6 +8,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class AuctionHouse implements AuctionProcess {
 
@@ -15,17 +17,17 @@ public class AuctionHouse implements AuctionProcess {
 //    public AuctionHouse(ClientProxy bankProxy, ServerProxy auctionHouseServer) {
 //    }
 
-    private HashMap<Integer, Item> items;
+    private ConcurrentHashMap<Integer, Item> items;
 //    private ObjectOutputStream os;
 //    private ObjectInputStream is;
     private ServerSocket s = null;
-    private ArrayList<ItemInfo> itemInfos;
+    private LinkedBlockingQueue<ItemInfo> itemInfos;
 
 
 
 
     public AuctionHouse(int port) {
-        items = new HashMap<Integer, Item>();
+        items = new ConcurrentHashMap<Integer, Item>();
 
         ServerSocket ss = null;
         try {
