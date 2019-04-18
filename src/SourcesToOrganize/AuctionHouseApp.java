@@ -1,6 +1,7 @@
 package SourcesToOrganize;
 
 import AuctionHouse.AuctionHouse;
+import BankProxy.BankProxy;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class AuctionHouseApp extends Application {
@@ -117,6 +119,36 @@ public class AuctionHouseApp extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
+//        launch(args);
+
+        Scanner inScanner = new Scanner(System.in);
+        String input;
+
+        //Connect to Bank
+        System.out.println("1. Test on own PC?");
+        System.out.println("2. Test in CS lab?");
+
+        input = inScanner.nextLine();
+
+        AuctionHouse auctionHouse = new AuctionHouse(2000);
+        BankProxy bankProxy;
+
+        if (input.equals("1")){
+
+            bankProxy = new BankProxy("localhost", 2000);
+
+        }
+
+        if (input.equals("2")){
+
+            System.out.println("enter bank host name: ");
+            input = inScanner.nextLine();
+            bankProxy = new BankProxy(input, 2000);
+
+        }
+
+
+
+
     }
 }
