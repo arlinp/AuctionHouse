@@ -3,6 +3,9 @@ package AuctionHouse;
 import AuctionProxy.AuctionProcess;
 import SourcesToOrganize.Bid;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -21,13 +24,19 @@ public class AuctionHouse implements AuctionProcess {
 //    private ObjectOutputStream os;
 //    private ObjectInputStream is;
     private ServerSocket s = null;
-    private LinkedBlockingQueue<ItemInfo> itemInfos;
+//    private LinkedBlockingQueue<ItemInfo> itemInfos;
+
+    private ArrayList<ItemInfo> itemInfos;
+
 
 
 
 
     public AuctionHouse(int port) {
+
+        itemInfos = new ArrayList<ItemInfo>();
         items = new ConcurrentHashMap<Integer, Item>();
+        readInItems();
 
         ServerSocket ss = null;
         try {
@@ -46,6 +55,38 @@ public class AuctionHouse implements AuctionProcess {
             }
 
         }
+
+    }
+
+    private void readInItems() {
+
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("resources/items.txt"));
+            String line;
+            String[] lineArr;
+            Item item;
+            ItemInfo itemInfo;
+
+            int itemNum = 0;
+
+            while ((line = br.readLine()) != null){
+
+                lineArr = line.split(" ");
+
+                itemInfo = new ItemInfo(lineArr[0], "", 0, Integer.parseInt(lineArr[1]));
+                itemInfos.add(itemInfo);
+
+                item = new Item(null, itemInfo);
+                items.put(itemNum, item);
+
+            }
+
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -123,8 +164,7 @@ public class AuctionHouse implements AuctionProcess {
      */
     @Override
     public ArrayList<ItemInfo> getItems() {
-        System.out.println("Returning Null for getItems");
-        return null;
+        return itemInfos;
     }
 
     /**

@@ -45,6 +45,11 @@ public class BankProxy implements BankProcess {
 //
 //    }
 
+    /**
+     * Sends new AccountID to Bank
+     * @param AccountID
+     * @return Success
+     */
     @Override
     public boolean addAccount(int AccountID) {
 

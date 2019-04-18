@@ -1,0 +1,5 @@
+clock 100
+glock 300
+sock 10
+flock 200
+lunchbox 50
