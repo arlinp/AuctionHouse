@@ -71,7 +71,7 @@ public class BankCommunicator implements Runnable {
         // TODO Implement the rest of this
         switch (br.getType()) {
             case NEWACCOUNT:
-                response.setSuccess(bank.addAccount(br.getID()));
+                response.setID(bank.addAccount());
                 break;
             case GETBALANCE:
                 response.setAmount(bank.getBalance(br.getID()));

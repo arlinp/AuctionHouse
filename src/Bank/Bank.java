@@ -6,11 +6,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Bank implements BankProcess {
 
     //UniqueID Counter
-    public static int counter = 0;
+    public static int counter = 1000;
     private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
     private HashMap<Integer, Double> lockedMoney = new HashMap<Integer, Double>();
 
@@ -36,20 +37,28 @@ public class Bank implements BankProcess {
         }
     }
 
-    @Override
-    public boolean addAccount(int AccountID) {
 
-        if (accounts.containsKey(AccountID)) return false;
-        counter++;
-        Account newAccount = new Account();
-        accounts.put(AccountID, newAccount);
-        return true;
-    }
+
+
 
 
     // TODO implement
     public boolean isAlive() {
         return true;
+    }
+
+    /**
+     * Makes an account for auction house or agent
+     *
+     * @return Account ID
+     */
+    // TODO possible synch error
+    @Override
+    public int addAccount() {
+            counter++;
+            Account newAccount = new Account();
+            accounts.put(newAccount.getUniqueID(), newAccount);
+            return newAccount.getUniqueID();
     }
 
     /**

@@ -33,8 +33,8 @@ public class AgentApp extends Application {
 
         if (input.equals("1")){
 
-            bankProxy = new BankProxy("localHost", 2000);
-            auctionProxy = new AuctionProxy("localhost", 2001);
+            bankProxy = new BankProxy("localHost", 42069);
+            auctionProxy = new AuctionProxy("localhost", 42070);
 
         }
 
@@ -42,15 +42,15 @@ public class AgentApp extends Application {
 
             System.out.println("enter bank host:");
             input = inScanner.nextLine();
-            bankProxy = new BankProxy(input, 2000);
+            bankProxy = new BankProxy(input, 42069);
 
             System.out.println("enter auctionhouse host:");
             input = inScanner.nextLine();
-            auctionProxy = new AuctionProxy(input, 2001);
+            auctionProxy = new AuctionProxy(input, 42070);
 
         }
 
-        int accountID = 0;
+        int accountID = bankProxy.addAccount();;
 
         //main loop
         while (!input.equals("exit")) {
@@ -66,19 +66,20 @@ public class AgentApp extends Application {
             //if bank, get balance
             if (input.equals("1")) {
 
-                System.out.println("enter account ID: ");
-                System.out.println(" or nothing...");
-                input  = inScanner.nextLine();
+//                System.out.println("Your Account ID is: ");
+//                System.out.println(" or nothing...");
+//                input  = inScanner.nextLine();
+//
+//                if (input.equals("")) {
+//                    accountID = 5;
+//                } else {
+//                    accountID = Integer.parseInt(input);
+//                }
+//
 
-                if (input.equals("")) {
-                    accountID = 5;
-                } else {
-                    accountID = Integer.parseInt(input);
-                }
 
 
-                System.out.println("making new Account, ID=" + accountID);
-                bankProxy.addAccount(accountID);
+                System.out.println("Account ID=" + accountID);
                 System.out.println("account balance = "
                         + bankProxy.getBalance(accountID));
 

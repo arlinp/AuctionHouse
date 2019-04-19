@@ -8,12 +8,11 @@ package BankProxy;
 public interface BankProcess {
 
     /**
-     * makes an account for auction house or agent
+     * Makes an account for auction house or agent
      *
-     * @param AccountID
-     * @return success
+     * @return Account ID
      */
-    boolean addAccount(int AccountID);
+    int addAccount();
 
     /**
      * Get the balance of the Account number

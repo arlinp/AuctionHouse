@@ -7,7 +7,7 @@ import static Bank.Bank.counter;
 public class Account {
 
     private double balance;
-    private double uniqueID;
+    private int uniqueID;
     private double lockedMoney;
     private int lockID;
 
@@ -74,5 +74,9 @@ public class Account {
      */
     public synchronized boolean unlockFunds(int lockID) {
         return true;
+    }
+
+    public int getUniqueID() {
+        return uniqueID;
     }
 }

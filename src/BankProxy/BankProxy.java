@@ -48,25 +48,24 @@ public class BankProxy implements BankProcess {
 //    }
 
     /**
-     * Sends new AccountID to Bank
-     * @param AccountID
-     * @return Success
+     * Makes an account for auction house or agent
+     *
+     * @return Account ID
      */
     @Override
-    public boolean addAccount(int AccountID) {
+    public int addAccount() {
 
         BankRequest ar = new BankRequest(BankInfo.NEWACCOUNT);
-        ar.setID(AccountID);
 
         try{
             os.writeObject(ar);
             BankRequest newAr = (BankRequest) is.readObject();
-            return newAr.isSuccess();
+            return newAr.getID();
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return true;
+        return 0;
 
     }
 
