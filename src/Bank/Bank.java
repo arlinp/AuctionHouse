@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class Bank implements BankProcess {
 
     //UniqueID Counter
-    public static int counter;
+    public static int counter = 0;
     private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
     private HashMap<Integer, Double> lockedMoney = new HashMap<Integer, Double>();
 
@@ -40,7 +40,7 @@ public class Bank implements BankProcess {
     public boolean addAccount(int AccountID) {
 
         if (accounts.containsKey(AccountID)) return false;
-
+        counter++;
         Account newAccount = new Account();
         accounts.put(AccountID, newAccount);
         return true;
@@ -130,9 +130,13 @@ public class Bank implements BankProcess {
      * @param amount Amount of Money
      */
     @Override
-    public boolean transferFunds(int fromID, int toID, double amount) {
+    public synchronized boolean transferFunds(int fromID, int toID, double amount) {
         System.out.println("Transfered $" + amount + " from Account#: " + fromID + " to Account#: " + toID);
-        return false;
+        Account account1 = accounts.get(fromID);
+        Account account2 = accounts.get(toID);
+        account1.removeFunds(amount);
+        account2.addFunds(amount);
+        return true;
     }
 
     /**
@@ -143,7 +147,7 @@ public class Bank implements BankProcess {
      */
     @Override
     public boolean transferFunds(int fromID, int toID, int lockID) {
-        System.out.println("Transferred the lockID# " + lockID + " from Account# " + fromID + " to Account# " + toID);
+
         return false;
     }
 }
