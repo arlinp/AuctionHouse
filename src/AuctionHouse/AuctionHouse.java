@@ -34,28 +34,28 @@ public class AuctionHouse implements AuctionProcess {
     public AuctionHouse(int port) {
 
 //        BankProxy bank = new BankProxy("127.0.0.1", 46920);
-        bank = new Bank(420);
+//        bank = new Bank(420);
 
 
         readInItems();
 
-        ServerSocket ss = null;
-        try {
-            ss = new ServerSocket(port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        while (true) {
-            try {
-                Socket s = ss.accept();
-                AuctionCommunicator ac = new AuctionCommunicator(s,this);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
+//        ServerSocket ss = null;
+//        try {
+//            ss = new ServerSocket(port);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        while (true) {
+//            try {
+//                Socket s = ss.accept();
+//                AuctionCommunicator ac = new AuctionCommunicator(s,this);
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
 
     }
 
@@ -80,7 +80,7 @@ public class AuctionHouse implements AuctionProcess {
         } catch (IOException e){
             e.printStackTrace();
         }
-
+        System.out.println("Got here");
     }
 
     /**
@@ -92,7 +92,7 @@ public class AuctionHouse implements AuctionProcess {
         items.put(item.getItemID(), item);
         itemInfos.add(item.getItemInfo());
 
-        return 0;
+        return item.getItemID();
     }
 
     /**
@@ -135,8 +135,8 @@ public class AuctionHouse implements AuctionProcess {
      */
     @Override
     public ItemInfo getItemInfo(int itemID) {
-        System.out.println("Returning Null for getItemInfo");
-        return null;
+
+        return items.get(itemID).getItemInfo();
     }
 
     /**

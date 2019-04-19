@@ -38,14 +38,14 @@ public class Item {
         }
 
         if (bid.getAmount() > this.bid.getAmount()) {
-            int lockID = bank.lockFunds(bid.getAccountNumber(), bid.getAmount());
+//            int lockID = bank.lockFunds(bid.getAccountNumber(), bid.getAmount());
 
-            if (lockID == -1) {
-                System.out.println("Not enough funds");
-                return false;
-            }
+//            if (lockID == -1) {
+//                System.out.println("Not enough funds");
+//                return false;
+//            }
 
-            bank.unlockFunds(this.bid.getAccountNumber(),this.bid.getLockID());
+//            bank.unlockFunds(this.bid.getAccountNumber(),this.bid.getLockID());
 
             synchronized (itemInfo) { itemInfo.setPrice(bid.getAmount()); }
 
@@ -65,5 +65,10 @@ public class Item {
 
     public ItemInfo getItemInfo() {
         return itemInfo;
+    }
+
+    @Override
+    public String toString() {
+        return itemInfo.toString();
     }
 }

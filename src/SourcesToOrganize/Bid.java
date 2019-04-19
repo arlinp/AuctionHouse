@@ -9,7 +9,7 @@ public class Bid implements Serializable {
     private int lockID;
     private int itemID;
 
-    Bid(double amount, int accountNumber, int itemID) {
+    public Bid(double amount, int accountNumber, int itemID) {
         this.amount = amount;
         this.accountNumber = accountNumber;
         this.itemID = itemID;

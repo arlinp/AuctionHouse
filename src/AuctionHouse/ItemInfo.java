@@ -42,4 +42,8 @@ public class ItemInfo implements Serializable {
 
     public void setPrice(double price) { this.price = price; }
 
+    @Override
+    public String toString() {
+        return name + " " + desc + " " + System.currentTimeMillis() + " " + time + " " + price + " " + itemID ;
+    }
 }
