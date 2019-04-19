@@ -1,10 +1,13 @@
 package SourcesToOrganize;
 
+import AuctionHouse.Item;
+import AuctionHouse.ItemInfo;
 import AuctionProxy.AuctionProxy;
 import BankProxy.BankProxy;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class AgentApp extends Application {
@@ -47,7 +50,7 @@ public class AgentApp extends Application {
 
         }
 
-        int accountID;
+        int accountID = 0;
 
         //main loop
         while (!input.equals("exit")) {
@@ -71,8 +74,8 @@ public class AgentApp extends Application {
                     accountID = 5;
                 } else {
                     accountID = Integer.parseInt(input);
-
                 }
+
 
                 System.out.println("making new Account, ID=" + accountID);
                 bankProxy.addAccount(accountID);
@@ -103,7 +106,28 @@ public class AgentApp extends Application {
             if (input.equals("2")) {
 
                 System.out.println("Items for auction: ");
-                System.out.println(auctionProxy.getItems());
+                ArrayList<ItemInfo> auctionItems = auctionProxy.getItems();
+
+                System.out.println("enter number to make bid");
+
+                for (int i = 0; i < auctionItems.size(); i++) {
+                    System.out.println("" + i + " : " + auctionItems.get(i));
+                }
+
+                input = inScanner.nextLine();
+
+                System.out.println("Bid attempt: " + input);
+                int itemIndex = Integer.parseInt(input);
+                System.out.println();
+
+                System.out.println("enter amount: ");
+                input = inScanner.nextLine();
+                double amount = Double.parseDouble(input);
+
+                System.out.println("making bid on: " + auctionItems.get(itemIndex) + " " +
+                        "for : " + amount);
+
+                auctionProxy.bid(new Bid(amount,accountID,auctionItems.get(itemIndex).getItemID()));
 
             }
         }

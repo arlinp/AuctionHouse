@@ -26,6 +26,8 @@ public class BankProxy implements BankProcess {
         try {
             s = new Socket(hostname, port);
 
+            System.out.println("connected: " + s.isConnected());
+
             os = new ObjectOutputStream(s.getOutputStream());
             is = new ObjectInputStream(s.getInputStream());
 
