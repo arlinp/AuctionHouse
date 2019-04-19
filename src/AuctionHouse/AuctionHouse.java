@@ -1,6 +1,8 @@
 package AuctionHouse;
 
 import AuctionProxy.AuctionProcess;
+import Bank.Bank;
+import BankProxy.BankProxy;
 import SourcesToOrganize.Bid;
 
 import java.io.BufferedReader;
@@ -20,22 +22,21 @@ public class AuctionHouse implements AuctionProcess {
 //    public AuctionHouse(ClientProxy bankProxy, ServerProxy auctionHouseServer) {
 //    }
 
-    private ConcurrentHashMap<Integer, Item> items;
-//    private ObjectOutputStream os;
-//    private ObjectInputStream is;
+    private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
     private ServerSocket s = null;
-//    private LinkedBlockingQueue<ItemInfo> itemInfos;
-
-    private ArrayList<ItemInfo> itemInfos;
-
+    private ArrayList<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
+//    private BankProxy bank;
+    private Bank bank;
 
 
 
 
     public AuctionHouse(int port) {
 
-        itemInfos = new ArrayList<ItemInfo>();
-        items = new ConcurrentHashMap<Integer, Item>();
+//        BankProxy bank = new BankProxy("127.0.0.1", 46920);
+        bank = new Bank(420);
+
+
         readInItems();
 
         ServerSocket ss = null;
@@ -59,14 +60,10 @@ public class AuctionHouse implements AuctionProcess {
     }
 
     private void readInItems() {
-
-
         try {
             BufferedReader br = new BufferedReader(new FileReader("resources/items.txt"));
             String line;
             String[] lineArr;
-            Item item;
-            ItemInfo itemInfo;
 
             int itemNum = 0;
 
@@ -74,15 +71,12 @@ public class AuctionHouse implements AuctionProcess {
 
                 lineArr = line.split(" ");
 
-                itemInfo = new ItemInfo(lineArr[0], "", 0, Integer.parseInt(lineArr[1]));
+                ItemInfo itemInfo = new ItemInfo(lineArr[0], "", System.currentTimeMillis()+20000, Integer.parseInt(lineArr[1]));
                 itemInfos.add(itemInfo);
 
-                item = new Item(null, itemInfo);
+                Item item = new Item(bank, itemInfo);
                 items.put(itemNum, item);
-
             }
-
-
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -131,18 +125,6 @@ public class AuctionHouse implements AuctionProcess {
 
         item.setBid(bid);
 
-//        System.out.println("I theoretically bid");
-//        if (items.containsKey(bid.getItemID())) {
-//            Item item = items.get(bid.getItemID());
-//
-////            if (bid.getAmount() > item.getAmount()) {
-////                if (bank.lock(bid.getAccountNumber(), bid.getAmount())) {
-////                    item.getBid().unlock(ID)
-////                    item.setBid(bid);
-////                }
-////            }
-//
-//        }
     }
 
     /**

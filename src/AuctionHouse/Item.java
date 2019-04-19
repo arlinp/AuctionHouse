@@ -1,11 +1,13 @@
 package AuctionHouse;
 
+import Bank.Bank;
 import BankProxy.BankProxy;
 import SourcesToOrganize.Bid;
 
 public class Item {
 
-    private BankProxy bank;
+//    private BankProxy bank;
+    private Bank bank;
     private Bid bid;
 
 
@@ -13,7 +15,7 @@ public class Item {
     private ItemInfo itemInfo;
     private int itemID;
 
-    public Item(BankProxy bank, ItemInfo itemInfo) {
+    public Item(Bank bank, ItemInfo itemInfo) {
         this.bank = bank;
         this.itemInfo = itemInfo;
         this.itemID = itemInfo.getItemID();
