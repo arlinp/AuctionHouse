@@ -12,6 +12,7 @@ public class Bank implements BankProcess {
     //UniqueID Counter
     public static int counter;
     private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
+    private HashMap<Integer, Double> lockedMoney = new HashMap<Integer, Double>();
 
 
     public Bank(int port) {
@@ -96,7 +97,6 @@ public class Bank implements BankProcess {
      * Locks a certain amount of money away for potential use, returns an
      * integer value that can be used for later use.
      *
-     * (maybe whether a boolean as to if it was allowed?)
      *
      * @param AccountID Unique Identifier of Account
      * @param amount    Amount of Money
@@ -106,9 +106,9 @@ public class Bank implements BankProcess {
     public int lockFunds(int AccountID, double amount) {
         System.out.println("Locked $" + amount + " from the Account #: " + AccountID);
         Account account = accounts.get(AccountID);
-        account.lockFunds(amount);
-        //return account.lockFunds(amount);
-        return 0;
+        int lockIDReturned = account.lockFunds(amount);
+        lockedMoney.put(lockIDReturned, amount);
+        return lockIDReturned;
     }
 
     /**
@@ -119,7 +119,8 @@ public class Bank implements BankProcess {
     @Override
     public boolean unlockFunds(int AccountID, int lockID) {
         System.out.println("Unlocked LockID# " + lockID + " to the Account #: " + AccountID);
-        return false;
+        Account account = accounts.get(AccountID);
+        return account.unlockFunds(lockID);
     }
 
     /**

@@ -1,13 +1,15 @@
 package Bank;
 
+import java.util.Random;
+
 import static Bank.Bank.counter;
 
 public class Account {
 
     private double balance;
     private double uniqueID;
-    private Object lock;
     private double lockedMoney;
+    private int lockID;
 
     public Account(){
         this.balance = 10;
@@ -48,13 +50,21 @@ public class Account {
      *
      * @return Random/Unique Integer of lock, for later retrieval
      */
-    public synchronized boolean lockFunds(Double amount) {
-        if( (this.balance - amount) <0){ return false;}
+    public synchronized int lockFunds(Double amount) {
+
+        //Generates a random pin/lockID used for retrieval
+        //of the funds later
+
+        Random ran = new Random();
+        lockID = ran.nextInt(9999);
+
+        //to do: need to return error
+        if( (this.balance - amount) <0){ return 0;}
 
         else{
                 this.lockedMoney = amount;
                 this.balance -= lockedMoney;
-                return true;
+                return lockID;
             }
     }
 
@@ -62,12 +72,7 @@ public class Account {
      * Unlocks the lock given by the identifier!
      *
      */
-    public synchronized boolean unlockFunds(Double amount) {
-        if(amount > this.lockedMoney){ return false;}
-        else{
-            this.balance += amount;
-            this.lockedMoney -= amount;
-            return true;
-        }
+    public synchronized boolean unlockFunds(int lockID) {
+        return true;
     }
 }
