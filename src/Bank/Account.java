@@ -59,13 +59,13 @@ public class Account {
         lockID = ran.nextInt(9999);
 
         //to do: need to return error
-        if( (this.balance - amount) <0){ return 0;}
-
-        else{
-                this.lockedMoney = amount;
-                this.balance -= lockedMoney;
-                return lockID;
-            }
+        if (this.balance - amount < 0) {
+            return 0;
+        } else {
+            this.lockedMoney = amount;
+            this.balance -= lockedMoney;
+            return lockID;
+        }
     }
 
     /**
@@ -73,7 +73,15 @@ public class Account {
      *
      */
     public synchronized boolean unlockFunds(int lockID) {
+
+        this.balance += lockedMoney;
+        this.lockedMoney = 0;
+
         return true;
+    }
+
+    public double getLockedMoney() {
+        return lockedMoney;
     }
 
     public int getUniqueID() {

@@ -82,6 +82,8 @@ public class Bank implements BankProcess {
      */
     @Override
     public boolean addFunds(int AccountID, double amount) {
+        if (!accounts.containsKey(AccountID)) return false;
+
         System.out.println("Added $" + amount + " to the Account #: " + AccountID);
         Account account = accounts.get(AccountID);
         account.addFunds(amount);
@@ -96,9 +98,14 @@ public class Bank implements BankProcess {
      */
     @Override
     public boolean removeFunds(int AccountID, double amount) {
-        System.out.println("Removed $" + amount + " to the Account #: " + AccountID);
+        if (!accounts.containsKey(AccountID)) return false;
+
         Account account = accounts.get(AccountID);
+
+        if (account.getBalance() < amount) return false;
+
         account.removeFunds(amount);
+        System.out.println("Removed $" + amount + " to the Account #: " + AccountID);
         return true;
     }
 
@@ -113,9 +120,12 @@ public class Bank implements BankProcess {
      */
     @Override
     public int lockFunds(int AccountID, double amount) {
+        if (!accounts.containsKey(AccountID)) return -1;
+
         System.out.println("Locked $" + amount + " from the Account #: " + AccountID);
         Account account = accounts.get(AccountID);
         int lockIDReturned = account.lockFunds(amount);
+
         lockedMoney.put(lockIDReturned, amount);
         return lockIDReturned;
     }
@@ -140,9 +150,17 @@ public class Bank implements BankProcess {
      */
     @Override
     public synchronized boolean transferFunds(int fromID, int toID, double amount) {
+        if (!accounts.containsKey(fromID) && !accounts.containsKey(toID)) {
+            return false;
+        }
+
         System.out.println("Transfered $" + amount + " from Account#: " + fromID + " to Account#: " + toID);
+
         Account account1 = accounts.get(fromID);
         Account account2 = accounts.get(toID);
+
+        if (account1.getBalance() < amount) return false;
+
         account1.removeFunds(amount);
         account2.addFunds(amount);
         return true;
@@ -156,6 +174,17 @@ public class Bank implements BankProcess {
      */
     @Override
     public boolean transferFunds(int fromID, int toID, int lockID) {
+        if (!accounts.containsKey(fromID) && !accounts.containsKey(toID)) return false;
+
+        Account account1 = accounts.get(fromID);
+        Account account2 = accounts.get(toID);
+
+        double amount = account1.getLockedMoney();
+        if (account1.unlockFunds(lockID)) {
+            account1.removeFunds(amount);
+            account2.addFunds(amount);
+            return true;
+        }
 
         return false;
     }

@@ -25,37 +25,38 @@ public class AuctionHouse implements AuctionProcess {
     private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
     private ServerSocket s = null;
     private ArrayList<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
-//    private BankProxy bank;
-    private Bank bank;
+    private BankProxy bank;
+    private int auctionID;
+//    private Bank bank;
 
 
 
 
     public AuctionHouse(int port) {
 
-//        BankProxy bank = new BankProxy("127.0.0.1", 46920);
+        bank = new BankProxy("127.0.0.1", 42069);
 //        bank = new Bank(420);
-
+        auctionID = bank.addAccount();
 
         readInItems();
 
-//        ServerSocket ss = null;
-//        try {
-//            ss = new ServerSocket(port);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        while (true) {
-//            try {
-//                Socket s = ss.accept();
-//                AuctionCommunicator ac = new AuctionCommunicator(s,this);
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
+        ServerSocket ss = null;
+        try {
+            ss = new ServerSocket(port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        while (true) {
+            try {
+                Socket s = ss.accept();
+                AuctionCommunicator ac = new AuctionCommunicator(s,this);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
 
     }
 
@@ -71,11 +72,11 @@ public class AuctionHouse implements AuctionProcess {
 
                 lineArr = line.split(" ");
 
-                ItemInfo itemInfo = new ItemInfo(lineArr[0], "", System.currentTimeMillis()+20000, Integer.parseInt(lineArr[1]));
+                ItemInfo itemInfo = new ItemInfo(lineArr[0], "", System.currentTimeMillis()+40000, Integer.parseInt(lineArr[1]));
                 itemInfos.add(itemInfo);
-
-                Item item = new Item(bank, itemInfo);
-                items.put(itemNum, item);
+                System.out.println(itemInfo);
+                Item item = new Item(bank, itemInfo, auctionID);
+                items.put(item.getItemID(), item);
             }
         } catch (IOException e){
             e.printStackTrace();
@@ -122,7 +123,9 @@ public class AuctionHouse implements AuctionProcess {
     public void bid(Bid bid) {
 
         Item item = items.get(bid.getItemID());
-
+        System.out.println(bid.getItemID() + " " + items.contains(bid.getItemID()));
+        System.out.println(item);
+        System.out.println("Bidding with " + bid);
         item.setBid(bid);
 
     }
@@ -135,8 +138,12 @@ public class AuctionHouse implements AuctionProcess {
      */
     @Override
     public ItemInfo getItemInfo(int itemID) {
-
-        return items.get(itemID).getItemInfo();
+        if (items.get(itemID) != null) {
+            return items.get(itemID).getItemInfo();
+        }
+        else {
+            return null;
+        }
     }
 
     /**

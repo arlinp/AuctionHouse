@@ -125,11 +125,12 @@ public class AgentApp extends Application {
                 input = inScanner.nextLine();
                 double amount = Double.parseDouble(input);
 
-                System.out.println("making bid on: " + auctionItems.get(itemIndex) + " " +
-                        "for : " + amount);
+//                System.out.println("making bid on: " + auctionItems.get(itemIndex) + " " +
+//                        "for : " + amount);
+//
+//                auctionProxy.bid(new Bid(amount,accountID,auctionItems.get(itemIndex).getItemID()));
 
-                auctionProxy.bid(new Bid(amount,accountID,auctionItems.get(itemIndex).getItemID()));
-
+                auctionProxy.bid(new Bid(amount, accountID, itemIndex));
             }
         }
 
