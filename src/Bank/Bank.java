@@ -171,8 +171,8 @@ public class Bank implements BankProcess {
 
         Account account1 = accounts.get(fromID);
         Account account2 = accounts.get(toID);
+        double amount = account1.getLockedFunds(lockID);
 
-        double amount = account1.getLockedMoney();
         if (account1.unlockFunds(lockID)) {
             account1.removeFunds(amount);
             account2.addFunds(amount);

@@ -81,6 +81,11 @@ public class Account {
         this.addFunds(getLockedMoney().get(lockID));
         return true;
     }
+    public synchronized double getLockedFunds(int lockID) {
+
+        //Right now, this puts it back into the account balance
+        return getLockedMoney().get(lockID);
+    }
 
     public synchronized HashMap<Integer, Double> getLockedMoney() {
         return lockedMoney;
