@@ -1,5 +1,6 @@
 package Bank;
 
+import java.util.HashMap;
 import java.util.Random;
 
 import static Bank.Bank.counter;
@@ -8,8 +9,8 @@ public class Account {
 
     private double balance;
     private int uniqueID;
-    private double lockedMoney;
     private int lockID;
+    private HashMap<Integer, Double> lockedMoney = new HashMap<>();
 
     public Account(){
         this.balance = 10;
@@ -57,13 +58,15 @@ public class Account {
 
         Random ran = new Random();
         lockID = ran.nextInt(9999);
+        double moneyToLock = amount;
 
         //to do: need to return error
         if (this.balance - amount < 0) {
             return 0;
         } else {
-            this.lockedMoney = amount;
-            this.balance -= lockedMoney;
+            moneyToLock = amount;
+            this.balance -= moneyToLock;
+            lockedMoney.put(lockID, moneyToLock);
             return lockID;
         }
     }
@@ -74,13 +77,12 @@ public class Account {
      */
     public synchronized boolean unlockFunds(int lockID) {
 
-        this.balance += lockedMoney;
-        this.lockedMoney = 0;
-
+        //Right now, this puts it back into the account balance
+        this.addFunds(getLockedMoney().get(lockID));
         return true;
     }
 
-    public double getLockedMoney() {
+    public synchronized HashMap<Integer, Double> getLockedMoney() {
         return lockedMoney;
     }
 

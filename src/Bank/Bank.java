@@ -37,11 +37,6 @@ public class Bank implements BankProcess {
         }
     }
 
-
-
-
-
-
     // TODO implement
     public boolean isAlive() {
         return true;
@@ -124,10 +119,8 @@ public class Bank implements BankProcess {
 
         System.out.println("Locked $" + amount + " from the Account #: " + AccountID);
         Account account = accounts.get(AccountID);
-        int lockIDReturned = account.lockFunds(amount);
-
-        lockedMoney.put(lockIDReturned, amount);
-        return lockIDReturned;
+        //return the LockID
+        return account.lockFunds(amount);
     }
 
     /**
