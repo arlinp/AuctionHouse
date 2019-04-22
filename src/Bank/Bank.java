@@ -6,20 +6,27 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Runs a Bank where accounts can be interacted with through a socket connection
+ */
 public class Bank implements BankProcess {
 
+    // Debugging flags
     public static final boolean BANKCOMMDEBUG = false;
     public static final boolean BANKDEBUG = false;
 
-
-    //UniqueID Counter
+    // Used data structures
     public static int counter = 1000;
     private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
     private HashMap<Integer, Double> lockedMoney = new HashMap<Integer, Double>();
 
 
+    /**
+     * Constructor for Bank
+     *
+     * @param port Creates a server on the given port
+     */
     public Bank(int port) {
 
 
@@ -48,7 +55,6 @@ public class Bank implements BankProcess {
     }
 
     // TODO implement
-
     /**
      * Checks whether the Bank is alive
      *
@@ -63,7 +69,7 @@ public class Bank implements BankProcess {
      *
      * @return Account ID
      */
-    // TODO possible synch error
+    // TODO possible synch error. Change from iterating a counter to a random number
     @Override
     public int addAccount() {
         // Iterate counter
@@ -225,6 +231,7 @@ public class Bank implements BankProcess {
             }
         }
 
+        // Return false if it couldn't transfer the funds
         return false;
     }
 }

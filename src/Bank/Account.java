@@ -2,20 +2,23 @@ package Bank;
 
 import java.util.HashMap;
 import java.util.Random;
-
 import static Bank.Bank.counter;
 
+/**
+ * Account class for use within the bank
+ */
 public class Account {
 
     private double balance;
     private int uniqueID;
-    private int lockID;
     private HashMap<Integer, Double> lockedMoney = new HashMap<>();
 
+    /**
+     * Initialize a new account with a balance of $10 and unique counter
+     */
     public Account(){
         this.balance = 10;
         this.uniqueID = counter;
-
     }
 
     /**
@@ -52,45 +55,56 @@ public class Account {
      * @return Random/Unique Integer of lock, for later retrieval
      */
     public synchronized int lockFunds(Double amount) {
-
-        //Generates a random pin/lockID used for retrieval
-        //of the funds later
-
+        // Generates a random pin/lockID used for retrieval
+        // of the funds later
         Random ran = new Random();
-        lockID = ran.nextInt(9999);
-        double moneyToLock = amount;
+        int lockID = ran.nextInt(9999);
 
-        //to do: need to return error
-        if (this.balance - amount < 0) {
+        // Run checks
+        if (lockedMoney.containsKey(lockID)) {
+            return lockFunds(amount);
+        } else if (this.balance - amount < 0) {
             return 0;
         } else {
-            moneyToLock = amount;
-            this.balance -= moneyToLock;
-            lockedMoney.put(lockID, moneyToLock);
+            this.balance -= amount;
+            lockedMoney.put(lockID, amount);
             return lockID;
         }
     }
 
     /**
-     * Unlocks the lock given by the identifier!
+     * Unlocks the funds with the lockID
      *
+     * @param lockID ID of the lock
+     * @return True if unlocked
      */
     public synchronized boolean unlockFunds(int lockID) {
+        // Check that locked ID is contained
+        if (!lockedMoney.containsKey(lockID)) return false;
 
-        //Right now, this puts it back into the account balance
-        this.addFunds(getLockedMoney().get(lockID));
+        // Add locked money back into the account
+        addFunds(lockedMoney.get(lockID));
+        lockedMoney.remove(lockID);
+
         return true;
     }
+
+    /**
+     * Returns the amount of money within the specified lock
+     *
+     * @param lockID ID of lock
+     * @return Value of getting it from a HashMap
+     */
     public synchronized double getLockedFunds(int lockID) {
-
-        //Right now, this puts it back into the account balance
-        return getLockedMoney().get(lockID);
+        return lockedMoney.get(lockID);
     }
 
-    public synchronized HashMap<Integer, Double> getLockedMoney() {
-        return lockedMoney;
-    }
 
+    /**
+     * Returns the unique ID of the Account
+     *
+     * @return Unique ID
+     */
     public int getUniqueID() {
         return uniqueID;
     }

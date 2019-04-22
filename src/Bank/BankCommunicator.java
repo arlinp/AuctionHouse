@@ -6,6 +6,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/**
+ * Dedicated thread for a socket connection
+ */
 public class BankCommunicator implements Runnable {
 
     private Socket s;
@@ -21,9 +24,11 @@ public class BankCommunicator implements Runnable {
      */
     public BankCommunicator(Socket s, Bank bank) {
 
+        // Create sockets that are passed
         this.s = s;
         this.bank = bank;
 
+        // Create new ObjectDataStreams
         try {
             is = new ObjectInputStream(s.getInputStream());
             os = new ObjectOutputStream(s.getOutputStream());
@@ -31,6 +36,7 @@ public class BankCommunicator implements Runnable {
             e.printStackTrace();
         }
 
+        // Start new thread for processing messages
         new Thread(this).start();
     }
 
@@ -42,15 +48,28 @@ public class BankCommunicator implements Runnable {
     @Override
     public void run() {
         if (Bank.BANKCOMMDEBUG) System.out.println("Starting thread for " + s.getInetAddress() + " on thread: " + Thread.currentThread().getName());
+
+        // Check for connection and aliveness
         while(s.isConnected() && bank.isAlive()) {
             try {
+                // Process BankRequest from input stream
                 BankRequest br = (BankRequest) is.readObject();
+
+                // Throw error if br is not processable
+                if (br == null) throw new ClassNotFoundException();
+
+                // Process messages
                 processMessage(br);
             } catch (IOException | ClassNotFoundException e) {
-                if (Bank.BANKCOMMDEBUG) System.out.print("OH NO");
+                if (Bank.BANKCOMMDEBUG) {
+                    System.out.println("Error occured!");
+                    e.printStackTrace();
+                }
                 break;
             }
         }
+
+        if (Bank.BANKCOMMDEBUG) System.out.println("Connection broke for " + s.getInetAddress());
     }
 
     /**
