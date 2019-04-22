@@ -10,6 +10,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Bank implements BankProcess {
 
+    public static final boolean BANKCOMMDEBUG = false;
+    public static final boolean BANKDEBUG = false;
+
+
     //UniqueID Counter
     public static int counter = 1000;
     private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
@@ -18,18 +22,24 @@ public class Bank implements BankProcess {
 
     public Bank(int port) {
 
+
+        // Attempt to create a new server socket
         ServerSocket ss = null;
         try {
             ss = new ServerSocket(port);
+            if (BANKDEBUG) System.out.println("Started a server on port: " + port);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        while (true) {
+        if (BANKDEBUG) System.out.println("Accepting Connections...");
+
+        // Accept connections while true
+        while (isAlive()) {
             try {
                 Socket s = ss.accept();
                 BankCommunicator ac = new BankCommunicator(s,this);
-
+                if (BANKDEBUG) System.out.println("Started new BankCommunicator for: " + s.getRemoteSocketAddress());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -38,6 +48,12 @@ public class Bank implements BankProcess {
     }
 
     // TODO implement
+
+    /**
+     * Checks whether the Bank is alive
+     *
+     * @return boolean for aliveness
+     */
     public boolean isAlive() {
         return true;
     }
@@ -50,10 +66,15 @@ public class Bank implements BankProcess {
     // TODO possible synch error
     @Override
     public int addAccount() {
-            counter++;
-            Account newAccount = new Account();
-            accounts.put(newAccount.getUniqueID(), newAccount);
-            return newAccount.getUniqueID();
+        // Iterate counter
+        counter++;
+
+        // Add a new account to the existing accounts
+        Account newAccount = new Account();
+        accounts.put(newAccount.getUniqueID(), newAccount);
+
+        // Return new Unique ID
+        return newAccount.getUniqueID();
     }
 
     /**
@@ -64,7 +85,10 @@ public class Bank implements BankProcess {
      */
     @Override
     public double getBalance(int AccountID) {
-        System.out.println("Getting the balance for Account#: " + AccountID);
+        // Run check that would cause crash
+        if (!accounts.containsKey(AccountID)) return -1.0;
+
+        // Get the balance of an account!
         Account account = accounts.get(AccountID);
         return account.getBalance();
     }
@@ -77,10 +101,13 @@ public class Bank implements BankProcess {
      */
     @Override
     public boolean addFunds(int AccountID, double amount) {
+        // Run check that would cause crash
         if (!accounts.containsKey(AccountID)) return false;
 
-        System.out.println("Added $" + amount + " to the Account #: " + AccountID);
+        // Get the account
         Account account = accounts.get(AccountID);
+
+        // Add funds to an account
         account.addFunds(amount);
         return true;
     }
@@ -93,14 +120,16 @@ public class Bank implements BankProcess {
      */
     @Override
     public boolean removeFunds(int AccountID, double amount) {
+        // Run check that would cause crash
         if (!accounts.containsKey(AccountID)) return false;
 
         Account account = accounts.get(AccountID);
 
+        // Run logical check on balance
         if (account.getBalance() < amount) return false;
 
+        // Remove a given amount of funds
         account.removeFunds(amount);
-        System.out.println("Removed $" + amount + " to the Account #: " + AccountID);
         return true;
     }
 
@@ -115,45 +144,54 @@ public class Bank implements BankProcess {
      */
     @Override
     public int lockFunds(int AccountID, double amount) {
+        // Run check that would cause crash
         if (!accounts.containsKey(AccountID)) return -1;
 
-        System.out.println("Locked $" + amount + " from the Account #: " + AccountID);
         Account account = accounts.get(AccountID);
-        //return the LockID
+
+        // Return the lockID
         return account.lockFunds(amount);
     }
 
     /**
      * Unlocks the lock given by the identifier!
-     *  @param AccountID Unique Identifier of Account
+     *
+     * @param AccountID Unique Identifier of Account
      * @param lockID    Identifier of the lock
      */
     @Override
     public boolean unlockFunds(int AccountID, int lockID) {
-        System.out.println("Unlocked LockID# " + lockID + " to the Account #: " + AccountID);
+        // Run check that would cause crash
+        if (!accounts.containsKey(AccountID)) return false;
+
         Account account = accounts.get(AccountID);
+
+        // Return status of unlock
         return account.unlockFunds(lockID);
     }
 
     /**
      * Transfer funds of amount specified from ID1 to ID2
-     *  @param fromID Unique Identifier of Account1
+     *
+     * @param fromID Unique Identifier of Account1
      * @param toID   Unique Identifier of Account2
      * @param amount Amount of Money
      */
     @Override
     public synchronized boolean transferFunds(int fromID, int toID, double amount) {
+        // Run check that would cause crash
         if (!accounts.containsKey(fromID) && !accounts.containsKey(toID)) {
             return false;
         }
 
-        System.out.println("Transfered $" + amount + " from Account#: " + fromID + " to Account#: " + toID);
-
+        // Get the accounts
         Account account1 = accounts.get(fromID);
         Account account2 = accounts.get(toID);
 
+        // Check for balance
         if (account1.getBalance() < amount) return false;
 
+        // Exchange funds!
         account1.removeFunds(amount);
         account2.addFunds(amount);
         return true;
@@ -161,22 +199,30 @@ public class Bank implements BankProcess {
 
     /**
      * Transfer funds based on the lock within the account tied to the fromID
-     *  @param fromID Unique Identifier of Account1
+     *
+     * @param fromID Unique Identifier of Account1
      * @param toID   Unique Identifier of Account2
      * @param lockID Lock identifier
      */
     @Override
     public boolean transferFunds(int fromID, int toID, int lockID) {
+        // Run check that would cause crash
         if (!accounts.containsKey(fromID) && !accounts.containsKey(toID)) return false;
 
+        // Get the accounts
         Account account1 = accounts.get(fromID);
         Account account2 = accounts.get(toID);
+
         double amount = account1.getLockedFunds(lockID);
 
-        if (account1.unlockFunds(lockID)) {
-            account1.removeFunds(amount);
-            account2.addFunds(amount);
-            return true;
+        // Synchronize on the first account so that the code is ran
+        // consecutively consistently
+        synchronized (account1) {
+            if (account1.unlockFunds(lockID)) {
+                account1.removeFunds(amount);
+                account2.addFunds(amount);
+                return true;
+            }
         }
 
         return false;
