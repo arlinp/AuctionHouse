@@ -12,7 +12,7 @@ public interface BankProcess {
      *
      * @return Account ID
      */
-    int addAccount();
+    int addAccount(int ID);
 
     /**
      * Get the balance of the Account number

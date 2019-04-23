@@ -53,9 +53,10 @@ public class BankProxy implements BankProcess {
      * @return Account ID
      */
     @Override
-    public int addAccount() {
+    public int addAccount(int ID) {
 
         BankRequest ar = new BankRequest(BankInfo.NEWACCOUNT);
+        ar.setID(ID);
 
         try{
             os.writeObject(ar);

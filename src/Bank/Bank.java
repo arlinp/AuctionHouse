@@ -1,6 +1,7 @@
 package Bank;
 
 import BankProxy.BankProcess;
+import com.sun.xml.internal.bind.v2.TODO;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -71,13 +72,13 @@ public class Bank implements BankProcess {
      * @return Account ID
      */
     @Override
-    public int addAccount() {
+    public int addAccount(int ID) {
         // Iterate counter
 
         // Add a new account to the existing accounts. New account
         // created with a random number.
-        int generatedID = generateAccountID();
-        Account newAccount = new Account(generatedID);
+        //int generatedID = generateAccountID();
+        Account newAccount = new Account(ID);
 
         //Save the Account ID and Account to HashTable
         accounts.put(newAccount.getUniqueID(), newAccount);
@@ -89,6 +90,9 @@ public class Bank implements BankProcess {
     public int generateAccountID() {
         // Generate a random ID
         int number = ran.nextInt(1000);
+
+        //TODO Check Hashmap TEST THIS TO MAKE SURE IT WORKS
+
         if(accounts.containsKey(number)){
             generateAccountID();
         }

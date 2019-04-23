@@ -86,7 +86,7 @@ public class BankCommunicator implements Runnable {
         // Check type and map appropriate actions
         switch (br.getType()) {
             case NEWACCOUNT: // Create a new account
-                int accountID = bank.addAccount();
+                int accountID = bank.addAccount(br.getID());
                 response.setID(accountID);
 
                 if (Bank.BANKCOMMDEBUG) System.out.println("\tNew Account Created: " + accountID);

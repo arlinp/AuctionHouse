@@ -33,10 +33,9 @@ public class AuctionHouse implements AuctionProcess {
 
 
     public AuctionHouse(int port) {
-
         bank = new BankProxy("127.0.0.1", 42069);
 //        bank = new Bank(420);
-        auctionID = bank.addAccount();
+        auctionID = bank.addAccount(8697);
 
         readInItems();
 

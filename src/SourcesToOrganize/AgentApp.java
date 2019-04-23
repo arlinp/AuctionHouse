@@ -54,7 +54,8 @@ public class AgentApp extends Application {
 
         }
 
-        int accountID = bankProxy.addAccount();
+        //int accountID = bankProxy.addAccount();
+        int accountID = 0;
 
 //        this test is not going to work
 //        if(test){
@@ -86,16 +87,16 @@ public class AgentApp extends Application {
             //if bank, get balance
             if (input.equals("1")) {
 
-//                System.out.println("Your Account ID is: ");
-//                System.out.println(" or nothing...");
-//                input  = inScanner.nextLine();
-//
-//                if (input.equals("")) {
-//                    accountID = 5;
-//                } else {
-//                    accountID = Integer.parseInt(input);
-//                }
-//
+                System.out.println("Your Account ID is: ");
+                System.out.println(" or nothing...");
+                input  = inScanner.nextLine();
+
+                if (input.equals("")) {
+                    accountID = 5;
+                } else {
+                    accountID = Integer.parseInt(input);
+                }
+
 
 
 
