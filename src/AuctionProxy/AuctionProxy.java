@@ -5,12 +5,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import SourcesToOrganize.Bid;
 import AuctionHouse.ItemInfo;
 
 public class AuctionProxy implements AuctionProcess,Runnable {
 
+    private LinkedBlockingQueue<AuctionRequest> messages = new LinkedBlockingQueue<>();
     private ObjectInputStream is = null;
     private ObjectOutputStream os = null;
     private Socket s;
@@ -81,10 +83,11 @@ public class AuctionProxy implements AuctionProcess,Runnable {
 
         try {
             os.writeObject(ar);
-            AuctionRequest newAr = (AuctionRequest) is.readObject();
-            return newAr.getItem();
 
-        } catch (IOException | ClassNotFoundException e) {
+            AuctionRequest response = messages.take();
+            return response.getItem();
+
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -152,14 +155,30 @@ public class AuctionProxy implements AuctionProcess,Runnable {
         }));
     }
 
-//    @Override
-//    public void run() {
-//        while (isOpen()) {
-//
-//        }
-//    }
-//
-//    private boolean isOpen() {
-//        return open;
-//    }
+    @Override
+    public void run() {
+        while (isOpen()) {
+            AuctionRequest newAr = null
+            try {
+                newAr = (AuctionRequest) is.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            if (newAr.getAck()) {
+                messages.add(newAr);
+                synchronized (this) {
+                    notify();
+                }
+            } else {
+                System.out.println(newAr.getMessage());
+            }
+
+
+        }
+    }
+
+    private boolean isOpen() {
+        return open;
+    }
 }

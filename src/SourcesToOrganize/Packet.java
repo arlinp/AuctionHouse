@@ -2,7 +2,8 @@ package SourcesToOrganize;
 
 public class Packet {
 
-    Boolean status = false;
+    private Boolean status = false;
+    private Boolean ack = true;
     // Troubleshooting stuff goes here
 
     public void setStatus(Boolean status) {
@@ -11,5 +12,14 @@ public class Packet {
 
     public Boolean getStatus() {
         return status;
+    }
+
+
+    public Boolean getAck() {
+        return ack;
+    }
+
+    public void setAck(Boolean ack) {
+        this.ack = ack;
     }
 }
