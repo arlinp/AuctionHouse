@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Runs a Bank where accounts can be interacted with through a socket connection
@@ -17,7 +18,7 @@ public class Bank implements BankProcess {
     public static final boolean BANKDEBUG = false;
 
     // Used data structures
-    public static int counter = 1000;
+    public  Random ran = new Random();
     private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
     private HashMap<Integer, Double> lockedMoney = new HashMap<Integer, Double>();
 
@@ -73,10 +74,11 @@ public class Bank implements BankProcess {
     @Override
     public int addAccount() {
         // Iterate counter
-        counter++;
 
         // Add a new account to the existing accounts
-        Account newAccount = new Account();
+        Account newAccount = new Account(ran.nextInt(1000));
+
+        //Save the Account ID and Account to HashTable
         accounts.put(newAccount.getUniqueID(), newAccount);
 
         // Return new Unique ID

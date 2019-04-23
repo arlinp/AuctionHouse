@@ -2,7 +2,6 @@ package Bank;
 
 import java.util.HashMap;
 import java.util.Random;
-import static Bank.Bank.counter;
 
 /**
  * Account class for use within the bank
@@ -16,9 +15,8 @@ public class Account {
     /**
      * Initialize a new account with a balance of $10 and unique counter
      */
-    public Account(){
-        this.balance = 10;
-        this.uniqueID = counter;
+    public Account(int ID){
+        this.uniqueID = ID;
     }
 
     /**
@@ -108,4 +106,6 @@ public class Account {
     public int getUniqueID() {
         return uniqueID;
     }
+    public void setUniqueID(int ID) { this.uniqueID = ID; }
+
 }
