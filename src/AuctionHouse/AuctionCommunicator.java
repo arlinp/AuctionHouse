@@ -1,6 +1,7 @@
 package AuctionHouse;
 
 import AuctionProxy.AuctionRequest;
+import AuctionProxy.BidInfo;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -72,25 +73,26 @@ public class AuctionCommunicator implements Runnable{
         try {
             switch (ar.getType()) {
                 case BID:
-                    auctionHouse.bid(ar.getBid());
+                    BidInfo status = auctionHouse.bid(ar.getBid());
+                    newAR.setBidStatus(status);
                     break;
                 case GET:
                     newAR.setItemInfo(auctionHouse.getItemInfo(ar.getItemID()));
-//                    newAR.setTest(auctionHouse.helloInternet(ar.getTest()));
+//                    newAR.setMessage(auctionHouse.helloInternet(ar.getMessage()));
                     break;
                 case GETALL:
                     newAR.setItems(auctionHouse.getItems());
                     break;
                 case TEST:
-                    String s = auctionHouse.helloInternet(ar.getTest());
+                    String s = auctionHouse.helloInternet(ar.getMessage());
                     System.out.println(s + " was the response");
-                    newAR.setTest(s);
+                    newAR.setMessage(s);
                     break;
             }
 
-            System.out.println("CHECK FOR SETTING " + newAR.getTest() + " " + newAR.getType() + " " + ar.getType());
+            System.out.println("CHECK FOR SETTING " + newAR.getMessage() + " " + newAR.getType() + " " + ar.getType());
             newAR.setItemID(1234);
-//            newAR.setTest("Testing12");
+//            newAR.setMessage("Testing12");
             os.writeObject(newAR);
 
             System.out.println("sent the message");

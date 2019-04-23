@@ -1,6 +1,6 @@
 package AuctionHouse;
 
-import Bank.Bank;
+import AuctionProxy.BidInfo;
 import BankProxy.BankProxy;
 import SourcesToOrganize.Bid;
 
@@ -31,10 +31,10 @@ public class Item implements Runnable {
      * @param bid
      * @return
      */
-    public synchronized boolean setBid(Bid bid) {
+    public synchronized BidInfo setBid(Bid bid) {
         if (System.currentTimeMillis() > itemInfo.getTime()) {
             System.out.println("Auction is over!");
-            return false;
+            return BidInfo.REJECTION;
         }
 
         if (bid.getAmount() > itemInfo.getPrice()) {
@@ -44,7 +44,7 @@ public class Item implements Runnable {
 
             if (lockID == -1) {
                 System.out.println("Not enough funds");
-                return false;
+                return BidInfo.REJECTION;
             }
 
             if (this.bid != null) {
@@ -55,10 +55,10 @@ public class Item implements Runnable {
 
             this.bid = bid;
 
-            return true;
+            return BidInfo.ACCEPTANCE;
         } else {
             System.out.println("Bid is too low");
-            return false;
+            return BidInfo.REJECTION;
         }
     }
 

@@ -5,15 +5,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import SourcesToOrganize.Bid;
 import AuctionHouse.ItemInfo;
 
-public class AuctionProxy implements AuctionProcess {
+public class AuctionProxy implements AuctionProcess,Runnable {
 
+    private LinkedBlockingQueue<AuctionRequest> messages = new LinkedBlockingQueue<>();
     private ObjectInputStream is = null;
     private ObjectOutputStream os = null;
     private Socket s;
+    boolean open;
 
     /**
      * Proxy design for the Auction House. Creates a socket from the passed parameters
@@ -22,6 +25,7 @@ public class AuctionProxy implements AuctionProcess {
      * @param port
      */
     public AuctionProxy(String hostname, int port) {
+        open = true;
         System.out.println("Creating the proxy");
         try {
             s = new Socket(hostname, port);
@@ -50,7 +54,7 @@ public class AuctionProxy implements AuctionProcess {
      * @param bid    Bid object that contains elements
      */
     @Override
-    public void bid(Bid bid) {
+    public BidInfo bid(Bid bid) {
         // TODO itemID is redundant, as already contained in bid
         AuctionRequest ar = new AuctionRequest(AuctionInfo.BID);
         ar.setBid(bid);
@@ -59,10 +63,11 @@ public class AuctionProxy implements AuctionProcess {
         try {
             os.writeObject(ar);
             AuctionRequest newAr = (AuctionRequest) is.readObject();
-//            return newAr.getItem();
+            return newAr.getBidStatus();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+        return BidInfo.REJECTION;
     }
 
     /**
@@ -78,10 +83,11 @@ public class AuctionProxy implements AuctionProcess {
 
         try {
             os.writeObject(ar);
-            AuctionRequest newAr = (AuctionRequest) is.readObject();
-            return newAr.getItem();
 
-        } catch (IOException | ClassNotFoundException e) {
+            AuctionRequest response = messages.take();
+            return response.getItem();
+
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -121,22 +127,26 @@ public class AuctionProxy implements AuctionProcess {
 
         try {
             ar.setItemID(1000);
-            ar.setTest(s);
+            ar.setMessage(s);
             os.writeObject(ar);
             AuctionRequest newAr = (AuctionRequest) is.readObject();
-            System.out.println("I found the message: " + newAr + " AND " + newAr.getTest() + " " + newAr.getType() + " " + newAr.getItemID());
-            return "" + newAr.getTest();
+            System.out.println("I found the message: " + newAr + " AND " + newAr.getMessage() + " " + newAr.getType() + " " + newAr.getItemID());
+            return newAr.getMessage();
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
-
+    /**
+     * Close the connection
+     */
     public void close() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
+                open = false;
                 s.close();
                 System.out.println("shut down!");
             } catch (IOException e) {
@@ -145,4 +155,30 @@ public class AuctionProxy implements AuctionProcess {
         }));
     }
 
+    @Override
+    public void run() {
+        while (isOpen()) {
+            AuctionRequest newAr = null
+            try {
+                newAr = (AuctionRequest) is.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            if (newAr.getAck()) {
+                messages.add(newAr);
+                synchronized (this) {
+                    notify();
+                }
+            } else {
+                System.out.println(newAr.getMessage());
+            }
+
+
+        }
+    }
+
+    private boolean isOpen() {
+        return open;
+    }
 }
