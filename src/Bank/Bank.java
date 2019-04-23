@@ -70,19 +70,30 @@ public class Bank implements BankProcess {
      *
      * @return Account ID
      */
-    // TODO possible synch error. Change from iterating a counter to a random number
     @Override
     public int addAccount() {
         // Iterate counter
 
-        // Add a new account to the existing accounts
-        Account newAccount = new Account(ran.nextInt(1000));
+        // Add a new account to the existing accounts. New account
+        // created with a random number.
+        int generatedID = generateAccountID();
+        Account newAccount = new Account(generatedID);
 
         //Save the Account ID and Account to HashTable
         accounts.put(newAccount.getUniqueID(), newAccount);
 
         // Return new Unique ID
         return newAccount.getUniqueID();
+    }
+
+    public int generateAccountID() {
+        // Generate a random ID
+        int number = ran.nextInt(1000);
+        if(accounts.containsKey(number)){
+            generateAccountID();
+        }
+        return number;
+
     }
 
     /**
@@ -92,7 +103,7 @@ public class Bank implements BankProcess {
      * @return Amount of money
      */
     @Override
-    public double getBalance(int AccountID) {
+    public synchronized double getBalance(int AccountID) {
         // Run check that would cause crash
         if (!accounts.containsKey(AccountID)) return -1.0;
 
@@ -108,7 +119,7 @@ public class Bank implements BankProcess {
      * @param amount    Amount of Money
      */
     @Override
-    public boolean addFunds(int AccountID, double amount) {
+    public synchronized boolean addFunds(int AccountID, double amount) {
         // Run check that would cause crash
         if (!accounts.containsKey(AccountID)) return false;
 
@@ -151,7 +162,7 @@ public class Bank implements BankProcess {
      * @return Random/Unique Integer of lock, for later retrieval
      */
     @Override
-    public int lockFunds(int AccountID, double amount) {
+    public synchronized int lockFunds(int AccountID, double amount) {
         // Run check that would cause crash
         if (!accounts.containsKey(AccountID)) return -1;
 
@@ -168,7 +179,7 @@ public class Bank implements BankProcess {
      * @param lockID    Identifier of the lock
      */
     @Override
-    public boolean unlockFunds(int AccountID, int lockID) {
+    public synchronized boolean unlockFunds(int AccountID, int lockID) {
         // Run check that would cause crash
         if (!accounts.containsKey(AccountID)) return false;
 
@@ -213,7 +224,7 @@ public class Bank implements BankProcess {
      * @param lockID Lock identifier
      */
     @Override
-    public boolean transferFunds(int fromID, int toID, int lockID) {
+    public synchronized boolean transferFunds(int fromID, int toID, int lockID) {
         // Run check that would cause crash
         if (!accounts.containsKey(fromID) && !accounts.containsKey(toID)) return false;
 

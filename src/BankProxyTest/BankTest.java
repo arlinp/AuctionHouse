@@ -9,5 +9,6 @@ public class BankTest {
         System.out.println("Starting auction house on port: 42069");
         Bank ah = new Bank(42069);
 
+
     }
 }

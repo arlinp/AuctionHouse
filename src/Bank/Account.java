@@ -103,9 +103,9 @@ public class Account {
      *
      * @return Unique ID
      */
-    public int getUniqueID() {
+    public synchronized int getUniqueID() {
         return uniqueID;
     }
-    public void setUniqueID(int ID) { this.uniqueID = ID; }
+    public synchronized void setUniqueID(int ID) { this.uniqueID = ID; }
 
 }
