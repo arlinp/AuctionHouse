@@ -11,7 +11,7 @@ public interface AuctionProcess {
      *
      * @param bid Bid object that contains elements
      */
-    void bid(Bid bid);
+    BidInfo bid(Bid bid);
 
     /**
      * Gets the Item Info from the Item ID.

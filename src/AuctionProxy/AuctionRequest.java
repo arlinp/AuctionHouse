@@ -15,7 +15,8 @@ public class AuctionRequest extends Packet implements Serializable {
     private ArrayList<ItemInfo> items = null;
     private boolean contains = false;
     private int itemID = 0;
-    private String test = "";
+    private String message = "";
+    private BidInfo bidStatus;
 
 
     public int getItemID() {
@@ -62,11 +63,19 @@ public class AuctionRequest extends Packet implements Serializable {
     }
 
 
-    public String getTest() {
-        return test;
+    public String getMessage() {
+        return message;
     }
 
-    public void setTest(String test) {
-        this.test = test;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public BidInfo getBidStatus() {
+        return bidStatus;
+    }
+
+    public void setBidStatus(BidInfo bidStatus) {
+        this.bidStatus = bidStatus;
     }
 }
