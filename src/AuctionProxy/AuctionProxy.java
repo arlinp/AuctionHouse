@@ -158,7 +158,7 @@ public class AuctionProxy implements AuctionProcess,Runnable {
     @Override
     public void run() {
         while (isOpen()) {
-            AuctionRequest newAr = null
+            AuctionRequest newAr = null;
             try {
                 newAr = (AuctionRequest) is.readObject();
             } catch (IOException | ClassNotFoundException e) {

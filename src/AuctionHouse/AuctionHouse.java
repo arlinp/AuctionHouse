@@ -1,7 +1,7 @@
 package AuctionHouse;
 
 import AuctionProxy.AuctionProcess;
-import AuctionProxy.AuctionProxy;
+import AuctionProxy.BidInfo;
 import Bank.Bank;
 import BankProxy.BankProxy;
 import SourcesToOrganize.Bid;
@@ -120,7 +120,7 @@ public class AuctionHouse implements AuctionProcess {
      * @param bid    Bid object that contains elementss
      */
     @Override
-    public void bid(Bid bid) {
+    public BidInfo bid(Bid bid) {
 
         Item item = items.get(bid.getItemID());
         System.out.println(bid.getItemID() + " " + items.contains(bid.getItemID()));
@@ -128,6 +128,7 @@ public class AuctionHouse implements AuctionProcess {
         System.out.println("Bidding with " + bid);
         item.setBid(bid);
 
+        return null;
     }
 
     /**
