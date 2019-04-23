@@ -15,7 +15,7 @@ import java.util.Random;
 public class Bank implements BankProcess {
 
     // Debugging flags
-    public static final boolean BANKCOMMDEBUG = false;
+    public static final boolean BANKCOMMDEBUG = true;
     public static final boolean BANKDEBUG = false;
 
     // Used data structures
@@ -109,6 +109,10 @@ public class Bank implements BankProcess {
     @Override
     public synchronized double getBalance(int AccountID) {
         // Run check that would cause crash
+        for (Integer accountNum : accounts.keySet()){
+            System.out.println(accountNum);
+        }
+
         if (!accounts.containsKey(AccountID)) return -1.0;
 
         // Get the balance of an account!

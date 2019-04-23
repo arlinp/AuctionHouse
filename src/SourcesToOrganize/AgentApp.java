@@ -97,6 +97,8 @@ public class AgentApp extends Application {
                     accountID = Integer.parseInt(input);
                 }
 
+                accountID = bankProxy.addAccount(accountID);
+
 
 
 

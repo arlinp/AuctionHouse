@@ -25,7 +25,8 @@ public class Account {
      * @return Amount of money
      */
     public synchronized double getBalance() {
-        return this.balance;
+
+        return balance;
     }
 
     /**
@@ -34,7 +35,7 @@ public class Account {
      * @param amount    Amount of Money
      */
     public synchronized void addFunds(double amount) {
-        this.balance += amount;
+        balance += amount;
     }
 
     /**
@@ -43,7 +44,7 @@ public class Account {
      * @param amount    Amount of Money
      */
     public synchronized void removeFunds(double amount) {
-        this.balance -= amount;
+        balance -= amount;
     }
 
     /**
@@ -61,10 +62,10 @@ public class Account {
         // Run checks
         if (lockedMoney.containsKey(lockID)) {
             return lockFunds(amount);
-        } else if (this.balance - amount < 0) {
+        } else if (balance - amount < 0) {
             return 0;
         } else {
-            this.balance -= amount;
+            balance -= amount;
             lockedMoney.put(lockID, amount);
             return lockID;
         }
@@ -106,6 +107,6 @@ public class Account {
     public synchronized int getUniqueID() {
         return uniqueID;
     }
-    public synchronized void setUniqueID(int ID) { this.uniqueID = ID; }
+    public synchronized void setUniqueID(int ID) { uniqueID = ID; }
 
 }
