@@ -8,7 +8,7 @@ import java.util.Random;
  */
 public class Account {
 
-    private double balance;
+    private double balance = 0;
     private int uniqueID;
     private HashMap<Integer, Double> lockedMoney = new HashMap<>();
 
