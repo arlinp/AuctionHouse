@@ -1,6 +1,7 @@
 package AuctionHouse;
 
 import AuctionProxy.AuctionProcess;
+import AuctionProxy.AuctionProxy;
 import Bank.Bank;
 import BankProxy.BankProxy;
 import SourcesToOrganize.Bid;
@@ -172,5 +173,10 @@ public class AuctionHouse implements AuctionProcess {
 
     public boolean isAlive() {
         return true;
+    }
+
+    public static void main(String[] args) {
+
+        AuctionHouse ah = new AuctionHouse(42070);
     }
 }
