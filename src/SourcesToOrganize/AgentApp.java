@@ -20,7 +20,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class AgentApp extends Application {
+public class AgentApp extends Application{
 
 
     Stage window;
@@ -166,22 +166,6 @@ public class AgentApp extends Application {
 
         //int accountID = bankProxy.addAccount();
         int accountID = 0;
-
-//        this test is not going to work
-//        if(test){
-//
-//            int account2ID = bankProxy.addAccount();
-//
-//            //Add money to accounts
-//            bankProxy.addFunds(accountID, 500);
-//            bankProxy.addFunds(account2ID, 500);
-//
-//            System.out.println("New Balance Account 1: " + bankProxy.getBalance(accountID));
-//            System.out.println("New Balance Account 2: " + bankProxy.getBalance(account2ID));
-//
-//
-//
-//        }
 
         //main loop
         while (!input.equals("exit")) {
