@@ -19,17 +19,25 @@ public class AuctionRequest extends Packet implements Serializable {
     private BidInfo bidStatus;
 
 
+    public AuctionRequest(AuctionInfo type) {
+        this.type = type;
+        setPacketID((int)(Math.random()*Integer.MAX_VALUE));
+        setStatus(true);
+    }
+
+    public AuctionRequest(AuctionInfo type, int ID) {
+        this.type = type;
+        setPacketID(ID);
+        setStatus(true);
+    }
+
+
     public int getItemID() {
         return itemID;
     }
 
     public void setItemID(int itemID) {
         this.itemID = itemID;
-    }
-
-    public AuctionRequest(AuctionInfo type) {
-        this.type = type;
-        setStatus(true);
     }
 
     public AuctionInfo getType() { return type; }

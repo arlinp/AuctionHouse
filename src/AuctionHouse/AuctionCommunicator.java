@@ -67,8 +67,8 @@ public class AuctionCommunicator implements Runnable{
      * @param ar AuctionRequest to handle
      */
     private void processMessage(AuctionRequest ar) {
-        System.out.println("THE TYPE OF REQUEST IS: " + ar.getType());
-        AuctionRequest newAR = new AuctionRequest(ar.getType());
+        System.out.println("THE TYPE OF REQUEST IS: " + ar.getType() + " " + ar.getPacketID());
+        AuctionRequest newAR = new AuctionRequest(ar.getType(), ar.getPacketID());
 
         try {
             switch (ar.getType()) {
@@ -90,7 +90,7 @@ public class AuctionCommunicator implements Runnable{
                     break;
             }
 
-            System.out.println("CHECK FOR SETTING " + newAR.getMessage() + " " + newAR.getType() + " " + ar.getType());
+            System.out.println("CHECK FOR SETTING " + newAR.getPacketID());
             newAR.setItemID(1234);
 //            newAR.setMessage("Testing12");
             os.writeObject(newAR);

@@ -5,14 +5,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import SourcesToOrganize.Bid;
 import AuctionHouse.ItemInfo;
 
-public class AuctionProxy implements AuctionProcess,Runnable {
+public class AuctionProxy implements AuctionProcess, Runnable {
 
-    private LinkedBlockingQueue<AuctionRequest> messages = new LinkedBlockingQueue<>();
+    private ConcurrentHashMap<Integer, AuctionRequest> messages = new ConcurrentHashMap<Integer, AuctionRequest>();
     private ObjectInputStream is = null;
     private ObjectOutputStream os = null;
     private Socket s;
@@ -40,18 +41,17 @@ public class AuctionProxy implements AuctionProcess,Runnable {
             e.printStackTrace();
         }
 
+        new Thread(this).start();
+
         System.out.println("Created the proxy");
     }
 
-//    private void processMessage() {
-//
-//    }
 
 
     /**
      * To place a bid
      *
-     * @param bid    Bid object that contains elements
+     * @param bid Bid object that contains elements
      */
     @Override
     public BidInfo bid(Bid bid) {
@@ -62,9 +62,11 @@ public class AuctionProxy implements AuctionProcess,Runnable {
         // TODO Need to reimplement BID to project specification (e.g. Returns various decisions)
         try {
             os.writeObject(ar);
-            AuctionRequest newAr = (AuctionRequest) is.readObject();
-            return newAr.getBidStatus();
-        } catch (IOException | ClassNotFoundException e) {
+            waitOn(ar.getPacketID());
+
+            AuctionRequest response = messages.get(ar.getPacketID());
+            return response.getBidStatus();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return BidInfo.REJECTION;
@@ -83,11 +85,11 @@ public class AuctionProxy implements AuctionProcess,Runnable {
 
         try {
             os.writeObject(ar);
+            waitOn(ar.getPacketID());
 
-            AuctionRequest response = messages.take();
+            AuctionRequest response = messages.get(ar.getPacketID());
             return response.getItem();
-
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -105,10 +107,12 @@ public class AuctionProxy implements AuctionProcess,Runnable {
 
         try {
             os.writeObject(ar);
-            AuctionRequest newAr = (AuctionRequest) is.readObject();
-            return newAr.getItems();
+            waitOn(ar.getPacketID());
 
-        } catch (IOException | ClassNotFoundException e) {
+            AuctionRequest response = messages.get(ar.getPacketID());
+            return response.getItems();
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -123,19 +127,19 @@ public class AuctionProxy implements AuctionProcess,Runnable {
      */
     @Override
     public String helloInternet(String s) {
-        AuctionRequest ar = new AuctionRequest(AuctionInfo.TEST);
-
-        try {
-            ar.setItemID(1000);
-            ar.setMessage(s);
-            os.writeObject(ar);
-            AuctionRequest newAr = (AuctionRequest) is.readObject();
-            System.out.println("I found the message: " + newAr + " AND " + newAr.getMessage() + " " + newAr.getType() + " " + newAr.getItemID());
-            return newAr.getMessage();
-
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+//        AuctionRequest ar = new AuctionRequest(AuctionInfo.TEST);
+//
+//        try {
+//            ar.setItemID(1000);
+//            ar.setMessage(s);
+//            os.writeObject(ar);
+//            AuctionRequest response = (AuctionRequest) is.readObject();
+//            System.out.println("I found the message: " + response + " AND " + response.getMessage() + " " + response.getType() + " " + response.getItemID());
+//            return response.getMessage();
+//
+//        } catch (IOException | ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
 
         return null;
     }
@@ -158,7 +162,7 @@ public class AuctionProxy implements AuctionProcess,Runnable {
     @Override
     public void run() {
         while (isOpen()) {
-            AuctionRequest newAr = null
+            AuctionRequest newAr = null;
             try {
                 newAr = (AuctionRequest) is.readObject();
             } catch (IOException | ClassNotFoundException e) {
@@ -166,19 +170,38 @@ public class AuctionProxy implements AuctionProcess,Runnable {
             }
 
             if (newAr.getAck()) {
-                messages.add(newAr);
+                System.out.println("Put in hashmap");
+                System.out.println(messages.containsKey(newAr.getPacketID()) + " " + newAr.getPacketID());
+                messages.put(newAr.getPacketID(), newAr);
+                System.out.println(messages.containsKey(newAr.getPacketID()) + " " + newAr.getPacketID());
                 synchronized (this) {
                     notify();
                 }
             } else {
+                System.out.println("Processing");
                 System.out.println(newAr.getMessage());
             }
-
-
         }
     }
 
     private boolean isOpen() {
         return open;
     }
+
+    public void waitOn(int packetID) {
+
+
+        synchronized (this) {
+            while (!messages.containsKey(packetID)) {
+                try {
+                    System.out.println("Waiting on " + packetID);
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
 }

@@ -1,9 +1,12 @@
 package SourcesToOrganize;
 
-public class Packet {
+import java.io.Serializable;
+
+public class Packet implements Serializable {
 
     private Boolean status = false;
     private Boolean ack = true;
+    private int packetID = 0;
     // Troubleshooting stuff goes here
 
     public void setStatus(Boolean status) {
@@ -21,5 +24,13 @@ public class Packet {
 
     public void setAck(Boolean ack) {
         this.ack = ack;
+    }
+
+    public int getPacketID() {
+        return packetID;
+    }
+
+    public void setPacketID(int packetID) {
+        this.packetID = packetID;
     }
 }
