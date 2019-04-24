@@ -15,7 +15,21 @@ public class AuctionRequest extends Packet implements Serializable {
     private ArrayList<ItemInfo> items = null;
     private boolean contains = false;
     private int itemID = 0;
-    private String test = "";
+    private String message = "";
+    private BidInfo bidStatus;
+
+
+    public AuctionRequest(AuctionInfo type) {
+        this.type = type;
+        setPacketID((int)(Math.random()*Integer.MAX_VALUE));
+        setStatus(true);
+    }
+
+    public AuctionRequest(AuctionInfo type, int ID) {
+        this.type = type;
+        setPacketID(ID);
+        setStatus(true);
+    }
 
 
     public int getItemID() {
@@ -24,11 +38,6 @@ public class AuctionRequest extends Packet implements Serializable {
 
     public void setItemID(int itemID) {
         this.itemID = itemID;
-    }
-
-    public AuctionRequest(AuctionInfo type) {
-        this.type = type;
-        setStatus(true);
     }
 
     public AuctionInfo getType() { return type; }
@@ -62,11 +71,19 @@ public class AuctionRequest extends Packet implements Serializable {
     }
 
 
-    public String getTest() {
-        return test;
+    public String getMessage() {
+        return message;
     }
 
-    public void setTest(String test) {
-        this.test = test;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public BidInfo getBidStatus() {
+        return bidStatus;
+    }
+
+    public void setBidStatus(BidInfo bidStatus) {
+        this.bidStatus = bidStatus;
     }
 }

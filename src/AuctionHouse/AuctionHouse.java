@@ -1,20 +1,16 @@
 package AuctionHouse;
 
 import AuctionProxy.AuctionProcess;
-import Bank.Bank;
+import AuctionProxy.BidInfo;
 import BankProxy.BankProxy;
 import SourcesToOrganize.Bid;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class AuctionHouse implements AuctionProcess {
 
@@ -119,7 +115,8 @@ public class AuctionHouse implements AuctionProcess {
      * @param bid    Bid object that contains elementss
      */
     @Override
-    public void bid(Bid bid) {
+    public BidInfo bid(Bid bid) {
+        if (bid == null) return BidInfo.REJECTION;
 
         Item item = items.get(bid.getItemID());
         System.out.println(bid.getItemID() + " " + items.contains(bid.getItemID()));
@@ -127,6 +124,7 @@ public class AuctionHouse implements AuctionProcess {
         System.out.println("Bidding with " + bid);
         item.setBid(bid);
 
+        return BidInfo.REJECTION;
     }
 
     /**
@@ -172,5 +170,10 @@ public class AuctionHouse implements AuctionProcess {
 
     public boolean isAlive() {
         return true;
+    }
+
+    public static void main(String[] args) {
+
+        AuctionHouse ah = new AuctionHouse(42070);
     }
 }
