@@ -174,23 +174,45 @@ public class AuctionProxy implements AuctionProcess, Runnable {
                 System.out.println(messages.containsKey(newAr.getPacketID()) + " " + newAr.getPacketID());
                 messages.put(newAr.getPacketID(), newAr);
                 System.out.println(messages.containsKey(newAr.getPacketID()) + " " + newAr.getPacketID());
-                synchronized (this) {
-                    notify();
-                }
+
+                synchronized (this) { notify(); }
             } else {
                 System.out.println("Processing");
-                System.out.println(newAr.getMessage());
+                processMessage(newAr);
+
             }
         }
+    }
+
+    private void processMessage(AuctionRequest newAr) {
+        switch(newAr.getType()) {
+            case BID:
+                switch (newAr.getBidStatus()) {
+                    case OUTBID:
+
+                        break;
+                    case WINNER:
+
+                        break;
+                }
+                break;
+
+
+        }
+
+
     }
 
     private boolean isOpen() {
         return open;
     }
 
+    /**
+     * Wait on a given packetID
+     *
+     * @param packetID Wait until messages contains key
+     */
     public void waitOn(int packetID) {
-
-
         synchronized (this) {
             while (!messages.containsKey(packetID)) {
                 try {
