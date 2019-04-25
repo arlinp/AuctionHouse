@@ -241,6 +241,7 @@ public class Bank implements BankProcess {
         Account account1 = accounts.get(fromID);
         Account account2 = accounts.get(toID);
 
+        System.out.println(account1 + " " + account2);
         double amount = account1.getLockedFunds(lockID);
 
         // Synchronize on the first account so that the code is ran

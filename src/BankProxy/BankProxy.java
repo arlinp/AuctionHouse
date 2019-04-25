@@ -234,7 +234,7 @@ public class BankProxy implements BankProcess, Runnable {
      */
     @Override
     public boolean transferFunds(int fromID, int toID, int lockID) {
-        BankRequest request = new BankRequest(BankInfo.TRANSFER);
+        BankRequest request = new BankRequest(BankInfo.TRANSFERFROMLOCK);
         request.setID(fromID);
         request.setToID(toID);
         request.setLockNumber(lockID);

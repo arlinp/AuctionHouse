@@ -2,6 +2,7 @@ package Bank;
 
 import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Account class for use within the bank
@@ -10,12 +11,13 @@ public class Account {
 
     private double balance = 0;
     private int uniqueID;
-    private HashMap<Integer, Double> lockedMoney = new HashMap<>();
+    private ConcurrentHashMap<Integer, Double> lockedMoney;
 
     /**
      * Initialize a new account with a balance of $10 and unique counter
      */
     public Account(int ID){
+        lockedMoney = new ConcurrentHashMap<>();
         this.uniqueID = ID;
     }
 
@@ -57,7 +59,7 @@ public class Account {
         // Generates a random pin/lockID used for retrieval
         // of the funds later
         Random ran = new Random();
-        int lockID = ran.nextInt(9999);
+        int lockID = ran.nextInt(Integer.MAX_VALUE);
 
         // Run checks
         if (lockedMoney.containsKey(lockID)) {
@@ -79,8 +81,11 @@ public class Account {
      */
     public synchronized boolean unlockFunds(int lockID) {
         // Check that locked ID is contained
-        if (!lockedMoney.containsKey(lockID)) return false;
-
+        if (!lockedMoney.containsKey(lockID))  {
+            System.out.println("Doesnt contain it");
+            return false;
+        }
+        System.out.println("Readding funds $" + lockedMoney.get(lockID));
         // Add locked money back into the account
         addFunds(lockedMoney.get(lockID));
         lockedMoney.remove(lockID);
@@ -95,6 +100,13 @@ public class Account {
      * @return Value of getting it from a HashMap
      */
     public synchronized double getLockedFunds(int lockID) {
+        System.out.println("PASSED LOCK: " + lockID);
+        System.out.println(lockedMoney.get(lockID));
+        for (int lock : lockedMoney.keySet()) {
+            System.out.print(lock + " " + lockedMoney.get(lock) + "   ");
+
+        }
+        System.out.println();
         return lockedMoney.get(lockID);
     }
 

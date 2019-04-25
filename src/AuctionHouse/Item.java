@@ -19,7 +19,7 @@ public class Item implements Runnable {
         this.itemID = itemInfo.getItemID();
         this.auctionID = auctionID;
 
-
+        new Thread(this).start();
     }
 
     /**
@@ -42,7 +42,7 @@ public class Item implements Runnable {
                     bid.getAccountNumber());
             int lockID = bank.lockFunds(bid.getAccountNumber(), bid.getAmount());
 
-            if (lockID == -1) {
+            if (lockID == -1 || lockID == 0) {
                 System.out.println("Not enough funds");
                 return BidInfo.REJECTION;
             }
@@ -53,7 +53,9 @@ public class Item implements Runnable {
 
             synchronized (itemInfo) { itemInfo.setPrice(bid.getAmount()); }
 
+
             this.bid = bid;
+            this.bid.setLockID(lockID);
 
             return BidInfo.ACCEPTANCE;
         } else {
@@ -92,17 +94,20 @@ public class Item implements Runnable {
         // Calculate time plus offset due to imprecision of wait
         Long timeLeft = itemInfo.getTime() - System.currentTimeMillis() + 100;
 
-        if (timeLeft <= 0) {
-            try {
+
+        try {
+            synchronized (this) {
                 wait(timeLeft);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         if (System.currentTimeMillis() > itemInfo.getTime()) {
+            System.out.println("Auction Ended!");
             endAuction();
         } else {
+            System.out.println("Running again!");
             run();
         }
 
@@ -114,15 +119,14 @@ public class Item implements Runnable {
 //        }
 
 
-
-
-
     }
 
     private void endAuction() {
 
-        bank.transferFunds(bid.getAccountNumber(), auctionID, bid.getLockID());
+        if (bid != null) {
+            bank.transferFunds(bid.getAccountNumber(), auctionID, bid.getLockID());
 
+        }
 
     }
 
