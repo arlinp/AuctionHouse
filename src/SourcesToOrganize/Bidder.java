@@ -10,9 +10,9 @@ import java.util.ArrayList;
 public class Bidder implements Runnable{
 
     private int account;
-    BankProxy bankProxy = null;
-    AuctionProxy auctionProxy = null;
-    ArrayList<ItemInfo> auctionItems;
+    private BankProxy bankProxy = null;
+    private AuctionProxy auctionProxy = null;
+    private ArrayList<ItemInfo> auctionItems;
 
     public Bidder(int accountID){
         account = accountID;
@@ -27,8 +27,10 @@ public class Bidder implements Runnable{
 
     @Override
     public void run() {
-
-        auctionProxy.bid(new Bid(100, account, 2));
+            //repeatedly try to bid on first item
+        while(true) {
+            auctionProxy.bid(new Bid(10, account, auctionItems.get(0).getItemID()));
+        }
 
     }
 }
