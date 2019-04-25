@@ -96,6 +96,7 @@ public class AgentApp extends Application{
 
         Text notification = new Text();
 
+        //new Bank Account
         TextField bankAccountInput = new TextField("5");
 
         Button bankLogin = new Button("make new Account");
@@ -107,7 +108,8 @@ public class AgentApp extends Application{
 
         });
 
-        TextField addFundsInput = new TextField();
+        //add funds input
+        TextField addFundsInput = new TextField("1000");
 
         Button addFundsButton = new Button("addFunds");
         addFundsButton.setOnAction(e -> {
@@ -124,10 +126,10 @@ public class AgentApp extends Application{
 
 
         root.add(bankAccountInput,1,1);
-        root.add(bankLogin, 1,2);
+        root.add(bankLogin, 2,1);
 
         root.add(addFundsInput, 1, 3);
-        root.add(addFundsButton, 1, 4);
+        root.add(addFundsButton, 2, 3);
 
         root.add(auctionButton, 1, 7);
 
