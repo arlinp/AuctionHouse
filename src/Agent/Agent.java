@@ -107,7 +107,7 @@ public class Agent implements BankProcess, AuctionProcess {
     }
 
     public void setAccountID(int accountID) {
-        this.accountID = accountID;
+        this.accountID = bankProxy.addAccount(accountID);
     }
 
 }

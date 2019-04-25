@@ -15,6 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AuctionHouse implements AuctionProcess {
 
 
+    public static final long ITEM_WAIT_TIME = 30000;
+
+
 //    public AuctionHouse(ClientProxy bankProxy, ServerProxy auctionHouseServer) {
 //    }
 

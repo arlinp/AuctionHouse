@@ -91,6 +91,8 @@ public class AgentCommandLine extends AgentApp{
                         agent.setAccountID(Integer.parseInt(input));
                     }
 
+                    
+
 
                     System.out.println("Account ID=" + agent.getAccountID());
                     System.out.println("account balance = "

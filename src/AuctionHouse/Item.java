@@ -53,9 +53,12 @@ public class Item implements Runnable {
 
             synchronized (itemInfo) { itemInfo.setPrice(bid.getAmount()); }
 
-
+            if (this.bid != null) {
+                this.bid.getAc().notifyBid(BidInfo.OUTBID, itemID, bid.getAmount());
+            }
             this.bid = bid;
             this.bid.setLockID(lockID);
+            this.notify();
 
             return BidInfo.ACCEPTANCE;
         } else {
@@ -91,43 +94,40 @@ public class Item implements Runnable {
      */
     @Override
     public void run() {
-        // Calculate time plus offset due to imprecision of wait
-        Long timeLeft = itemInfo.getTime() - System.currentTimeMillis() + 100;
+        itemTimer(null);
+    }
 
-
+    // TODO Synch on setting and checking of bid
+    private synchronized void itemTimer(Bid currentBid) {
+        currentBid = bid;
         try {
-            synchronized (this) {
-                wait(timeLeft);
-            }
+            synchronized (this) { wait(AuctionHouse.ITEM_WAIT_TIME); }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        if (System.currentTimeMillis() > itemInfo.getTime()) {
-            System.out.println("Auction Ended!");
-            endAuction();
-        } else {
-            System.out.println("Running again!");
-            run();
+        if (bid == null) {
+            System.out.println("Noone bid on " + this);
+            return;
         }
-
-//        while(noNewBid) {
-//            wait 30 seconds
-//                wake on new bid
-//
-//
-//        }
-
-
+        synchronized (bid) {
+            if (bid == currentBid) {
+                endAuction();
+            } else {
+                currentBid = bid;
+                itemTimer(currentBid);
+            }
+        }
     }
 
+
+
     private void endAuction() {
-
         if (bid != null) {
+            System.out.println("THE ITEM " + itemInfo + " WAS SOLD");
+            bid.getAc().notifyBid(BidInfo.WINNER, itemID, bid.getAmount());
             bank.transferFunds(bid.getAccountNumber(), auctionID, bid.getLockID());
-
         }
-
     }
 
 

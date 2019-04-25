@@ -244,6 +244,7 @@ public class AgentApp extends Application{
         agent = new Agent(bankProxy, auctionProxy);
 
         return true;
+
     }
 
 
