@@ -91,7 +91,6 @@ public class AuctionHouseApp extends Application {
             @Override
             public void handle(MouseEvent event) {
 
-
             }
         };
     }
