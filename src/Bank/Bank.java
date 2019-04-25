@@ -31,7 +31,6 @@ public class Bank implements BankProcess {
      */
     public Bank(int port) {
 
-
         // Attempt to create a new server socket
         ServerSocket ss = null;
         try {
@@ -48,6 +47,8 @@ public class Bank implements BankProcess {
             try {
                 Socket s = ss.accept();
                 BankCommunicator ac = new BankCommunicator(s,this);
+
+
                 if (BANKDEBUG) System.out.println("Started new BankCommunicator for: " + s.getRemoteSocketAddress());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -253,6 +254,19 @@ public class Bank implements BankProcess {
         }
 
         // Return false if it couldn't transfer the funds
+        return false;
+    }
+
+    /**
+     * Add new AuctionHouse server to Bank logs
+     *
+     * @param ipAddress Host of new server
+     * @param port      Port number of service
+     * @return status
+     */
+    @Override
+    public boolean newServer(String ipAddress, int port) {
+        System.out.println("New server on IP address: " + ipAddress + ":" + port);
         return false;
     }
 }

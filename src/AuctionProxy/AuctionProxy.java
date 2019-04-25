@@ -17,7 +17,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     private ObjectInputStream is = null;
     private ObjectOutputStream os = null;
     private Socket s;
-    boolean open;
+    private boolean open;
 
     /**
      * Proxy design for the Auction House. Creates a socket from the passed parameters
@@ -159,6 +159,9 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         }));
     }
 
+
+    // Separate to handle notifies
+
     @Override
     public void run() {
         while (isOpen()) {
@@ -170,14 +173,14 @@ public class AuctionProxy implements AuctionProcess, Runnable {
             }
 
             if (newAr.getAck()) {
-                System.out.println("Put in hashmap");
-                System.out.println(messages.containsKey(newAr.getPacketID()) + " " + newAr.getPacketID());
+//                System.out.println("Put in hashmap");
+//                System.out.println(messages.containsKey(newAr.getPacketID()) + " " + newAr.getPacketID());
                 messages.put(newAr.getPacketID(), newAr);
-                System.out.println(messages.containsKey(newAr.getPacketID()) + " " + newAr.getPacketID());
+//                System.out.println(messages.containsKey(newAr.getPacketID()) + " " + newAr.getPacketID());
 
                 synchronized (this) { notify(); }
             } else {
-                System.out.println("Processing");
+//                System.out.println("Processing");
                 processMessage(newAr);
 
             }
@@ -189,18 +192,24 @@ public class AuctionProxy implements AuctionProcess, Runnable {
             case BID:
                 switch (newAr.getBidStatus()) {
                     case OUTBID:
+                        int itemID = newAr.getItemID();
+                        double amount = newAr.getNewAmount();
 
+                        System.out.println("You were outbid on item# " +
+                                itemID + ". The new bid is " + amount);
                         break;
                     case WINNER:
+                        int itemWon = newAr.getItemID();
+                        double amountPaid = newAr.getNewAmount();
 
+                        System.out.println("You won item# " + itemWon + ". T" +
+                                "here was $" + amountPaid + " transferred fr" +
+                                "om your bank account. Please allow 6-8 week" +
+                                "s in delivery for your item to arrive");
                         break;
                 }
                 break;
-
-
         }
-
-
     }
 
     private boolean isOpen() {

@@ -75,4 +75,13 @@ public interface BankProcess {
     boolean transferFunds(int fromID, int toID, int lockID);
 
 
+    /**
+     * Add new AuctionHouse server to Bank logs
+     *
+     * @param ipAddress Host of new server
+     * @param port Port number of service
+     * @return status
+     */
+    boolean newServer(String ipAddress, int port);
+
 }

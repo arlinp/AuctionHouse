@@ -23,7 +23,7 @@ public class AgentAppCopy{
         BankProxy bankProxy = null;
         AuctionProxy auctionProxy = null;
 
-        bankProxy = new BankProxy("localHost", 42069);
+        bankProxy = new BankProxy("localHost", 42069, null);
         auctionProxy = new AuctionProxy("localhost", 42070);
 
 

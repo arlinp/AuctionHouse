@@ -17,6 +17,7 @@ public class AuctionRequest extends Packet implements Serializable {
     private int itemID = 0;
     private String message = "";
     private BidInfo bidStatus;
+    private double newAmount = 0;
 
 
     public AuctionRequest(AuctionInfo type) {
@@ -85,5 +86,13 @@ public class AuctionRequest extends Packet implements Serializable {
 
     public void setBidStatus(BidInfo bidStatus) {
         this.bidStatus = bidStatus;
+    }
+
+    public double getNewAmount() {
+        return newAmount;
+    }
+
+    public void setNewAmount(double newAmount) {
+        this.newAmount = newAmount;
     }
 }

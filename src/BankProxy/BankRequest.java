@@ -14,14 +14,23 @@ public class BankRequest extends Packet implements Serializable {
     private double amount;
     private int lockNumber;
     private boolean isSuccess;
+    private String ipAddress;
+    private int port;
 
     public BankRequest(BankInfo type) {
+        setPacketID((int)(Math.random()*Integer.MAX_VALUE));
         this.type = type;
     }
 
     // TODO Check usage
     public BankRequest() {
+            setStatus(true);
+    }
 
+    public BankRequest(BankInfo type, int ID) {
+        setPacketID((int)(Math.random()*Integer.MAX_VALUE));
+        this.type = type;
+        setPacketID(ID);
     }
 
     public void setSuccess(boolean success) {
@@ -70,5 +79,21 @@ public class BankRequest extends Packet implements Serializable {
 
     public void setLockNumber(int lockNumber) {
         this.lockNumber = lockNumber;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 }

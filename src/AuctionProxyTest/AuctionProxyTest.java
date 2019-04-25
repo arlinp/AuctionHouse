@@ -8,7 +8,7 @@ public class AuctionProxyTest {
     public static void main(String[] args) {
         System.out.println("Starting proxy");
         AuctionProxy auction = new AuctionProxy("127.0.0.1", 42070);
-        BankProxy bank = new BankProxy("127.0.0.1", 42069);
+        BankProxy bank = new BankProxy("127.0.0.1", 42069, null);
 
         int accountID = bank.addAccount(1020);
 

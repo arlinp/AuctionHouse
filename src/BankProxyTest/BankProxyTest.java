@@ -8,7 +8,7 @@ public class BankProxyTest {
     public static void main(String[] args) {
         System.out.println("Starting proxy");
 
-        BankProxy bank = new BankProxy("127.0.0.1", 42069);
+        BankProxy bank = new BankProxy("127.0.0.1", 42069, null);
 
         System.out.println("Getting the balance of Account 100");
         System.out.println(bank.getBalance(100));

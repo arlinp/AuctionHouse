@@ -81,7 +81,7 @@ public class BankCommunicator implements Runnable {
         if (Bank.BANKCOMMDEBUG) System.out.println("THE TYPE OF REQUEST IS: " + br.getType());
 
         // Create a response for br
-        BankRequest response = new BankRequest(br.getType());
+        BankRequest response = new BankRequest(br.getType(), br.getPacketID());
 
         // Check type and map appropriate actions
         switch (br.getType()) {
@@ -132,6 +132,12 @@ public class BankCommunicator implements Runnable {
 
                 if (Bank.BANKCOMMDEBUG) System.out.println("\tTransferred $" + br.getLockNumber() + " from Account#: " + br.getID() + " to Account#: " + br.getToID());
                 break;
+            case NEWAUCTION:
+                response.setStatus(true);
+                bank.newServer(br.getIpAddress(), br.getPort());
+
+                if (Bank.BANKCOMMDEBUG) System.out.println("\tNew Server on " + br.getIpAddress() + ":" + br.getPort());
+                break;
         }
 
         try {
@@ -142,4 +148,21 @@ public class BankCommunicator implements Runnable {
             e.printStackTrace();
         }
     }
+
+
+
+    public void notifyNewAuction(String ipAddress, int port) {
+        BankRequest ar = new BankRequest();
+        ar.setAck(false);
+        ar.setIpAddress(ipAddress);
+        ar.setPort(port);
+
+        try {
+            os.writeObject(ar);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

@@ -19,17 +19,14 @@ public class AuctionHouse implements AuctionProcess {
 //    }
 
     private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
-    private ServerSocket s = null;
     private ArrayList<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
     private BankProxy bank;
     private int auctionID;
-//    private Bank bank;
-
-
 
 
     public AuctionHouse(int port) {
-        bank = new BankProxy("127.0.0.1", 42069);
+        bank = new BankProxy("127.0.0.1", 42069, null);
+
 //        bank = new Bank(420);
         auctionID = bank.addAccount(8697);
 
@@ -42,12 +39,20 @@ public class AuctionHouse implements AuctionProcess {
             e.printStackTrace();
         }
 
+        bank.newServer("127.0.0.1", port);
+
         while (true) {
             try {
                 Socket s = ss.accept();
                 AuctionCommunicator ac = new AuctionCommunicator(s,this);
 
-            } catch (IOException e) {
+                System.out.println("Starting to send");
+                Thread.sleep(200);
+
+//                ac.notifyBid(BidInfo.OUTBID, 1002, 100.00);
+//                ac.notifyBid(BidInfo.WINNER, 1001, 100.00);
+
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
 

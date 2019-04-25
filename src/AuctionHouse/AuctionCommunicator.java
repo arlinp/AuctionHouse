@@ -1,5 +1,6 @@
 package AuctionHouse;
 
+import AuctionProxy.AuctionInfo;
 import AuctionProxy.AuctionRequest;
 import AuctionProxy.BidInfo;
 
@@ -100,4 +101,21 @@ public class AuctionCommunicator implements Runnable{
             e.printStackTrace();
         }
     }
+
+    public void notifyBid(BidInfo status, int itemID, double amount) {
+        AuctionRequest ar = new AuctionRequest(AuctionInfo.BID);
+        ar.setAck(false);
+        ar.setBidStatus(status);
+        ar.setItemID(itemID);
+        ar.setNewAmount(amount);
+
+        try {
+            os.writeObject(ar);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 }
