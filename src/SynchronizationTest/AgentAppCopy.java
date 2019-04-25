@@ -31,9 +31,6 @@ public class AgentAppCopy{
         int account2ID = 420;
 
 
-        //main loop
-        while (!input.equals("exit")) {
-
             accountID = bankProxy.addAccount(accountID);
             account2ID = bankProxy.addAccount(account2ID);
 
@@ -47,9 +44,11 @@ public class AgentAppCopy{
             Bidder Bidder1 = new Bidder(accountID, auctionProxy, bankProxy);
             Bidder Bidder2 = new Bidder(account2ID, auctionProxy, bankProxy);
 
-            auctionProxy.bid(new Bid(100, accountID, 2));
+            Thread thread1 = new Thread(Bidder1);
+            thread1.start();
+            Thread thread2 = new Thread(Bidder2);
+            thread2.start();
 
-        }
 
     }
 

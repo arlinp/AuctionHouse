@@ -12,7 +12,7 @@ public class Bidder implements Runnable{
     private int account;
     BankProxy bankProxy = null;
     AuctionProxy auctionProxy = null;
-    ArrayList<ItemInfo> auctionItems = auctionProxy.getItems();
+    ArrayList<ItemInfo> auctionItems;
 
     public Bidder(int accountID){
         account = accountID;
@@ -22,11 +22,13 @@ public class Bidder implements Runnable{
         account = accountID;
         this.auctionProxy = auctionProxy;
         this.bankProxy = bankProxy;
+        auctionItems = auctionProxy.getItems();
     }
 
     @Override
     public void run() {
 
+        auctionProxy.bid(new Bid(100, account, 2));
 
     }
 }
