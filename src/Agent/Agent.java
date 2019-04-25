@@ -12,6 +12,10 @@ import java.util.ArrayList;
 
 public class Agent implements BankProcess, AuctionProcess {
 
+
+
+    int accountID = 0;
+
     BankProxy bankProxy = null;
     AuctionProxy auctionProxy = null;
 
@@ -51,10 +55,20 @@ public class Agent implements BankProcess, AuctionProcess {
         return bankProxy.getBalance(AccountID);
     }
 
+    public double getBalance() {
+        return bankProxy.getBalance(accountID);
+    }
+
+
     @Override
     public boolean addFunds(int AccountID, double amount) {
         return bankProxy.addFunds(AccountID, amount);
     }
+    public boolean addFunds(double amount) {
+        return bankProxy.addFunds(accountID, amount);
+    }
+
+
 
     @Override
     public boolean removeFunds(int AccountID, double amount) {
@@ -86,5 +100,12 @@ public class Agent implements BankProcess, AuctionProcess {
         return bankProxy.newServer(ipAddress,port);
     }
 
+    public int getAccountID() {
+        return accountID;
+    }
+
+    public void setAccountID(int accountID) {
+        this.accountID = accountID;
+    }
 
 }

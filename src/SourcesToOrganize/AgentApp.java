@@ -1,17 +1,13 @@
 package SourcesToOrganize;
 
 import Agent.Agent;
-import AuctionHouse.Item;
 import AuctionHouse.ItemInfo;
 import AuctionProxy.AuctionProxy;
 import BankProxy.BankProxy;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -48,20 +44,21 @@ public class AgentApp extends Application{
 
             if (input.equals("1")) {
 
-                bankProxy = new BankProxy("localHost", 42069, this);
-                auctionProxy = new AuctionProxy("localhost", 42070);
+//                bankProxy = new BankProxy("localHost", 42069, this);
+//                auctionProxy = new AuctionProxy("localhost", 42070);
+                localTest();
 
             }
 
             if (input.equals("2")) {
 
                 System.out.println("enter bank host:");
-                input = inScanner.nextLine();
-                bankProxy = new BankProxy(input, 42069, this);
+                bankProxy = new BankProxy(inScanner.nextLine(), 42069, this);
 
                 System.out.println("enter auctionhouse host:");
-                input = inScanner.nextLine();
-                auctionProxy = new AuctionProxy(input, 42070);
+                auctionProxy = new AuctionProxy(inScanner.nextLine(), 42070);
+
+                agent = new Agent(bankProxy, auctionProxy);
 
             }
 
@@ -91,27 +88,28 @@ public class AgentApp extends Application{
             //if bank, get balance
             if (input.equals("1")) {
 
-                System.out.println("Your Account ID is: ");
-                System.out.println(" or nothing...");
-                input = inScanner.nextLine();
+                if (agent.getAccountID() == 0) {
 
-                if (input.equals("")) {
-                    accountID = 5;
-                } else {
-                    accountID = Integer.parseInt(input);
+                    System.out.println("Your Account ID is: ");
+                    System.out.println(" or nothing...");
+                    input = inScanner.nextLine();
+
+                    if (input.equals("")) {
+                        agent.setAccountID(5);
+                    } else {
+                        agent.setAccountID(Integer.parseInt(input));
+                    }
+
+
+                    System.out.println("Account ID=" + agent.getAccountID());
+                    System.out.println("account balance = "
+                            + agent.getBalance());
                 }
 
-                accountID = bankProxy.addAccount(accountID);
-
-
-                System.out.println("Account ID=" + accountID);
-                System.out.println("account balance = "
-                        + bankProxy.getBalance(accountID));
-
-                while (!input.equals("done")) {
+                while (!input.equals("0")) {
 
                     System.out.println("1. add to funds.");
-                    System.out.println("done. to exit bank");
+                    System.out.println("0. to exit bank");
                     input = inScanner.nextLine();
 
                     if (input.equals("1")) {
@@ -119,9 +117,9 @@ public class AgentApp extends Application{
                         System.out.println("Enter amount to deposit:");
                         input = inScanner.nextLine();
 
-                        bankProxy.addFunds(accountID, Integer.parseInt(input));
+                        agent.addFunds(Double.parseDouble(input));
 
-                        System.out.println("New Balance: " + bankProxy.getBalance(accountID));
+                        System.out.println("New Balance: " + agent.getBalance());
                     }
 
                 }
@@ -132,7 +130,7 @@ public class AgentApp extends Application{
             if (input.equals("2")) {
 
                 System.out.println("Items for auction: ");
-                ArrayList<ItemInfo> auctionItems = auctionProxy.getItems();
+                ArrayList<ItemInfo> auctionItems = agent.getItems();
 
                 System.out.println("enter number to make bid");
 
@@ -155,7 +153,7 @@ public class AgentApp extends Application{
 //
 //                auctionProxy.bid(new Bid(amount,accountID,auctionItems.get(itemIndex).getItemID()));
 
-                auctionProxy.bid(new Bid(amount, accountID, itemIndex));
+                agent.bid(new Bid(amount, agent.getAccountID(), itemIndex));
             }
         }
     }
@@ -228,6 +226,8 @@ public class AgentApp extends Application{
             agent.addAccount(Integer.parseInt(bankAccountInput.getText()));
 
             notification.setText("account " + bankAccountInput.getText() + " made");
+
+            window.setScene(auctionScene());
         });
 
 
@@ -237,6 +237,33 @@ public class AgentApp extends Application{
 
         return new Scene(root, 500, 500);
 
+    }
+
+    private Scene auctionScene() {
+
+        GridPane root = new GridPane();
+
+        ScrollPane scrollPane = new ScrollPane();
+
+        TableView<String> tableView = new TableView<>();
+        scrollPane.setContent(tableView);
+
+        //add column to table
+        TableColumn<String, ItemInfo> itemCol = new TableColumn<>("Item");
+        tableView.getColumns().add(itemCol);
+
+
+        ArrayList<ItemInfo> itemInfos = agent.getItems();
+
+        for (ItemInfo info : itemInfos){
+
+            tableView.getItems().add(info.getName());
+
+        }
+
+        root.add(scrollPane, 1,1);
+
+        return new Scene(root,500, 500);
     }
 
     private void localTest() {
