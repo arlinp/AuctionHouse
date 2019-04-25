@@ -3,6 +3,7 @@ package AuctionHouse;
 import AuctionProxy.AuctionInfo;
 import AuctionProxy.AuctionRequest;
 import AuctionProxy.BidInfo;
+import SourcesToOrganize.Bid;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -74,7 +75,9 @@ public class AuctionCommunicator implements Runnable{
         try {
             switch (ar.getType()) {
                 case BID:
-                    BidInfo status = auctionHouse.bid(ar.getBid());
+                    Bid bid = ar.getBid();
+                    bid.setAc(this);
+                    BidInfo status = auctionHouse.bid(bid);
                     newAR.setBidStatus(status);
                     break;
                 case GET:

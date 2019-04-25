@@ -1,5 +1,7 @@
 package SourcesToOrganize;
 
+import AuctionHouse.AuctionCommunicator;
+
 import java.io.Serializable;
 
 public class Bid implements Serializable {
@@ -8,6 +10,7 @@ public class Bid implements Serializable {
     private int accountNumber;
     private int lockID;
     private int itemID;
+    private AuctionCommunicator ac;
 
     public Bid(double amount, int accountNumber, int itemID) {
         this.amount = amount;
@@ -37,5 +40,13 @@ public class Bid implements Serializable {
 
     public void setLockID(int lockID) {
         this.lockID = lockID;
+    }
+
+    public AuctionCommunicator getAc() {
+        return ac;
+    }
+
+    public void setAc(AuctionCommunicator ac) {
+        this.ac = ac;
     }
 }

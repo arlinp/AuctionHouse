@@ -105,6 +105,18 @@ public class Item implements Runnable {
         } else {
             run();
         }
+
+//        while(noNewBid) {
+//            wait 30 seconds
+//                wake on new bid
+//
+//
+//        }
+
+
+
+
+
     }
 
     private void endAuction() {
