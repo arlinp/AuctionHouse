@@ -1,7 +1,9 @@
-clock 100
-lock 50
-glock 300
-sock 10
-flock 200
-hawk 300
-lunchbox 50
+Clock 100
+Lock 50
+Glock 300
+Sock 10
+Flock 200
+Hawk 300
+Duck 70
+Magnets 5
+Lunchbox 50

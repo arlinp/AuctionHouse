@@ -13,11 +13,13 @@ import java.util.ArrayList;
 public class Agent implements BankProcess, AuctionProcess {
 
 
-
     int accountID = 0;
 
     BankProxy bankProxy = null;
     AuctionProxy auctionProxy = null;
+
+    ArrayList<AuctionProxy> connectedAuctionProxys = new ArrayList<AuctionProxy>();
+    AuctionProxy currentAuctionProxy;
 
     public Agent(BankProxy bankProxy, AuctionProxy auctionProxy){
 

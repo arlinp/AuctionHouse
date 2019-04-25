@@ -35,12 +35,14 @@ public class BankProxy implements BankProcess, Runnable {
         this.client = client;
 
         try {
-            s = new Socket(hostname, port);
+            while (s == null) {
+                s = new Socket(hostname, port);
 
-            System.out.println("connected: " + s.isConnected());
+                System.out.println("connected: " + s.isConnected());
 
-            os = new ObjectOutputStream(s.getOutputStream());
-            is = new ObjectInputStream(s.getInputStream());
+                os = new ObjectOutputStream(s.getOutputStream());
+                is = new ObjectInputStream(s.getInputStream());
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
