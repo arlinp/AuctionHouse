@@ -65,7 +65,7 @@ public class Account {
         if (lockedMoney.containsKey(lockID)) {
             return lockFunds(amount);
         } else if (balance - amount < 0) {
-            return 0;
+            return -1;
         } else {
             balance -= amount;
             lockedMoney.put(lockID, amount);

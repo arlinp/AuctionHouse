@@ -2,6 +2,11 @@ package BankProxy;
 
 //import SourcesToOrganize.BankProxy;
 
+import SourcesToOrganize.NetworkDevice;
+
+import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
+
 /**
  * Bank Functionality offered, which is to be implemented by the Bank and the ClientProxy/ServerProxy
  */
@@ -78,10 +83,23 @@ public interface BankProcess {
     /**
      * Add new AuctionHouse server to Bank logs
      *
-     * @param ipAddress Host of new server
-     * @param port Port number of service
+     * @param networkDevice Networked device to open for use
      * @return status
      */
-    boolean newServer(String ipAddress, int port);
+    boolean openServer(NetworkDevice networkDevice);
 
+    /**
+     * Close an AuctionHouse server to Bank logs
+     *
+     * @param networkDevice Networked device to close
+     * @return status of closure
+     */
+    boolean closeServer(NetworkDevice networkDevice);
+
+    /**
+     * Get the servers currently listed within the Bank's systems
+     *
+     * @return List of servers
+     */
+    LinkedBlockingQueue<NetworkDevice> getServers();
 }

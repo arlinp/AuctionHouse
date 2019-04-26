@@ -1,9 +1,12 @@
 package BankProxy;
 
 import BankProxy.BankProxy;
+import SourcesToOrganize.NetworkDevice;
 import SourcesToOrganize.Packet;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class BankRequest extends Packet implements Serializable {
 
@@ -14,11 +17,11 @@ public class BankRequest extends Packet implements Serializable {
     private double amount;
     private int lockNumber;
     private boolean isSuccess;
-    private String ipAddress;
-    private int port;
+    private LinkedBlockingQueue<NetworkDevice> networkDevices;
 
     public BankRequest(BankInfo type) {
         setPacketID((int)(Math.random()*Integer.MAX_VALUE));
+        networkDevices = new LinkedBlockingQueue<>();
         this.type = type;
     }
 
@@ -81,19 +84,28 @@ public class BankRequest extends Packet implements Serializable {
         this.lockNumber = lockNumber;
     }
 
-    public int getPort() {
-        return port;
+    public LinkedBlockingQueue<NetworkDevice> getNetworkDevices() {
+        return networkDevices;
     }
 
-    public void setPort(int port) {
-        this.port = port;
+    public void setNetworkDevices(LinkedBlockingQueue<NetworkDevice> networkDevices) {
+        this.networkDevices = networkDevices;
     }
 
-    public String getIpAddress() {
-        return ipAddress;
+    public NetworkDevice getNetworkDevice() {
+        if (networkDevices.size() > 0) return networkDevices.peek();
+        else return null;
     }
 
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
+    public void addNetworkDevices(String ipAddress, int port) {
+        NetworkDevice networkDevice = new NetworkDevice(ipAddress, port);
+        networkDevices.add(networkDevice);
     }
+
+    public void addNetworkDevices(NetworkDevice networkDevice) {
+        networkDevices.add(networkDevice);
+    }
+
+
+
 }

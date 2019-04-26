@@ -1,13 +1,18 @@
 package Bank;
 
+import AuctionHouse.AuctionCommunicator;
 import BankProxy.BankProcess;
+import SourcesToOrganize.NetworkDevice;
 
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Runs a Bank where accounts can be interacted with through a socket connection
@@ -22,7 +27,9 @@ public class Bank implements BankProcess {
     public  Random ran = new Random();
     private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
     private HashMap<Integer, Double> lockedMoney = new HashMap<Integer, Double>();
-
+    private LinkedBlockingQueue<NetworkDevice> networkDevices = new LinkedBlockingQueue<>();
+    // TODO replace with Thread pool
+    private LinkedBlockingQueue<BankCommunicator> bankCommunicators = new LinkedBlockingQueue<>();
 
     /**
      * Constructor for Bank
@@ -47,10 +54,10 @@ public class Bank implements BankProcess {
             try {
                 Socket s = ss.accept();
                 BankCommunicator ac = new BankCommunicator(s,this);
-
+                bankCommunicators.put(ac);
 
                 if (BANKDEBUG) System.out.println("Started new BankCommunicator for: " + s.getRemoteSocketAddress());
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
 
@@ -261,14 +268,48 @@ public class Bank implements BankProcess {
     /**
      * Add new AuctionHouse server to Bank logs
      *
-     * @param ipAddress Host of new server
-     * @param port      Port number of service
+     * @param networkDevice Networked device to open for use
      * @return status
      */
     @Override
-    public boolean newServer(String ipAddress, int port) {
-        System.out.println("New server on IP address: " + ipAddress + ":" + port);
+    public boolean openServer(NetworkDevice networkDevice) {
+        networkDevices.add(networkDevice);
         return false;
     }
+
+    /**
+     * Close an AuctionHouse server to Bank logs
+     *
+     * @param networkDevice Networked device to close
+     * @return status of closure
+     */
+    @Override
+    public boolean closeServer(NetworkDevice networkDevice) {
+        networkDevices.remove(networkDevice);
+        return false;
+    }
+
+    /**
+     * Get the servers currently listed within the Bank's systems
+     *
+     * @return List of servers
+     */
+    @Override
+    public LinkedBlockingQueue<NetworkDevice> getServers() {
+        return networkDevices;
+    }
+
+    /**
+     *
+     * @param networkDevice
+     */
+    public void notifyAuction(NetworkDevice networkDevice) {
+        for (BankCommunicator bc : bankCommunicators) {
+
+            bc.notifyNewAuction(networkDevice);
+        }
+    }
+
+
 }
 

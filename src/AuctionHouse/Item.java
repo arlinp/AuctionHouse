@@ -7,15 +7,17 @@ import SourcesToOrganize.Bid;
 public class Item implements Runnable {
 
     private BankProxy bank;
-//    private Bank bank;
+    private AuctionHouse auction;
     private Bid bid;
     private int auctionID;
     private ItemInfo itemInfo;
     private int itemID;
     private boolean open = true;
 
-    public Item(BankProxy bank, ItemInfo itemInfo, int auctionID) {
+    public Item(BankProxy bank, AuctionHouse auction, ItemInfo itemInfo,
+                int auctionID) {
         this.bank = bank;
+        this.auction = auction;
         this.itemInfo = itemInfo;
         this.itemID = itemInfo.getItemID();
         this.auctionID = auctionID;
@@ -39,16 +41,10 @@ public class Item implements Runnable {
         }
 
         if (bid.getAmount() > itemInfo.getPrice()) {
-            System.out.println(bank + " " +
-                    bid.getAccountNumber());
             int lockID = bank.lockFunds(bid.getAccountNumber(), bid.getAmount());
 
-            if (lockID == -1 || lockID == 0) {
-//                System.out.println("Not enough funds");
-                return BidInfo.REJECTION;
-            }
-
-            if (this.bid != null) {
+            if (lockID == -1) return BidInfo.REJECTION;
+            else if (this.bid != null) {
                 bank.unlockFunds(this.bid.getAccountNumber(), this.bid.getLockID());
             }
 
@@ -61,10 +57,9 @@ public class Item implements Runnable {
             this.bid = bid;
             this.bid.setLockID(lockID);
             this.notify();
-
             return BidInfo.ACCEPTANCE;
+
         } else {
-//            System.out.println("Bid is too low");
             return BidInfo.REJECTION;
         }
     }
@@ -97,12 +92,18 @@ public class Item implements Runnable {
     @Override
     public void run() {
         itemTimer();
-
     }
 
-    // TODO Synch on setting and checking of bid
+    /**
+     * Timer that resets upon each bid. Works off a notify/wait structure.
+     *
+     * When it has be approximately the specified time and the bid has not
+     * changed then the auction will conclude.
+     */
     private synchronized void itemTimer() {
         Bid currentBid;
+
+        // Wait specified time for a bid to occur.
         do {
             currentBid = bid;
             try {
@@ -111,13 +112,15 @@ public class Item implements Runnable {
                 e.printStackTrace();
             }
 
+            // Checks if noone bid
             if (bid == null) {
-                System.out.println("Noone bid on " + this);
+                // TODO Keep track on items not being bid on
                 return;
             }
+
         } while (currentBid != bid);
 
-        System.out.println("AUCTION CONTINUING");
+        // End auction
         synchronized (bid) {
             if (bid == currentBid) {
                 System.out.println("ENDING AUCTION WITH ITEM WINNING BLAH");
@@ -134,6 +137,7 @@ public class Item implements Runnable {
                 System.out.println("THE ITEM " + itemInfo + " WAS SOLD");
                 bid.getAc().notifyBid(BidInfo.WINNER, itemID, bid.getAmount());
                 bank.transferFunds(bid.getAccountNumber(), auctionID, bid.getLockID());
+                auction.removeItem(itemID);
             }
         }
     }

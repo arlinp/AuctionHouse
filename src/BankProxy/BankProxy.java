@@ -5,10 +5,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
-import Agent.Agent;
-import BankProxy.BankRequest;
 import SourcesToOrganize.AgentApp;
+import SourcesToOrganize.NetworkDevice;
 
 /**
  * Proxy design for the Bank
@@ -258,15 +258,14 @@ public class BankProxy implements BankProcess, Runnable {
     /**
      * Add new AuctionHouse server to Bank logs
      *
-     * @param ipAddress Host of new server
-     * @param port      Port number of service
+     * @param networkDevice Networked device to open for use
      * @return status
      */
     @Override
-    public boolean newServer(String ipAddress, int port) {
-        BankRequest request = new BankRequest(BankInfo.NEWAUCTION);
-        request.setIpAddress(ipAddress);
-        request.setPort(port);
+    public boolean openServer(NetworkDevice networkDevice) {
+
+        BankRequest request = new BankRequest(BankInfo.OPENAUCTION);
+        request.addNetworkDevices(networkDevice);
 
         try {
             os.writeObject(request);
@@ -281,6 +280,56 @@ public class BankProxy implements BankProcess, Runnable {
 
         return false;
     }
+
+    /**
+     * Close an AuctionHouse server to Bank logs
+     *
+     * @param networkDevice Networked device to close
+     * @return status of closure
+     */
+    @Override
+    public boolean closeServer(NetworkDevice networkDevice) {
+
+        BankRequest request = new BankRequest(BankInfo.CLOSEAUCTION);
+        request.addNetworkDevices(networkDevice);
+
+        try {
+            os.writeObject(request);
+            waitOn(request.getPacketID());
+
+            BankRequest response = messages.get(request.getPacketID());
+            return response.getStatus();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the servers currently listed within the Bank's systems
+     *
+     * @return List of servers
+     */
+    @Override
+    public LinkedBlockingQueue<NetworkDevice> getServers() {
+        BankRequest request = new BankRequest(BankInfo.GETAUCTIONS);
+
+        try {
+            os.writeObject(request);
+            waitOn(request.getPacketID());
+
+            BankRequest response = messages.get(request.getPacketID());
+            return response.getNetworkDevices();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
     // TODO Implement notify bank of myself (A New AuctionHouse)
 
@@ -342,12 +391,11 @@ public class BankProxy implements BankProcess, Runnable {
     // TODO Hey a new auction that we can talk to!
     private void processMessage(BankRequest notification) {
         switch (notification.getType()) {
-            case NEWAUCTION:
+            case OPENAUCTION:
                 // We ignore if we are a proxy
                 if (client != null) {
-                    client.addAuctionHouse(notification.getIpAddress(),
-                                           notification.getPort());
-                    System.out.println("New server to add " + notification.getIpAddress() + ":" + notification.getPort());
+                    client.addAuctionHouse(notification.getNetworkDevice());
+                    System.out.println("New server to add " + notification.getNetworkDevice());
                 } else {
                     System.out.println("No new server to add because I am already an auction");
                 }

@@ -28,9 +28,8 @@ public class AuctionHouse implements AuctionProcess {
 
 
     public AuctionHouse(int port) {
-        bank = new BankProxy("127.0.0.1", 42069, null);
 
-//        bank = new Bank(420);
+        bank = new BankProxy("127.0.0.1", 42069, null);
         auctionID = bank.addAccount(8697);
 
         readInItems();
@@ -42,7 +41,7 @@ public class AuctionHouse implements AuctionProcess {
             e.printStackTrace();
         }
 
-        bank.newServer("127.0.0.1", port);
+        bank.openServer("127.0.0.1", port);
 
         while (true) {
             try {
@@ -78,7 +77,7 @@ public class AuctionHouse implements AuctionProcess {
                 ItemInfo itemInfo = new ItemInfo(lineArr[0], "", System.currentTimeMillis()+40000, Integer.parseInt(lineArr[1]));
                 itemInfos.add(itemInfo);
                 System.out.println(itemInfo);
-                Item item = new Item(bank, itemInfo, auctionID);
+                Item item = new Item(bank, this, itemInfo, auctionID);
                 items.put(item.getItemID(), item);
             }
         } catch (IOException e){
@@ -99,16 +98,22 @@ public class AuctionHouse implements AuctionProcess {
         return item.getItemID();
     }
 
+
     /**
      *
      * @param itemID
      * @return
      */
-    private boolean removeItem(int itemID) {
-        return false;
+    public void removeItem(int itemID) {
+        if (items.containsKey(itemID)) {
+            itemInfos.remove(items.get(itemID).getItemInfo());
+            items.remove(itemID);
+        }
     }
 
+    // TODO implement?
     /**
+     *
      *
      * @param itemID
      */
@@ -116,23 +121,21 @@ public class AuctionHouse implements AuctionProcess {
 
     }
 
-
     /**
-     * To place a bid
+     * To place a bid, with the completed bid object
      *
-     * @param bid    Bid object that contains elementss
+     * @param bid    Bid object that contains elements
      */
     @Override
     public BidInfo bid(Bid bid) {
+        // Sanity check
         if (bid == null) return BidInfo.REJECTION;
 
+        // Get the item to be bid upon
         Item item = items.get(bid.getItemID());
-        System.out.println(bid.getItemID() + " " + items.contains(bid.getItemID()));
-        System.out.println(item);
-        System.out.println("Bidding with " + bid);
-        item.setBid(bid);
 
-        return BidInfo.REJECTION;
+        // Set the bid and return the result
+        return item.setBid(bid);
     }
 
     /**

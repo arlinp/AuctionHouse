@@ -1,10 +1,13 @@
 package Bank;
 
 import BankProxy.BankRequest;
+import SourcesToOrganize.NetworkDevice;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Dedicated thread for a socket connection
@@ -132,11 +135,28 @@ public class BankCommunicator implements Runnable {
 
                 if (Bank.BANKCOMMDEBUG) System.out.println("\tTransferred $" + br.getLockNumber() + " from Account#: " + br.getID() + " to Account#: " + br.getToID());
                 break;
-            case NEWAUCTION:
+            case OPENAUCTION:
                 response.setStatus(true);
-                bank.newServer(br.getIpAddress(), br.getPort());
+                bank.openServer(br.getNetworkDevice());
 
-                if (Bank.BANKCOMMDEBUG) System.out.println("\tNew Server on " + br.getIpAddress() + ":" + br.getPort());
+                if (Bank.BANKCOMMDEBUG) System.out.println("\tNew Server on " + br.getNetworkDevice());
+                break;
+            case CLOSEAUCTION:
+                response.setStatus(true);
+                bank.closeServer(br.getNetworkDevice());
+
+                if (Bank.BANKCOMMDEBUG) System.out.println("\tStopped distributing the server of " + br.getNetworkDevice());
+                break;
+            case GETAUCTIONS:
+                LinkedBlockingQueue<NetworkDevice> list = bank.getServers();
+
+                if (Bank.BANKCOMMDEBUG) {
+                    System.out.print("\tSending the following servers: \n\t");
+                    for (NetworkDevice nd : list) {
+                        System.out.print(nd + " ");
+                    }
+                    System.out.println();
+                }
                 break;
         }
 
@@ -151,11 +171,10 @@ public class BankCommunicator implements Runnable {
 
 
 
-    public void notifyNewAuction(String ipAddress, int port) {
+    public void notifyNewAuction(NetworkDevice networkDevice) {
         BankRequest ar = new BankRequest();
         ar.setAck(false);
-        ar.setIpAddress(ipAddress);
-        ar.setPort(port);
+        ar.addNetworkDevices(networkDevice);
 
         try {
             os.writeObject(ar);

@@ -98,8 +98,8 @@ public class Agent implements BankProcess, AuctionProcess {
     }
 
     @Override
-    public boolean newServer(String ipAddress, int port) {
-        return bankProxy.newServer(ipAddress,port);
+    public boolean openServer(String ipAddress, int port) {
+        return bankProxy.openServer(ipAddress,port);
     }
 
     public int getAccountID() {

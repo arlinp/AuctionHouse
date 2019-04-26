@@ -256,8 +256,8 @@ public class AgentApp extends Application{
 
     }
 
-    public void addAuctionHouse(String ipAddress, int port) {
+    public void addAuctionHouse(NetworkDevice networkDevice) {
 
-        System.out.println("I am theoretically going to add an auctionhouse for " + ipAddress + ":" + port);
+        System.out.println("I am theoretically going to add an auctionhouse for " + networkDevice);
     }
 }
