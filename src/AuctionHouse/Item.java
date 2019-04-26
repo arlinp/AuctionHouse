@@ -44,7 +44,7 @@ public class Item implements Runnable {
             int lockID = bank.lockFunds(bid.getAccountNumber(), bid.getAmount());
 
             if (lockID == -1 || lockID == 0) {
-                System.out.println("Not enough funds");
+//                System.out.println("Not enough funds");
                 return BidInfo.REJECTION;
             }
 
@@ -64,7 +64,7 @@ public class Item implements Runnable {
 
             return BidInfo.ACCEPTANCE;
         } else {
-            System.out.println("Bid is too low");
+//            System.out.println("Bid is too low");
             return BidInfo.REJECTION;
         }
     }
@@ -96,38 +96,39 @@ public class Item implements Runnable {
      */
     @Override
     public void run() {
-        itemTimer(null);
+        itemTimer();
+
     }
 
     // TODO Synch on setting and checking of bid
-    private synchronized void itemTimer(Bid currentBid) {
-        currentBid = bid;
-        try {
-            synchronized (this) { wait(AuctionHouse.ITEM_WAIT_TIME); }
-        } catch (InterruptedException e) {
+    private synchronized void itemTimer() {
+        Bid currentBid;
+        do {
+            currentBid = bid;
+            try {
+                synchronized (this) { wait(AuctionHouse.ITEM_WAIT_TIME); }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-            e.printStackTrace();
-        }
+            if (bid == null) {
+                System.out.println("Noone bid on " + this);
+                return;
+            }
+        } while (currentBid != bid);
 
-        if (bid == null) {
-            System.out.println("Noone bid on " + this);
-            return;
-        }
         System.out.println("AUCTION CONTINUING");
         synchronized (bid) {
             if (bid == currentBid) {
                 System.out.println("ENDING AUCTION WITH ITEM WINNING BLAH");
                 open = false;
                 endAuction();
-            } else {
-                currentBid = bid;
-                itemTimer(currentBid);
+                return;
             }
         }
     }
 
     private synchronized void endAuction() {
-
         synchronized (bid) {
             if (bid != null) {
                 System.out.println("THE ITEM " + itemInfo + " WAS SOLD");
