@@ -12,6 +12,7 @@ public class Item implements Runnable {
     private int auctionID;
     private ItemInfo itemInfo;
     private int itemID;
+    private boolean open = true;
 
     public Item(BankProxy bank, ItemInfo itemInfo, int auctionID) {
         this.bank = bank;
@@ -32,7 +33,7 @@ public class Item implements Runnable {
      * @return
      */
     public synchronized BidInfo setBid(Bid bid) {
-        if (System.currentTimeMillis() > itemInfo.getTime()) {
+        if (!open) {
             System.out.println("Auction is over!");
             return BidInfo.REJECTION;
         }
@@ -56,6 +57,7 @@ public class Item implements Runnable {
             if (this.bid != null) {
                 this.bid.getAc().notifyBid(BidInfo.OUTBID, itemID, bid.getAmount());
             }
+
             this.bid = bid;
             this.bid.setLockID(lockID);
             this.notify();
@@ -103,6 +105,7 @@ public class Item implements Runnable {
         try {
             synchronized (this) { wait(AuctionHouse.ITEM_WAIT_TIME); }
         } catch (InterruptedException e) {
+
             e.printStackTrace();
         }
 
@@ -110,8 +113,11 @@ public class Item implements Runnable {
             System.out.println("Noone bid on " + this);
             return;
         }
+        System.out.println("AUCTION CONTINUING");
         synchronized (bid) {
             if (bid == currentBid) {
+                System.out.println("ENDING AUCTION WITH ITEM WINNING BLAH");
+                open = false;
                 endAuction();
             } else {
                 currentBid = bid;
@@ -120,13 +126,14 @@ public class Item implements Runnable {
         }
     }
 
+    private synchronized void endAuction() {
 
-
-    private void endAuction() {
-        if (bid != null) {
-            System.out.println("THE ITEM " + itemInfo + " WAS SOLD");
-            bid.getAc().notifyBid(BidInfo.WINNER, itemID, bid.getAmount());
-            bank.transferFunds(bid.getAccountNumber(), auctionID, bid.getLockID());
+        synchronized (bid) {
+            if (bid != null) {
+                System.out.println("THE ITEM " + itemInfo + " WAS SOLD");
+                bid.getAc().notifyBid(BidInfo.WINNER, itemID, bid.getAmount());
+                bank.transferFunds(bid.getAccountNumber(), auctionID, bid.getLockID());
+            }
         }
     }
 

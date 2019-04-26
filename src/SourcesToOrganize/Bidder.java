@@ -33,9 +33,8 @@ public class Bidder implements Runnable{
     @Override
     public void run() {
             //repeatedly try to bid on first item
-        for (int i = 0; i < 100000; i+=100) {
+        for (int i = 0; i < 1000000; i+=100) {
             System.out.println(i);
-            System.out.println(account + " Has $" +bankProxy.getBalance(account));
             auctionProxy.bid(new Bid(i, account, auctionItems.get(2).getItemID()));
 //            if (System.currentTimeMillis() > auctionItems.get(0).getTime()+1000) return;
         }

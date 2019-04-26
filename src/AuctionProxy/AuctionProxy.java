@@ -180,7 +180,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
 
                 synchronized (this) { notify(); }
             } else {
-//                System.out.println("Processing");
+                System.out.println("Processing");
                 processMessage(newAr);
 
             }
