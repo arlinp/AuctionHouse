@@ -7,8 +7,10 @@ import AuctionProxy.BidInfo;
 import BankProxy.BankProxy;
 import BankProxy.BankProcess;
 import SourcesToOrganize.Bid;
+import SourcesToOrganize.NetworkDevice;
 
 import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Agent implements BankProcess, AuctionProcess {
 
@@ -97,10 +99,42 @@ public class Agent implements BankProcess, AuctionProcess {
         return bankProxy.transferFunds(fromID, toID,lockID);
     }
 
+    /**
+     * Add new AuctionHouse server to Bank logs
+     *
+     * @param networkDevice Networked device to open for use
+     * @return status
+     */
     @Override
-    public boolean openServer(String ipAddress, int port) {
-        return bankProxy.openServer(ipAddress,port);
+    public boolean openServer(NetworkDevice networkDevice) {
+        return false;
     }
+
+    /**
+     * Close an AuctionHouse server to Bank logs
+     *
+     * @param networkDevice Networked device to close
+     * @return status of closure
+     */
+    @Override
+    public boolean closeServer(NetworkDevice networkDevice) {
+        return false;
+    }
+
+    /**
+     * Get the servers currently listed within the Bank's systems
+     *
+     * @return List of servers
+     */
+    @Override
+    public LinkedBlockingQueue<NetworkDevice> getServers() {
+        return bankProxy.getServers();
+    }
+
+//    @Override
+//    public boolean openServer(String ipAddress, int port) {
+//        return bankProxy.openServer(ipAddress,port);
+//    }
 
     public int getAccountID() {
         return accountID;

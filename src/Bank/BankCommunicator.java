@@ -1,5 +1,6 @@
 package Bank;
 
+import BankProxy.BankInfo;
 import BankProxy.BankRequest;
 import SourcesToOrganize.NetworkDevice;
 
@@ -139,6 +140,8 @@ public class BankCommunicator implements Runnable {
                 response.setStatus(true);
                 bank.openServer(br.getNetworkDevice());
 
+                bank.notifyAuction(br.getNetworkDevice());
+
                 if (Bank.BANKCOMMDEBUG) System.out.println("\tNew Server on " + br.getNetworkDevice());
                 break;
             case CLOSEAUCTION:
@@ -172,7 +175,7 @@ public class BankCommunicator implements Runnable {
 
 
     public void notifyNewAuction(NetworkDevice networkDevice) {
-        BankRequest ar = new BankRequest();
+        BankRequest ar = new BankRequest(BankInfo.OPENAUCTION);
         ar.setAck(false);
         ar.addNetworkDevices(networkDevice);
 

@@ -4,6 +4,8 @@ import AuctionProxy.AuctionProcess;
 import AuctionProxy.BidInfo;
 import BankProxy.BankProxy;
 import SourcesToOrganize.Bid;
+import SourcesToOrganize.NetworkDevice;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AuctionHouse implements AuctionProcess {
 
 
-    public static final long ITEM_WAIT_TIME = 10000;
+    public static final long ITEM_WAIT_TIME = 25000;
 
 
 //    public AuctionHouse(ClientProxy bankProxy, ServerProxy auctionHouseServer) {
@@ -41,7 +43,7 @@ public class AuctionHouse implements AuctionProcess {
             e.printStackTrace();
         }
 
-        bank.openServer("127.0.0.1", port);
+        bank.openServer(new NetworkDevice("127.0.0.1",port));
 
         while (true) {
             try {
@@ -49,12 +51,12 @@ public class AuctionHouse implements AuctionProcess {
                 AuctionCommunicator ac = new AuctionCommunicator(s,this);
 
                 System.out.println("Starting to send");
-                Thread.sleep(200);
+//                Thread.sleep(200);
 
 //                ac.notifyBid(BidInfo.OUTBID, 1002, 100.00);
 //                ac.notifyBid(BidInfo.WINNER, 1001, 100.00);
 
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 

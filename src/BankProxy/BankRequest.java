@@ -103,6 +103,7 @@ public class BankRequest extends Packet implements Serializable {
     }
 
     public void addNetworkDevices(NetworkDevice networkDevice) {
+        if (networkDevices == null) networkDevices = new LinkedBlockingQueue<>();
         networkDevices.add(networkDevice);
     }
 

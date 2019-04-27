@@ -34,6 +34,13 @@ public class BankProxy implements BankProcess, Runnable {
         open = true;
         this.client = client;
 
+        connectToServer(hostname, port);
+
+        new Thread(this).start();
+    }
+
+
+    private void connectToServer(String hostname, int port) {
         try {
             while (s == null) {
                 s = new Socket(hostname, port);
@@ -45,10 +52,14 @@ public class BankProxy implements BankProcess, Runnable {
             }
 
         } catch (IOException e) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            connectToServer(hostname, port);
             e.printStackTrace();
         }
-
-        new Thread(this).start();
     }
 
     /**

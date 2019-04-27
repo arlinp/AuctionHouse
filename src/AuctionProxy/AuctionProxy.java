@@ -28,6 +28,15 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     public AuctionProxy(String hostname, int port) {
         open = true;
         System.out.println("Creating the proxy");
+
+        connectToServer(hostname, port);
+
+        new Thread(this).start();
+
+        System.out.println("Created the proxy");
+    }
+
+    private void connectToServer(String hostname, int port) {
         try {
             s = new Socket(hostname, port);
             System.out.println("Created the socket " + s.toString() + " " + s.getInputStream());
@@ -38,15 +47,15 @@ public class AuctionProxy implements AuctionProcess, Runnable {
             is = new ObjectInputStream(s.getInputStream());
             System.out.println("Created the IS + " + is);
         } catch (IOException e) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            connectToServer(hostname, port);
             e.printStackTrace();
         }
-
-        new Thread(this).start();
-
-        System.out.println("Created the proxy");
     }
-
-
 
     /**
      * To place a bid

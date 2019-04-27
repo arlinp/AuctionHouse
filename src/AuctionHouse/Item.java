@@ -114,6 +114,8 @@ public class Item implements Runnable {
 
             // Checks if noone bid
             if (bid == null) {
+                // Noone bid on item Blah!
+                System.out.println("Noone bid on " + this);
                 // TODO Keep track on items not being bid on
                 return;
             }

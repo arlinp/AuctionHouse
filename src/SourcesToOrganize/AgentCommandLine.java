@@ -8,11 +8,12 @@ import BankProxy.BankProxy;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class AgentCommandLine extends AgentApp{
 
-
     private Agent agent;
+    LinkedBlockingQueue<NetworkDevice> servers;
 
     AgentCommandLine(){
         boolean test = false;
@@ -45,6 +46,7 @@ public class AgentCommandLine extends AgentApp{
 
                 System.out.println("enter bank host:");
                 bankProxy = new BankProxy(inScanner.nextLine(), 42069, this);
+
 
                 System.out.println("enter auctionhouse host:");
                 auctionProxy = new AuctionProxy(inScanner.nextLine(), 42070);
@@ -157,6 +159,11 @@ public class AgentCommandLine extends AgentApp{
         agent = new Agent(
                 new BankProxy("localHost", 42069, this),
                 new AuctionProxy("localhost", 42070));
+    }
+
+    @Override
+    public void addAuctionHouse(NetworkDevice networkDevice) {
+
     }
 
     public static void main(String[] args) {
