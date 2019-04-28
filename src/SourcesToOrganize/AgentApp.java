@@ -5,7 +5,9 @@ import AuctionHouse.ItemInfo;
 import AuctionProxy.AuctionProxy;
 import BankProxy.BankProxy;
 import javafx.application.Application;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -72,7 +74,6 @@ public class AgentApp extends Application{
         root.setAlignment(Pos.CENTER);
 
         root.add(title,1,1);
-        root.add(localTest, 1,2);
 
         root.add(new Label("Bank Host"), 0, 4);
         root.add(bankHostInput, 1,4);
@@ -80,6 +81,8 @@ public class AgentApp extends Application{
         root.add(new Label("AuctionHost"), 0, 5);
         root.add(auctionHostInput, 1, 5);
         root.add(labTest, 1, 6);
+
+        root.add(localTest, 1,9);
 
         return new Scene(root, 500, 500);
 
@@ -145,20 +148,16 @@ public class AgentApp extends Application{
      */
     private Scene auctionScene() {
 
-        GridPane root = new GridPane();
+        SplitPane splitPane = new SplitPane();
+        splitPane.setOrientation(Orientation.HORIZONTAL);
+
+        GridPane auctionItemRoot = new GridPane();
 
 
-        /*
-        //list view
-        ScrollPane scrollPane = new ScrollPane();
-        ListView<String> listView = new ListView<>();
-        scrollPane.setContent(listView);
+        splitPane.getItems().add(auctionItemRoot);
 
-        System.out.println(itemInfos);
-        for (ItemInfo info : itemInfos){
-            listView.getItems().add(info.getName());
-        }
-        */
+        splitPane.getItems().add(bankAccountRoot());
+
 
         ArrayList<ItemInfo> itemInfos = agent.getItems();
 
@@ -205,11 +204,11 @@ public class AgentApp extends Application{
         TextField amountInput = new TextField();
 
         bidButton.setOnAction(e -> {
-            ItemInfo selecteditem = tableView.getSelectionModel().getSelectedItem();
+            ItemInfo selectedItem = tableView.getSelectionModel().getSelectedItem();
 
             Double amount = Double.parseDouble(amountInput.getText());
 
-            Bid bid = new Bid(amount, agent.getAccountID(), selecteditem.getItemID());
+            Bid bid = new Bid(amount, agent.getAccountID(), selectedItem.getItemID());
 
             agent.bid(bid);
         });
@@ -224,15 +223,43 @@ public class AgentApp extends Application{
                button
 
          */
-        root.add(scrollTable, 1, 1);
-        root.add(selectedItemText, 1,3);
+        auctionItemRoot.add(scrollTable, 1, 1);
+        auctionItemRoot.add(selectedItemText, 1,3);
 
-        root.add(amountLabel, 0, 4);
-        root.add(amountInput, 1, 4);
-        root.add(bidButton,   1, 5);
+        auctionItemRoot.add(amountLabel, 0, 4);
+        auctionItemRoot.add(amountInput, 1, 4);
+        auctionItemRoot.add(bidButton,   1, 5);
 
 
-        return new Scene(root,500, 500);
+        return new Scene(splitPane,500, 500);
+    }
+
+
+    private Node bankAccountRoot(){
+
+        GridPane gridPane = new GridPane();
+
+        /*
+        acc# : ###
+        bal  : $$$
+         */
+
+
+        Label accountLabel = new Label("Account# : ");
+        Text accountNum = new Text(String.valueOf(agent.getAccountID()));
+
+
+        Label balanceLabel = new Label("Balance : ");
+        Text accountBal = new Text(String.valueOf(agent.getBalance()));
+
+        gridPane.add(accountLabel, 0,0);
+        gridPane.add(accountNum, 1, 0);
+
+        gridPane.add(balanceLabel, 0, 1);
+        gridPane.add(accountBal, 1,1);
+
+        return gridPane;
+
     }
 
     private boolean localTest() {

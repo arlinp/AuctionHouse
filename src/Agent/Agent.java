@@ -10,6 +10,7 @@ import SourcesToOrganize.Bid;
 import SourcesToOrganize.NetworkDevice;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Agent implements BankProcess, AuctionProcess {
@@ -23,35 +24,47 @@ public class Agent implements BankProcess, AuctionProcess {
     ArrayList<AuctionProxy> connectedAuctionProxys = new ArrayList<AuctionProxy>();
     AuctionProxy currentAuctionProxy;
 
+    LinkedList<Bid> bids = new LinkedList<>();
+
     public Agent(BankProxy bankProxy, AuctionProxy auctionProxy){
 
-        this.auctionProxy = auctionProxy;
+//        this.auctionProxy = auctionProxy;
+        connectedAuctionProxys.add(auctionProxy);
+        currentAuctionProxy = auctionProxy;
+
         this.bankProxy = bankProxy;
     }
 
     public int addAccount(int accountID){
-
         return bankProxy.addAccount(accountID);
+    }
+
+    public ArrayList<AuctionProxy> getConnectedAuctionProxys() {
+        return connectedAuctionProxys;
+    }
+
+    public LinkedList<Bid> getBids() {
+        return bids;
     }
 
     @Override
     public BidInfo bid(Bid bid) {
-        return auctionProxy.bid(bid);
+        return currentAuctionProxy.bid(bid);
     }
 
     @Override
     public ItemInfo getItemInfo(int itemID) {
-        return auctionProxy.getItemInfo(itemID);
+        return currentAuctionProxy.getItemInfo(itemID);
     }
 
     @Override
     public ArrayList<ItemInfo> getItems() {
-        return auctionProxy.getItems();
+        return currentAuctionProxy.getItems();
     }
 
     @Override
     public String helloInternet(String s) {
-        return auctionProxy.helloInternet(s);
+        return currentAuctionProxy.helloInternet(s);
     }
 
     @Override
