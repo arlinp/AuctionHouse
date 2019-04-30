@@ -7,16 +7,19 @@ import BankProxy.BankProxy;
 import javafx.application.Application;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class AgentApp extends Application{
 
@@ -24,6 +27,12 @@ public class AgentApp extends Application{
     Stage window;
     public Agent agent;
 
+
+    Text selectedItemText = new Text();
+    
+    
+    LinkedList<Bid> bids = new LinkedList<>();
+    private VBox bidVBox;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -151,12 +160,35 @@ public class AgentApp extends Application{
         SplitPane splitPane = new SplitPane();
         splitPane.setOrientation(Orientation.HORIZONTAL);
 
+        //select auctionhouses
+        GridPane houseSelectionRoot = houseSelectionRoot();
+        splitPane.getItems().add(houseSelectionRoot);
+
+        //select items
+
         GridPane auctionItemRoot = new GridPane();
-
-
         splitPane.getItems().add(auctionItemRoot);
 
         splitPane.getItems().add(bankAccountRoot());
+
+
+        //manage bids
+        
+        ScrollPane bidScrollPane = new ScrollPane();
+
+        bidVBox = new VBox();
+        
+        bidScrollPane.setContent(bidScrollPane);
+        
+        
+        
+
+        return new Scene(splitPane,500, 500);
+    }
+
+    private GridPane itemSelectionRoot() {
+
+        GridPane auctionItemRoot = itemSelectionRoot();
 
 
         ArrayList<ItemInfo> itemInfos = agent.getItems();
@@ -187,8 +219,8 @@ public class AgentApp extends Application{
             tableView.getItems().add(info);
         }
 
-        Text selectedItemText = new Text();
-
+        
+        //select Item
         tableView.setOnMouseClicked(e -> {
 //            ItemInfo selecteditem = tableView.getSelectionModel().getSelectedItem();
 
@@ -203,26 +235,22 @@ public class AgentApp extends Application{
         Label amountLabel = new Label("Bid Amount");
         TextField amountInput = new TextField();
 
+        //bid on Item
         bidButton.setOnAction(e -> {
             ItemInfo selectedItem = tableView.getSelectionModel().getSelectedItem();
 
             Double amount = Double.parseDouble(amountInput.getText());
 
             Bid bid = new Bid(amount, agent.getAccountID(), selectedItem.getItemID());
+            
+            bids.add(bid);
+            
+            bidVBox.getChildren().add(makeBidGroup(bid, selectedItem));
 
             agent.bid(bid);
         });
 
-
-        /*
-                table
-
-                text
-
-        label, input
-               button
-
-         */
+        
         auctionItemRoot.add(scrollTable, 1, 1);
         auctionItemRoot.add(selectedItemText, 1,3);
 
@@ -230,8 +258,52 @@ public class AgentApp extends Application{
         auctionItemRoot.add(amountInput, 1, 4);
         auctionItemRoot.add(bidButton,   1, 5);
 
+        return auctionItemRoot;
+    }
 
-        return new Scene(splitPane,500, 500);
+    private Group makeBidGroup(Bid bid, ItemInfo info) {
+
+        Group bidGroup = new Group();
+
+        bidGroup.getChildren().add(new Text(info.getName()));
+
+        bidGroup.getChildren().add(new Text("$" + info.getPrice()));
+
+        return bidGroup;
+    }
+
+    private GridPane houseSelectionRoot() {
+
+        GridPane root = new GridPane();
+
+        ScrollPane scrollPane = new ScrollPane();
+
+        TableView<AuctionProxy> tableView = new TableView<AuctionProxy>();
+
+
+
+        scrollPane.setContent(tableView);
+
+
+        TableColumn<AuctionProxy, String> hostCol = new TableColumn<>("Host");
+        hostCol.setCellValueFactory(new PropertyValueFactory<>("hostname"));
+        tableView.getColumns().add(hostCol);
+
+        //price columns
+        TableColumn<AuctionProxy, String> portCol = new TableColumn<>("Port#");
+        portCol.setCellValueFactory(new PropertyValueFactory<>("port"));
+        tableView.getColumns().add(portCol);
+
+        for (AuctionProxy proxy : agent.getConnectedAuctionProxys()){
+            tableView.getItems().add(proxy);
+        }
+
+
+        root.add(scrollPane, 1,1);
+
+
+        return root;
+
     }
 
 

@@ -19,6 +19,9 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     private Socket s;
     private boolean open;
 
+    private String hostname;
+    private int port;
+
     /**
      * Proxy design for the Auction House. Creates a socket from the passed parameters
      *
@@ -28,6 +31,9 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     public AuctionProxy(String hostname, int port) {
         open = true;
         System.out.println("Creating the proxy");
+
+        this.hostname = hostname;
+        this.port = port;
 
         connectToServer(hostname, port);
 
