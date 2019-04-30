@@ -19,7 +19,7 @@ public class AgentAppCopy{
 
 
         //Start the bidders with their accounts
-        Bidder Bidder1 = new Bidder(1, 42069, 42070);
+        Bidder Bidder1 = new Bidder(1, 42071, 42072);
 //        Bidder Bidder3 = new Bidder(3, 42069, 42070);
 //        Bidder Bidder4 = new Bidder(4, 42069, 42070);
 //        Bidder Bidder5 = new Bidder(5, 42069, 42070);
@@ -53,7 +53,7 @@ public class AgentAppCopy{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Bidder Bidder2 = new Bidder(2, 42069, 42070);
+        Bidder Bidder2 = new Bidder(2, 42071, 42072);
         new Thread(Bidder2).start();
 
     }
