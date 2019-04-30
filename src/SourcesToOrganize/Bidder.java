@@ -5,6 +5,7 @@ import AuctionHouse.ItemInfo;
 import AuctionProxy.AuctionProxy;
 import BankProxy.BankProxy;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class Bidder implements Runnable{
@@ -35,10 +36,13 @@ public class Bidder implements Runnable{
             //repeatedly try to bid on first item
 //        for (int i = 0; i < 1000000; i+=100) {
 //            System.out.println(i);
-        auctionProxy.bid(new Bid(1000, account, auctionProxy.getItems().get(2).getItemID()));
+
+        auctionProxy.bid(new Bid(1000, account, 1002));
         System.out.println(auctionProxy.getItems());
-        auctionProxy.bid(new Bid(2000+account, account, auctionProxy.getItems().get(2).getItemID()));
+        System.out.println(auctionProxy.getItemInfo(1002));
+        auctionProxy.bid(new Bid(2000+account, account, 1002));
         System.out.println(auctionProxy.getItems());
+        System.out.println(auctionProxy.getItemInfo(1002));
 //      if (System.currentTimeMillis() > auctionItems.get(0).getTime()+1000) return;
 //        }
     }

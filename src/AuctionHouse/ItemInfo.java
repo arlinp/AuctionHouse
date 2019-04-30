@@ -7,14 +7,12 @@ public class ItemInfo implements Serializable {
     private static transient int counter = 1000;
     private String name;
     private String desc;
-    private long time;
     private double price;
     private int itemID;
 
     public ItemInfo(String name, String desc, long time, double price) {
         this.name = name;
         this.desc = desc;
-        this.time = time;
         this.price = price;
         itemID = counter;
         counter++;
@@ -26,10 +24,6 @@ public class ItemInfo implements Serializable {
 
     public String getDesc() {
         return desc;
-    }
-
-    public long getTime() {
-        return time;
     }
 
     public double getPrice() {
@@ -44,6 +38,18 @@ public class ItemInfo implements Serializable {
 
     @Override
     public String toString() {
-        return name + " " + desc + " " + System.currentTimeMillis() + " " + time + " " + price + " " + itemID ;
+        return name +  " $" + price + " #" + itemID + " @" + super.toString();
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return new ItemInfo(name, desc, 0, price);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        ItemInfo item = (ItemInfo) o;
+
+        return itemID == item.getItemID();
     }
 }

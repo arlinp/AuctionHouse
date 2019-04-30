@@ -108,8 +108,12 @@ public class AuctionProxy implements AuctionProcess, Runnable {
 
             AuctionRequest response = messages.get(ar.getPacketID());
             messages.remove(ar.getPacketID());
+
+            ItemInfo itemInfo = (ItemInfo) response.getItem().clone();
+            System.out.println(itemInfo);
+            response.setItems(null);
             return response.getItem();
-        } catch (IOException e) {
+        } catch (IOException | CloneNotSupportedException e) {
             e.printStackTrace();
         }
 
@@ -133,6 +137,9 @@ public class AuctionProxy implements AuctionProcess, Runnable {
 
             AuctionRequest response = messages.get(ar.getPacketID());
             messages.remove(ar.getPacketID());
+
+
+
             return response.getItems();
 
         } catch (IOException e) {

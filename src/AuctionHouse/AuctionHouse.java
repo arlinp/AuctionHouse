@@ -32,7 +32,7 @@ public class AuctionHouse implements AuctionProcess {
 
     public AuctionHouse(int port) {
 
-        bank = new BankProxy("127.0.0.1", 42069, null);
+        bank = new BankProxy("127.0.0.1", 42071, null);
         auctionID = bank.addAccount(8697);
 
         readInItems();
@@ -145,7 +145,11 @@ public class AuctionHouse implements AuctionProcess {
     @Override
     public BidInfo bid(Bid bid) {
         // Sanity check
-        if (bid == null) return BidInfo.REJECTION;
+        if (bid == null // || !items.contains(bid.getItemID())
+        ) {
+            System.out.println("Reject with " + bid.getItemID() + " FOR " + items);
+            return BidInfo.REJECTION;
+        }
 
         // Get the item to be bid upon
         Item item = items.get(bid.getItemID());
