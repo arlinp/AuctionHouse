@@ -29,8 +29,8 @@ public class AuctionCommunicator implements Runnable{
         this.auctionHouse = auctionHouse;
 
         try {
-            is = new ObjectInputStream(s.getInputStream());
             os = new ObjectOutputStream(s.getOutputStream());
+            is = new ObjectInputStream(s.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }

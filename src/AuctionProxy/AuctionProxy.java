@@ -46,6 +46,9 @@ public class AuctionProxy implements AuctionProcess, Runnable {
 
             is = new ObjectInputStream(s.getInputStream());
             System.out.println("Created the IS + " + is);
+//
+//            os = new ObjectOutputStream(s.getOutputStream());
+//            is = new ObjectInputStream(s.getInputStream());
         } catch (IOException e) {
             try {
                 Thread.sleep(1000);
@@ -74,6 +77,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
             waitOn(ar.getPacketID());
 
             AuctionRequest response = messages.get(ar.getPacketID());
+            messages.remove(ar.getPacketID());
             return response.getBidStatus();
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,6 +101,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
             waitOn(ar.getPacketID());
 
             AuctionRequest response = messages.get(ar.getPacketID());
+            messages.remove(ar.getPacketID());
             return response.getItem();
         } catch (IOException e) {
             e.printStackTrace();
@@ -113,12 +118,15 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     @Override
     public ArrayList<ItemInfo> getItems() {
         AuctionRequest ar = new AuctionRequest(AuctionInfo.GETALL);
+        ar.setItems(null);
 
         try {
             os.writeObject(ar);
+
             waitOn(ar.getPacketID());
 
             AuctionRequest response = messages.get(ar.getPacketID());
+            messages.remove(ar.getPacketID());
             return response.getItems();
 
         } catch (IOException e) {
@@ -177,6 +185,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
             AuctionRequest newAr = null;
             try {
                 newAr = (AuctionRequest) is.readObject();
+
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -187,6 +196,10 @@ public class AuctionProxy implements AuctionProcess, Runnable {
                 messages.put(newAr.getPacketID(), newAr);
 //                System.out.println(messages.containsKey(newAr.getPacketID()) + " " + newAr.getPacketID());
 
+                for (AuctionRequest ar : messages.values()) {
+                    System.out.println(" PACKETS; " + ar.getType() + " " + ar.getPacketID());
+                }
+                System.out.println();
                 synchronized (this) { notify(); }
             } else {
                 System.out.println("Processing");
