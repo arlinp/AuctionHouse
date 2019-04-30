@@ -24,6 +24,7 @@ public class AuctionHouse implements AuctionProcess {
 //    }
 
     private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
+    private ConcurrentHashMap<Integer, Item> itemsNotUpForAuction = new ConcurrentHashMap<Integer, Item>();
     private ArrayList<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
     private BankProxy bank;
     private int auctionID;
@@ -70,7 +71,8 @@ public class AuctionHouse implements AuctionProcess {
             String line;
             String[] lineArr;
 
-            int itemNum = 0;
+            int itemNum;
+            int threadsStarted = 0;
 
             while ((line = br.readLine()) != null){
 
@@ -79,8 +81,19 @@ public class AuctionHouse implements AuctionProcess {
                 ItemInfo itemInfo = new ItemInfo(lineArr[0], "", System.currentTimeMillis()+40000, Integer.parseInt(lineArr[1]));
                 itemInfos.add(itemInfo);
                 System.out.println(itemInfo);
+
                 Item item = new Item(bank, this, itemInfo, auctionID);
-                items.put(item.getItemID(), item);
+
+                //start the first three item threads
+                if(threadsStarted < 3){
+                    items.put(item.getItemID(), item);
+                    item.startThread();
+                    threadsStarted++;
+                }
+                else {
+                    itemsNotUpForAuction.put(item.getItemID(), item);
+                }
+
             }
         } catch (IOException e){
             e.printStackTrace();
@@ -89,16 +102,17 @@ public class AuctionHouse implements AuctionProcess {
     }
 
     /**
+     * Adds another item to the list of items
+     * currently being auctioned
      *
-     * @param item
-     * @return
      */
-    private int addItem(Item item) {
-        items.put(item.getItemID(), item);
-        itemInfos.add(item.getItemInfo());
+    public void addItem() {
+        Integer nextItemID = itemsNotUpForAuction.values().stream().findFirst().get().getItemID();
+        Item put = itemsNotUpForAuction.remove(nextItemID);
+        items.put(nextItemID, put);
 
-        return item.getItemID();
     }
+
 
 
     /**
@@ -136,6 +150,7 @@ public class AuctionHouse implements AuctionProcess {
         // Get the item to be bid upon
         Item item = items.get(bid.getItemID());
 
+
         // Set the bid and return the result
         return item.setBid(bid);
     }
@@ -163,7 +178,9 @@ public class AuctionHouse implements AuctionProcess {
      */
     @Override
     public ArrayList<ItemInfo> getItems() {
+
         return itemInfos;
+
     }
 
     /**

@@ -22,6 +22,9 @@ public class Item implements Runnable {
         this.itemID = itemInfo.getItemID();
         this.auctionID = auctionID;
 
+    }
+
+    public synchronized void startThread(){
         new Thread(this).start();
     }
 
@@ -117,6 +120,7 @@ public class Item implements Runnable {
                 // Noone bid on item Blah!
                 System.out.println("Noone bid on " + this);
                 // TODO Keep track on items not being bid on
+                //auction.addItem();
                 return;
             }
 
@@ -141,6 +145,7 @@ public class Item implements Runnable {
                 bank.transferFunds(bid.getAccountNumber(), auctionID, bid.getLockID());
                 auction.removeItem(itemID);
             }
+            auction.addItem();
         }
     }
 

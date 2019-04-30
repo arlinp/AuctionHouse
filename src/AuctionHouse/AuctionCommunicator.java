@@ -58,6 +58,7 @@ public class AuctionCommunicator implements Runnable{
                 processMessage(ar);
             } catch (IOException | ClassNotFoundException e) {
                 System.out.print("OH NO");
+                e.printStackTrace();
                 break;
             }
         }
@@ -78,6 +79,7 @@ public class AuctionCommunicator implements Runnable{
                     Bid bid = ar.getBid();
                     bid.setAc(this);
                     BidInfo status = auctionHouse.bid(bid);
+                    System.out.println(status);
                     newAR.setBidStatus(status);
                     break;
                 case GET:

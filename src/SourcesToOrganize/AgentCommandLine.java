@@ -148,7 +148,7 @@ public class AgentCommandLine extends AgentApp{
 //
 //                auctionProxy.bid(new Bid(amount,accountID,auctionItems.get(itemIndex).getItemID()));
 
-                agent.bid(new Bid(amount, agent.getAccountID(), itemIndex));
+                agent.bid(new Bid(amount, agent.getAccountID(), auctionItems.get(itemIndex).getItemID()));
             }
         }
     }
