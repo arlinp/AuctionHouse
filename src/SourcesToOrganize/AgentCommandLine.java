@@ -45,7 +45,7 @@ public class AgentCommandLine extends AgentApp{
             if (input.equals("2")) {
 
                 System.out.println("enter bank host:");
-                bankProxy = new BankProxy(inScanner.nextLine(), 42069, this);
+                bankProxy = new BankProxy(inScanner.nextLine(), 42071, this);
 
 
                 System.out.println("enter auctionhouse host:");
@@ -148,7 +148,7 @@ public class AgentCommandLine extends AgentApp{
 //
 //                auctionProxy.bid(new Bid(amount,accountID,auctionItems.get(itemIndex).getItemID()));
 
-                agent.bid(new Bid(amount, agent.getAccountID(), auctionItems.get(itemIndex).getItemID()));
+                agent.bid(new Bid(amount, agent.getAccountID(), itemIndex));
             }
         }
     }
@@ -157,7 +157,7 @@ public class AgentCommandLine extends AgentApp{
 
 
         agent = new Agent(
-                new BankProxy("localHost", 42069, this),
+                new BankProxy("localHost", 42071, this),
                 new AuctionProxy("localhost", 42070));
     }
 
