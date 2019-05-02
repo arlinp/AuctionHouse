@@ -39,6 +39,15 @@ public class BankProxy implements BankProcess, Runnable {
         new Thread(this).start();
     }
 
+    public BankProxy(String hostname, int port) {
+
+        open = true;
+
+        connectToServer(hostname, port);
+
+        new Thread(this).start();
+    }
+
 
     private void connectToServer(String hostname, int port) {
         try {

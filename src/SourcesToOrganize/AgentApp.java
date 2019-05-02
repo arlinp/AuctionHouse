@@ -60,9 +60,9 @@ public class AgentApp extends Application{
         //test on this computer
         Button localTest = new Button("localhost Test");
         localTest.setOnAction(e -> {
-
+            System.out.println("test");
             localTest();
-
+            System.out.println("tedsty2");
             window.setScene(bankAccountScene());
         });
 
@@ -75,7 +75,7 @@ public class AgentApp extends Application{
         labTest.setOnAction(e -> {
 
             agent = new Agent(
-                    new BankProxy(bankHostInput.getText(), 42069,this),
+                    new BankProxy(bankHostInput.getText(), 42069),
                     new AuctionProxy(auctionHostInput.getText(), 42070));
         });
 
@@ -167,7 +167,7 @@ public class AgentApp extends Application{
         //select items
 
         GridPane auctionItemRoot = new GridPane();
-        splitPane.getItems().add(auctionItemRoot);
+        splitPane.getItems().add(itemSelectionRoot());
 
         splitPane.getItems().add(bankAccountRoot());
 
@@ -336,10 +336,10 @@ public class AgentApp extends Application{
 
     private boolean localTest() {
 
-        BankProxy bankProxy = new BankProxy("localHost", 42069, this);
+        BankProxy bankProxy = new BankProxy("localHost", 42069);
 
         AuctionProxy auctionProxy = new AuctionProxy("localhost", 42070);
-
+        System.out.println("Created connections");
         agent = new Agent(bankProxy, auctionProxy);
 
         return true;
