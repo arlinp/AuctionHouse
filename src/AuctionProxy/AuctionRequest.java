@@ -73,11 +73,7 @@ public class AuctionRequest extends Packet implements Serializable {
         else {
             if (this.items == null) this.items = new ArrayList<>();
             for (ItemInfo item : items) {
-                try {
-                    this.items.add((ItemInfo) item.clone());
-                } catch (CloneNotSupportedException e) {
-                    e.printStackTrace();
-                }
+                this.items.add((ItemInfo) item.clone());
             }
         }
 

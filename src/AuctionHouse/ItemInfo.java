@@ -4,18 +4,17 @@ import java.io.Serializable;
 
 public class ItemInfo implements Serializable {
 
-    private static transient int counter = 1000;
+//    private static transient int counter = 1000;
     private String name;
     private String desc;
     private double price;
     private int itemID;
 
-    public ItemInfo(String name, String desc, long time, double price) {
+    public ItemInfo(String name, String desc, long time, double price, int count) {
         this.name = name;
         this.desc = desc;
         this.price = price;
-        itemID = counter;
-        counter++;
+        itemID = count;
     }
 
     public String getName() {
@@ -42,8 +41,8 @@ public class ItemInfo implements Serializable {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return new ItemInfo(name, desc, 0, price);
+    public Object clone() {
+        return new ItemInfo(name, desc, 0, price, itemID);
     }
 
     @Override

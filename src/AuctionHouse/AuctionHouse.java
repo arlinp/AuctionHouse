@@ -34,7 +34,7 @@ public class AuctionHouse implements AuctionProcess {
 
     public AuctionHouse(int port) {
 
-        bank = new BankProxy("127.0.0.1", 42069, null);
+        bank = new BankProxy("127.0.0.1", 42071, null);
         auctionID = bank.addAccount(8697);
 
         readInItems();
@@ -51,7 +51,6 @@ public class AuctionHouse implements AuctionProcess {
 
         while (true) {
             try {
-                System.out.println("Accepting connections");
                 Socket s = ss.accept();
                 AuctionCommunicator ac = new AuctionCommunicator(s,this);
 

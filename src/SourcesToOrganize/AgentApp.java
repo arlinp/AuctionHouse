@@ -5,7 +5,6 @@ import AuctionHouse.ItemInfo;
 import AuctionProxy.AuctionProxy;
 import BankProxy.BankProxy;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -13,13 +12,11 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -33,22 +30,14 @@ public class AgentApp extends Application{
 
     Text selectedItemText = new Text();
     
+    
+    LinkedList<Bid> bids = new LinkedList<>();
     private VBox bidVBox;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         window = primaryStage;
-
-        window.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent windowEvent) {
-                if (agent.getBids().isEmpty()){
-                    window.close();
-                }
-            }
-        });
-
 
         primaryStage.setScene(introScene());
 
@@ -168,37 +157,38 @@ public class AgentApp extends Application{
      */
     private Scene auctionScene() {
 
-        BorderPane root = new BorderPane();
-
+        SplitPane splitPane = new SplitPane();
+        splitPane.setOrientation(Orientation.HORIZONTAL);
 
         //select auctionhouses
-
-        root.setLeft(houseSelectionRoot());
+        GridPane houseSelectionRoot = houseSelectionRoot();
+        splitPane.getItems().add(houseSelectionRoot);
 
         //select items
 
-        root.setCenter(itemSelectionRoot());
+        GridPane auctionItemRoot = new GridPane();
+        splitPane.getItems().add(itemSelectionRoot());
+
+        splitPane.getItems().add(bankAccountRoot());
 
 
         //manage bids
         
         ScrollPane bidScrollPane = new ScrollPane();
-        bidScrollPane.setFitToWidth(true);
 
         bidVBox = new VBox();
         
-        bidScrollPane.setContent(bidVBox);
+        bidScrollPane.setContent(bidScrollPane);
+        
+        
+        
 
-        root.setRight(bidScrollPane);
-
-
-
-        return new Scene(root,500, 500);
+        return new Scene(splitPane,500, 500);
     }
 
     private GridPane itemSelectionRoot() {
 
-        GridPane auctionItemRoot = new GridPane();
+        GridPane auctionItemRoot = itemSelectionRoot();
 
 
         ArrayList<ItemInfo> itemInfos = agent.getItems();
@@ -252,12 +242,12 @@ public class AgentApp extends Application{
             Double amount = Double.parseDouble(amountInput.getText());
 
             Bid bid = new Bid(amount, agent.getAccountID(), selectedItem.getItemID());
-            agent.bid(bid);
-
-            agent.getBids().add(bid);
+            
+            bids.add(bid);
             
             bidVBox.getChildren().add(makeBidGroup(bid, selectedItem));
 
+            agent.bid(bid);
         });
 
         
@@ -311,7 +301,6 @@ public class AgentApp extends Application{
 
         root.add(scrollPane, 1,1);
 
-        root.add(bankAccountRoot(), 1, 2);
 
         return root;
 
@@ -348,8 +337,8 @@ public class AgentApp extends Application{
     private boolean localTest() {
 
         BankProxy bankProxy = new BankProxy("localHost", 42069);
-        System.out.println("hereyrdyy");
-        AuctionProxy auctionProxy = new AuctionProxy("localhost", 42072);
+
+        AuctionProxy auctionProxy = new AuctionProxy("localhost", 42070);
         System.out.println("Created connections");
         agent = new Agent(bankProxy, auctionProxy);
 
