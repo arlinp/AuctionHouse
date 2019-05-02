@@ -60,7 +60,8 @@ public class AgentCommandLine extends AgentApp{
             if (auctionProxy == null) throw new ConnectException();
 
         } catch (ConnectException e) {
-
+            System.out.println("A connect exception happened");
+            e.printStackTrace();
 
         }
 
@@ -126,6 +127,10 @@ public class AgentCommandLine extends AgentApp{
 
                 System.out.println("Items for auction: ");
                 ArrayList<ItemInfo> auctionItems = agent.getItems();
+
+                for(ItemInfo info : auctionItems){
+                    System.out.println(info);
+                }
 
                 System.out.println("enter number to make bid");
 

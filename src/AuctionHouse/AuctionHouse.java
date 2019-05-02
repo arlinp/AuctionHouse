@@ -24,10 +24,12 @@ public class AuctionHouse implements AuctionProcess {
 //    }
 
     private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
-    private ConcurrentHashMap<Integer, Item> itemsNotUpForAuction = new ConcurrentHashMap<Integer, Item>();
+    private ArrayList<Item> itemsNotUpForAuction = new ArrayList<Item>();
     private ArrayList<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
     private BankProxy bank;
     private int auctionID;
+    private BufferedReader bufferedReader;
+    private static int counter = 0;
 
 
     public AuctionHouse(int port) {
@@ -39,6 +41,7 @@ public class AuctionHouse implements AuctionProcess {
 
         ServerSocket ss = null;
         try {
+            System.out.println(port);
             ss = new ServerSocket(port);
         } catch (IOException e) {
             e.printStackTrace();
@@ -68,30 +71,44 @@ public class AuctionHouse implements AuctionProcess {
     private void readInItems() {
         try {
             BufferedReader br = new BufferedReader(new FileReader("resources/items.txt"));
+            bufferedReader = br;
             String line;
             String[] lineArr;
 
-            int itemNum;
-            int threadsStarted = 0;
+            int itemNum = 0;
 
+//            for(int i = 0; i < 3; i++){
+//                line = br.readLine();
+//                if(!line.equals(null)) {
+//                    lineArr = line.split(" ");
+//
+//                    ItemInfo itemInfo = new ItemInfo(lineArr[0], "", System.currentTimeMillis() + 40000, Integer.parseInt(lineArr[1]));
+//                    itemInfos.add(itemInfo);
+//                    System.out.println(itemInfo);
+//
+//                    Item item = new Item(bank, this, itemInfo, auctionID);
+//                    items.put(item.getItemID(), item);
+//                    item.startThread();
+//                }
+//            }
             while ((line = br.readLine()) != null){
 
                 lineArr = line.split(" ");
 
                 ItemInfo itemInfo = new ItemInfo(lineArr[0], "", System.currentTimeMillis()+40000, Integer.parseInt(lineArr[1]));
-                itemInfos.add(itemInfo);
-                System.out.println(itemInfo);
-
                 Item item = new Item(bank, this, itemInfo, auctionID);
 
                 //start the first three item threads
-                if(threadsStarted < 3){
+                if(itemNum < 3){
+                    itemInfos.add(itemInfo);
+                    System.out.println(itemInfo);
                     items.put(item.getItemID(), item);
                     item.startThread();
-                    threadsStarted++;
+                    itemNum++;
                 }
                 else {
-                    itemsNotUpForAuction.put(item.getItemID(), item);
+                    //itemsNotUpForAuction.put(item.getItemID(), item);
+                    itemsNotUpForAuction.add(item);
                 }
 
             }
@@ -101,18 +118,8 @@ public class AuctionHouse implements AuctionProcess {
         System.out.println("Got here");
     }
 
-    /**
-     * Adds another item to the list of items
-     * currently being auctioned
-     *
-     */
-    public void addItem() {
-        Integer nextItemID = itemsNotUpForAuction.values().stream().findFirst().get().getItemID();
-        Item put = itemsNotUpForAuction.remove(nextItemID);
-        items.put(nextItemID, put);
-
-    }
-
+    // TODO check when to close an auction house and gracefully close it
+    // TODO in proxy, check if we can leave an Auction house
 
 
     /**
@@ -122,8 +129,18 @@ public class AuctionHouse implements AuctionProcess {
      */
     public void removeItem(int itemID) {
         if (items.containsKey(itemID)) {
+            int index = itemInfos.indexOf(items.get(itemID).getItemInfo());
             itemInfos.remove(items.get(itemID).getItemInfo());
-            items.remove(itemID);
+            Item item = items.remove(itemID);
+
+            // Add a new item to replace it
+                if(!itemsNotUpForAuction.isEmpty()) {
+
+                    Item itemUp = itemsNotUpForAuction.remove(0);
+                    items.put(itemUp.getItemID(), itemUp);
+                    itemUp.startThread();
+                }else{
+                    System.out.println("No more items in the Auction house!");}
         }
     }
 
@@ -145,7 +162,7 @@ public class AuctionHouse implements AuctionProcess {
     @Override
     public BidInfo bid(Bid bid) {
         // Sanity check
-        if (bid == null // || !items.contains(bid.getItemID())
+        if (bid == null || !items.containsKey(bid.getItemID())
         ) {
             System.out.println("Reject with " + bid.getItemID() + " FOR " + items);
             return BidInfo.REJECTION;
@@ -154,8 +171,6 @@ public class AuctionHouse implements AuctionProcess {
         // Get the item to be bid upon
         Item item = items.get(bid.getItemID());
 
-
-        // Set the bid and return the result
         return item.setBid(bid);
     }
 

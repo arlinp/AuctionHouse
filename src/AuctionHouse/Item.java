@@ -121,6 +121,7 @@ public class Item implements Runnable {
                 System.out.println("Noone bid on " + this);
                 // TODO Keep track on items not being bid on
                 //auction.addItem();
+                auction.removeItem(itemID);
                 return;
             }
 
@@ -145,7 +146,6 @@ public class Item implements Runnable {
                 bank.transferFunds(bid.getAccountNumber(), auctionID, bid.getLockID());
                 auction.removeItem(itemID);
             }
-            auction.addItem();
         }
     }
 

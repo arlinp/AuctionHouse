@@ -58,7 +58,7 @@ public class Agent implements BankProcess, AuctionProcess {
     }
 
     @Override
-    public ArrayList<ItemInfo> getItems() {
+    public synchronized ArrayList<ItemInfo> getItems() {
         return currentAuctionProxy.getItems();
     }
 
