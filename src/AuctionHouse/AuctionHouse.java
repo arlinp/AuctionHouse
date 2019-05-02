@@ -17,6 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AuctionHouse implements AuctionProcess {
 
 
+
+
     public static final long ITEM_WAIT_TIME = 25000;
 
 
@@ -29,12 +31,13 @@ public class AuctionHouse implements AuctionProcess {
     private BankProxy bank;
     private int auctionID;
     private BufferedReader bufferedReader;
-    private static int counter = 0;
+    private static int counter = 1000;
+
 
 
     public AuctionHouse(int port) {
 
-        bank = new BankProxy("127.0.0.1", 42071, null);
+        bank = new BankProxy("127.0.0.1", 42073, null);
         auctionID = bank.addAccount(8697);
 
         readInItems();
@@ -95,8 +98,10 @@ public class AuctionHouse implements AuctionProcess {
 
                 lineArr = line.split(" ");
 
-                ItemInfo itemInfo = new ItemInfo(lineArr[0], "", System.currentTimeMillis()+40000, Integer.parseInt(lineArr[1]));
+                ItemInfo itemInfo = new ItemInfo(lineArr[0], "", System.currentTimeMillis()+40000, Integer.parseInt(lineArr[1]),counter);
                 Item item = new Item(bank, this, itemInfo, auctionID);
+
+                counter++;
 
                 //start the first three item threads
                 if(itemNum < 3){

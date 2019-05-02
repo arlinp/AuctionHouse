@@ -26,11 +26,7 @@ public class AgentApp extends Application{
 
     Stage window;
     public Agent agent;
-
-
     Text selectedItemText = new Text();
-    
-    
     LinkedList<Bid> bids = new LinkedList<>();
     private VBox bidVBox;
 

@@ -113,7 +113,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
             System.out.println(itemInfo);
             response.setItems(null);
             return response.getItem();
-        } catch (IOException | CloneNotSupportedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
