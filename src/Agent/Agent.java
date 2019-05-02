@@ -36,6 +36,7 @@ public class Agent implements BankProcess, AuctionProcess {
     }
 
     public int addAccount(int accountID){
+        setAccountID(accountID);
         return bankProxy.addAccount(accountID);
     }
 
@@ -49,6 +50,8 @@ public class Agent implements BankProcess, AuctionProcess {
 
     @Override
     public BidInfo bid(Bid bid) {
+
+        bids.add(bid);
         return currentAuctionProxy.bid(bid);
     }
 
@@ -154,7 +157,7 @@ public class Agent implements BankProcess, AuctionProcess {
     }
 
     public void setAccountID(int accountID) {
-        this.accountID = bankProxy.addAccount(accountID);
+        this.accountID = accountID;
     }
 
 }

@@ -1,5 +1,6 @@
 package BankProxy;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -67,7 +68,7 @@ public class BankProxy implements BankProcess, Runnable {
                 e1.printStackTrace();
             }
             connectToServer(hostname, port);
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 
