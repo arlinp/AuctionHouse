@@ -204,6 +204,11 @@ public class AuctionHouse implements AuctionProcess {
         return alive;
     }
 
+    /**
+     * Main method that allows the AuctionHouse to be opened up and created
+     *
+     * @param args Takes in 0 or 4 parameters specificated
+     */
     public static void main(String[] args) {
         if (args.length == 4) {
 
@@ -224,7 +229,6 @@ public class AuctionHouse implements AuctionProcess {
 
             AuctionHouse ah = new AuctionHouse(operatingPort,args[1],bankPort);
         } else {
-
             AuctionHouse ah = new AuctionHouse(auctionPort, "localhost", bankPort);
         }
 
