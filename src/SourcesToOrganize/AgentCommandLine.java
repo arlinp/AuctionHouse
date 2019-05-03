@@ -90,7 +90,7 @@ public class AgentCommandLine extends AgentApp{
                     input = inScanner.nextLine();
 
                     if (input.equals("")) {
-                        agent.setAccountID(5);
+                        agent.addAccount(5);
                     } else {
                         agent.setAccountID(Integer.parseInt(input));
                     }

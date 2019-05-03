@@ -80,7 +80,7 @@ public class Bank implements BankProcess {
      * @return Account ID
      */
     @Override
-    public int addAccount(int ID) {
+    public synchronized int addAccount(int ID) {
         // Iterate counter
 
         // Add a new account to the existing accounts. New account
@@ -121,7 +121,10 @@ public class Bank implements BankProcess {
             System.out.println(accountNum);
         }
 
-        if (!accounts.containsKey(AccountID)) return -1.0;
+        if (!accounts.containsKey(AccountID)) {
+            System.out.println("CAN'T FIND THAT ACCOUNT");
+            return -1.0;
+        }
 
         // Get the balance of an account!
         Account account = accounts.get(AccountID);
