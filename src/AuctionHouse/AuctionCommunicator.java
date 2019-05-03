@@ -84,24 +84,18 @@ public class AuctionCommunicator implements Runnable{
                     break;
                 case GET:
                     newAR.setItemInfo(auctionHouse.getItemInfo(ar.getItemID()));
-//                    newAR.setMessage(auctionHouse.helloInternet(ar.getMessage()));
                     break;
                 case GETALL:
                     newAR.setItems(auctionHouse.getItems());
                     break;
-                case TEST:
-                    String s = auctionHouse.helloInternet(ar.getMessage());
-                    System.out.println(s + " was the response");
-                    newAR.setMessage(s);
+                case CLOSEREQUEST:
+                    newAR.setContains(auctionHouse.closeRequest(ar.getItemID()));
                     break;
             }
 
-//            System.out.println("CHECK FOR SETTING " + newAR.getPacketID());
-            newAR.setItemID(1234);
-//            newAR.setMessage("Testing12");
+            // Write out the object
             os.writeObject(newAR);
 
-//            System.out.println("sent the message");
         } catch (IOException e) {
             e.printStackTrace();
         }

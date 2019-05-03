@@ -14,6 +14,8 @@ import java.util.Random;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import static SourcesToOrganize.AgentApp.bankPort;
+
 /**
  * Runs a Bank where accounts can be interacted with through a socket connection
  */
@@ -308,11 +310,14 @@ public class Bank implements BankProcess {
      */
     public void notifyAuction(NetworkDevice networkDevice) {
         for (BankCommunicator bc : bankCommunicators) {
-
             bc.notifyNewAuction(networkDevice);
         }
     }
 
+
+    public static void main(String[] args) {
+        Bank bank = new Bank(bankPort);
+    }
 
 }
 

@@ -103,4 +103,8 @@ public class AuctionRequest extends Packet implements Serializable {
     public void setNewAmount(double newAmount) {
         this.newAmount = newAmount;
     }
+
+    public boolean isContains() {
+        return contains;
+    }
 }

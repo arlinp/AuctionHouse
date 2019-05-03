@@ -29,10 +29,10 @@ public interface AuctionProcess {
     ArrayList<ItemInfo> getItems();
 
     /**
-     * Test String hello world
+     * Check to see if the close is allowed
      *
-     * @param s String to say
-     * @return String as a response
+     * @param accountID Account ID to be used for checking
+     * @return True if no active bids, false if active bids
      */
-    String helloInternet(String s);
+    boolean closeRequest(int accountID);
 }

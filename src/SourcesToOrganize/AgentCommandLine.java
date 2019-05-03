@@ -67,8 +67,7 @@ public class AgentCommandLine extends AgentApp{
 //
 //        }
 
-        //int accountID = bankProxy.addAccount();
-        int accountID = 0;
+
 
         //main loop
         while (!input.equals("exit") || input.equals(null)) {
@@ -140,7 +139,13 @@ public class AgentCommandLine extends AgentApp{
                 input = inScanner.nextLine();
                 System.out.println("Bid attempt: " + input);
                 if (input.equalsIgnoreCase("menu")) continue;
-                int itemIndex = Integer.parseInt(input);
+                int itemIndex;
+                try {
+                    itemIndex = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    System.out.println("Please enter a number");
+                    continue;
+                }
                 System.out.println();
 
                 System.out.println("Enter amount: ");
@@ -154,7 +159,18 @@ public class AgentCommandLine extends AgentApp{
 
                 agent.bid(new Bid(amount, agent.getAccountID(), itemIndex));
             }
+
+            if (input.equalsIgnoreCase("exit")) {
+                System.out.println("Got here");
+                if (agent.closeRequest(agent.getAccountID())) continue;
+                else {
+                    System.out.println("Returned false");
+                    input = "";
+                }
+            }
         }
+
+
     }
 
     private void localTest() {
@@ -162,7 +178,7 @@ public class AgentCommandLine extends AgentApp{
 
         agent = new Agent(
                 new BankProxy("localHost", bankPort, this),
-                new AuctionProxy("localhost", auctionPort));
+                new AuctionProxy("localHost", auctionPort));
 
     }
 

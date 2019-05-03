@@ -137,15 +137,6 @@ public class AuctionHouse implements AuctionProcess {
         }
     }
 
-    // TODO implement?
-    /**
-     *
-     *
-     * @param itemID
-     */
-    private void updateItem(int itemID) {
-
-    }
 
     /**
      * To place a bid, with the completed bid object
@@ -208,19 +199,23 @@ public class AuctionHouse implements AuctionProcess {
     }
 
     /**
-     * Test String hello world
+     * Check to see if the close is allowed
      *
-     * @param s String to say
-     * @return String as a response
+     * @param accountID Account ID to be used for checking
+     * @return True if no active bids, false if active bids
      */
     @Override
-    public String helloInternet(String s) {
-        System.out.println("OMG he said: " + s);
-
-        String sss = "Got ur msg";
-        return sss;
+    public boolean closeRequest(int accountID) {
+        System.out.println("DID IT EVER EVEN CHECK?");
+        for (Item item : items.values()) {
+            if (item.contains(accountID)) {
+                System.out.println("False on" +item);
+                return false;
+            }
+        }
+        System.out.println("returned true");
+        return true;
     }
-
 
     public boolean isAlive() {
         return true;

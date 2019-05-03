@@ -22,7 +22,6 @@ public class AuctionProxyTest {
         System.out.println(auction.getItemInfo(127));
 
         System.out.println("Transmitting message");
-        System.out.println(auction.helloInternet("Hello bruh"));
         System.out.println("I said hello");
 
         auction.close();

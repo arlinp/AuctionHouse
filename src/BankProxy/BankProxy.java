@@ -87,6 +87,7 @@ public class BankProxy implements BankProcess, Runnable {
             waitOn(request.getPacketID());
 
             BankRequest response = messages.get(request.getPacketID());
+            messages.remove(response.getPacketID());
             return response.getID();
 
         } catch (IOException e) {
@@ -112,6 +113,7 @@ public class BankProxy implements BankProcess, Runnable {
             waitOn(request.getPacketID());
 
             BankRequest response = messages.get(request.getPacketID());
+            messages.remove(response.getPacketID());
             return response.getAmount();
 
         } catch (IOException e) {
@@ -136,6 +138,7 @@ public class BankProxy implements BankProcess, Runnable {
             waitOn(request.getPacketID());
 
             BankRequest response = messages.get(request.getPacketID());
+            messages.remove(response.getPacketID());
             return response.getStatus();
 
         } catch (IOException e) {
@@ -161,6 +164,7 @@ public class BankProxy implements BankProcess, Runnable {
             waitOn(request.getPacketID());
 
             BankRequest response = messages.get(request.getPacketID());
+            messages.remove(response.getPacketID());
             return response.getStatus();
 
         } catch (IOException e) {
@@ -189,6 +193,7 @@ public class BankProxy implements BankProcess, Runnable {
             waitOn(request.getPacketID());
 
             BankRequest response = messages.get(request.getPacketID());
+            messages.remove(response.getPacketID());
             return response.getLockNumber();
 
         } catch (IOException e) {
@@ -213,6 +218,7 @@ public class BankProxy implements BankProcess, Runnable {
             waitOn(request.getPacketID());
 
             BankRequest response = messages.get(request.getPacketID());
+            messages.remove(response.getPacketID());
             return response.getStatus();
 
         } catch (IOException e) {
@@ -240,6 +246,7 @@ public class BankProxy implements BankProcess, Runnable {
             waitOn(request.getPacketID());
 
             BankRequest response = messages.get(request.getPacketID());
+            messages.remove(response.getPacketID());
             return response.getStatus();
 
         } catch (IOException e) {
@@ -267,6 +274,7 @@ public class BankProxy implements BankProcess, Runnable {
             waitOn(request.getPacketID());
 
             BankRequest response = messages.get(request.getPacketID());
+            messages.remove(response.getPacketID());
             return response.getStatus();
 
         } catch (IOException e) {
@@ -293,6 +301,7 @@ public class BankProxy implements BankProcess, Runnable {
             waitOn(request.getPacketID());
 
             BankRequest response = messages.get(request.getPacketID());
+            messages.remove(response.getPacketID());
             return response.getStatus();
 
         } catch (IOException e) {
@@ -319,6 +328,7 @@ public class BankProxy implements BankProcess, Runnable {
             waitOn(request.getPacketID());
 
             BankRequest response = messages.get(request.getPacketID());
+            messages.remove(response.getPacketID());
             return response.getStatus();
 
         } catch (IOException e) {
@@ -342,6 +352,7 @@ public class BankProxy implements BankProcess, Runnable {
             waitOn(request.getPacketID());
 
             BankRequest response = messages.get(request.getPacketID());
+            messages.remove(response.getPacketID());
             return response.getNetworkDevices();
 
         } catch (IOException e) {
@@ -385,6 +396,8 @@ public class BankProxy implements BankProcess, Runnable {
     @Override
     public void run() {
         while (isOpen()) {
+
+            // Attempt to read and parse incoming messages
             BankRequest response = null;
             try {
                 response = (BankRequest) is.readObject();
@@ -392,12 +405,9 @@ public class BankProxy implements BankProcess, Runnable {
                 e.printStackTrace();
             }
 
+            // Process the messages
             if (response.getAck()) {
-//                System.out.println("Put in hashmap");
-//                System.out.println(messages.containsKey(response.getPacketID()) + " " + response.getPacketID());
                 messages.put(response.getPacketID(), response);
-//                System.out.println(messages.containsKey(response.getPacketID()) + " " + response.getPacketID());
-
                 synchronized (this) { notify(); }
             } else {
 //                System.out.println("Processing");

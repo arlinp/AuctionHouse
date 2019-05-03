@@ -16,29 +16,25 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Agent implements BankProcess, AuctionProcess {
 
 
+
     int accountID = 0;
-
     BankProxy bankProxy = null;
-    AuctionProxy auctionProxy = null;
-
-    ArrayList<AuctionProxy> connectedAuctionProxys = new ArrayList<AuctionProxy>();
-    AuctionProxy currentAuctionProxy;
+    private ArrayList<AuctionProxy> connectedAuctionProxys = new ArrayList<AuctionProxy>();
+    private AuctionProxy currentAuctionProxy;
 
     LinkedList<Bid> bids = new LinkedList<>();
 
-    public Agent(BankProxy bankProxy, AuctionProxy auctionProxy){
+    public Agent(BankProxy bankProxy, AuctionProxy auctionProxy) {
 
-//        this.auctionProxy = auctionProxy;
+
         connectedAuctionProxys.add(auctionProxy);
         currentAuctionProxy = auctionProxy;
 
         this.bankProxy = bankProxy;
     }
 
-    public int addAccount(int accountID){
-
+    public int addAccount(int accountID) {
         setAccountID(bankProxy.addAccount(accountID));
-
         return accountID;
     }
 
@@ -67,9 +63,16 @@ public class Agent implements BankProcess, AuctionProcess {
         return currentAuctionProxy.getItems();
     }
 
+
+    /**
+     * Check to see if the close is allowed
+     *
+     * @param accountID Account ID to be used for checking
+     * @return True if no active bids, false if active bids
+     */
     @Override
-    public String helloInternet(String s) {
-        return currentAuctionProxy.helloInternet(s);
+    public boolean closeRequest(int accountID) {
+        return currentAuctionProxy.closeRequest(accountID);
     }
 
     @Override
@@ -81,16 +84,14 @@ public class Agent implements BankProcess, AuctionProcess {
         return bankProxy.getBalance(accountID);
     }
 
-
     @Override
     public boolean addFunds(int AccountID, double amount) {
         return bankProxy.addFunds(AccountID, amount);
     }
+
     public boolean addFunds(double amount) {
         return bankProxy.addFunds(accountID, amount);
     }
-
-
 
     @Override
     public boolean removeFunds(int AccountID, double amount) {

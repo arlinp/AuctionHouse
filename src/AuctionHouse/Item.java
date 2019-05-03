@@ -130,7 +130,6 @@ public class Item implements Runnable {
         // End auction
         synchronized (bid) {
             if (bid == currentBid) {
-                System.out.println("ENDING AUCTION WITH ITEM WINNING BLAH");
                 open = false;
                 endAuction();
                 return;
@@ -151,4 +150,10 @@ public class Item implements Runnable {
     }
 
 
+    public boolean contains(int accountID) {
+        System.out.println(accountID + " " + bid);
+        if (bid != null) System.out.println(bid.getAccountNumber());
+        if (bid != null && bid.getAccountNumber() == accountID) return true;
+        else return false;
+    }
 }

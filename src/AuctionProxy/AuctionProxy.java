@@ -147,29 +147,33 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         return null;
     }
 
+
     /**
-     * Test String hello world
+     * Check to see if the close is allowed
      *
-     * @param s String to say
-     * @return String as a response
+     * @param accountID Account ID to be used for checking
+     * @return True if no active bids, false if active bids
      */
     @Override
-    public String helloInternet(String s) {
-//        AuctionRequest ar = new AuctionRequest(AuctionInfo.TEST);
-//
-//        try {
-//            ar.setItemID(1000);
-//            ar.setMessage(s);
-//            os.writeObject(ar);
-//            AuctionRequest response = (AuctionRequest) is.readObject();
-//            System.out.println("I found the message: " + response + " AND " + response.getMessage() + " " + response.getType() + " " + response.getItemID());
-//            return response.getMessage();
-//
-//        } catch (IOException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
+    public boolean closeRequest(int accountID) {
+        System.out.println("Checking request");
+        AuctionRequest ar = new AuctionRequest(AuctionInfo.CLOSEREQUEST);
+        ar.setItemID(accountID);
 
-        return null;
+        try {
+            os.writeObject(ar);
+
+            waitOn(ar.getPacketID());
+
+            AuctionRequest response = messages.get(ar.getPacketID());
+            messages.remove(response.getPacketID());
+            return response.isContains();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     /**
@@ -184,7 +188,6 @@ public class AuctionProxy implements AuctionProcess, Runnable {
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
-
             System.out.println("shut down!");
         }));
     }
@@ -195,29 +198,20 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     @Override
     public void run() {
         while (isOpen()) {
+            // Attempt to read in an AR from the input stream
             AuctionRequest newAr = null;
             try {
                 newAr = (AuctionRequest) is.readObject();
-
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
 
+            // Either notify or process immediately
             if (newAr.getAck()) {
-//                System.out.println("Put in hashmap");
-//                System.out.println(messages.containsKey(newAr.getPacketID()) + " " + newAr.getPacketID());
                 messages.put(newAr.getPacketID(), newAr);
-//                System.out.println(messages.containsKey(newAr.getPacketID()) + " " + newAr.getPacketID());
-
-                for (AuctionRequest ar : messages.values()) {
-                    System.out.println(" PACKETS; " + ar.getType() + " " + ar.getPacketID());
-                }
-                System.out.println();
                 synchronized (this) { notify(); }
             } else {
-                System.out.println("Processing");
                 processMessage(newAr);
-
             }
         }
     }
