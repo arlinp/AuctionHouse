@@ -20,7 +20,7 @@ import static SourcesToOrganize.AgentApp.bankPort;
 
 public class AuctionHouse implements AuctionProcess {
 
-    public static final long ITEM_WAIT_TIME = 25000;
+    public static long waitTime = 50000;
     private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
     private LinkedBlockingQueue<Item> itemsNotUpForAuction = new LinkedBlockingQueue<Item>();
     private LinkedBlockingQueue<ItemInfo> itemInfos = new LinkedBlockingQueue<ItemInfo>();
@@ -31,7 +31,7 @@ public class AuctionHouse implements AuctionProcess {
     private boolean alive = true;
 
 
-    public AuctionHouse(int port) {
+    public AuctionHouse(int port, String bankName, int bankPort) {
 
         bank = new BankProxy("127.0.0.1", bankPort, null);
         auctionID = bank.addAccount(8697);
@@ -205,6 +205,28 @@ public class AuctionHouse implements AuctionProcess {
     }
 
     public static void main(String[] args) {
-        AuctionHouse ah = new AuctionHouse(auctionPort);
+        if (args.length == 4) {
+
+            int operatingPort = 0;
+            int bankPort = 0;
+
+            try {
+                 operatingPort = Integer.parseInt(args[0]);
+                 bankPort = Integer.parseInt(args[2]);
+                 waitTime = Long.parseLong(args[3]);
+
+            } catch (NumberFormatException e) {
+                System.out.println("Input not correct:\n Correct usage: Auct" +
+                        "ionHouse <Operating Port> <Bank Host> <Bank Port> <" +
+                        "Wait Time>");
+                return;
+            }
+
+            AuctionHouse ah = new AuctionHouse(operatingPort,args[1],bankPort);
+        } else {
+
+            AuctionHouse ah = new AuctionHouse(auctionPort, "localhost", bankPort);
+        }
+
     }
 }
