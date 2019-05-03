@@ -23,7 +23,8 @@ import java.util.LinkedList;
 
 public class AgentApp extends Application{
 
-
+    public static int bankPort = 42070;
+    public static int auctionPort = 42069;
     Stage window;
     public Agent agent;
 
@@ -75,8 +76,8 @@ public class AgentApp extends Application{
         labTest.setOnAction(e -> {
 
             agent = new Agent(
-                    new BankProxy(bankHostInput.getText(), 42069),
-                    new AuctionProxy(auctionHostInput.getText(), 42070));
+                    new BankProxy(bankHostInput.getText(), bankPort),
+                    new AuctionProxy(auctionHostInput.getText(), auctionPort));
         });
 
 
@@ -336,9 +337,9 @@ public class AgentApp extends Application{
 
     private boolean localTest() {
 
-        BankProxy bankProxy = new BankProxy("localHost", 42069);
+        BankProxy bankProxy = new BankProxy("localHost", bankPort);
 
-        AuctionProxy auctionProxy = new AuctionProxy("localhost", 42070);
+        AuctionProxy auctionProxy = new AuctionProxy("localhost", auctionPort);
         System.out.println("Created connections");
         agent = new Agent(bankProxy, auctionProxy);
 

@@ -12,6 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class AgentCommandLine extends AgentApp{
 
+
     private Agent agent;
     LinkedBlockingQueue<NetworkDevice> servers;
 
@@ -92,7 +93,7 @@ public class AgentCommandLine extends AgentApp{
                     if (input.equals("")) {
                         agent.addAccount(5);
                     } else {
-                        agent.setAccountID(Integer.parseInt(input));
+                        agent.addAccount(Integer.parseInt(input));
                     }
 
                     
@@ -133,19 +134,16 @@ public class AgentCommandLine extends AgentApp{
                     System.out.println(info);
                 }
 
-                System.out.println("enter number to make bid");
+                System.out.println("Please enter a number to make bid\nOr type \"Menu\" to exit to the menu");
 
-//                for (int i = 0; i < auctionItems.size(); i++) {
-//                    System.out.println("" + i + " : " + auctionItems.get(i));
-//                }
 
                 input = inScanner.nextLine();
-
                 System.out.println("Bid attempt: " + input);
+                if (input.equalsIgnoreCase("menu")) continue;
                 int itemIndex = Integer.parseInt(input);
                 System.out.println();
 
-                System.out.println("enter amount: ");
+                System.out.println("Enter amount: ");
                 input = inScanner.nextLine();
                 double amount = Double.parseDouble(input);
 
@@ -163,8 +161,8 @@ public class AgentCommandLine extends AgentApp{
 
 
         agent = new Agent(
-                new BankProxy("localHost", 42071, this),
-                new AuctionProxy("localhost", 42073));
+                new BankProxy("localHost", bankPort, this),
+                new AuctionProxy("localhost", auctionPort));
 
     }
 

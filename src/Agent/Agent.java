@@ -36,8 +36,10 @@ public class Agent implements BankProcess, AuctionProcess {
     }
 
     public int addAccount(int accountID){
-        setAccountID(accountID);
-        return bankProxy.addAccount(accountID);
+
+        setAccountID(bankProxy.addAccount(accountID));
+
+        return accountID;
     }
 
     public ArrayList<AuctionProxy> getConnectedAuctionProxys() {

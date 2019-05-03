@@ -14,6 +14,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static SourcesToOrganize.AgentApp.auctionPort;
+import static SourcesToOrganize.AgentApp.bankPort;
+
 public class AuctionHouse implements AuctionProcess {
 
 
@@ -34,7 +37,7 @@ public class AuctionHouse implements AuctionProcess {
 
     public AuctionHouse(int port) {
 
-        bank = new BankProxy("127.0.0.1", 42071, null);
+        bank = new BankProxy("127.0.0.1", bankPort, null);
         auctionID = bank.addAccount(8697);
 
         readInItems();
@@ -77,25 +80,11 @@ public class AuctionHouse implements AuctionProcess {
 
             int itemNum = 0;
 
-//            for(int i = 0; i < 3; i++){
-//                line = br.readLine();
-//                if(!line.equals(null)) {
-//                    lineArr = line.split(" ");
-//
-//                    ItemInfo itemInfo = new ItemInfo(lineArr[0], "", System.currentTimeMillis() + 40000, Integer.parseInt(lineArr[1]));
-//                    itemInfos.add(itemInfo);
-//                    System.out.println(itemInfo);
-//
-//                    Item item = new Item(bank, this, itemInfo, auctionID);
-//                    items.put(item.getItemID(), item);
-//                    item.startThread();
-//                }
-//            }
             while ((line = br.readLine()) != null){
 
                 lineArr = line.split(" ");
 
-                ItemInfo itemInfo = new ItemInfo(lineArr[0], "", System.currentTimeMillis()+40000, Integer.parseInt(lineArr[1]), counter++);
+                ItemInfo itemInfo = new ItemInfo(lineArr[0], Integer.parseInt(lineArr[1]), counter++);
                 Item item = new Item(bank, this, itemInfo, auctionID);
 
                 //start the first three item threads
@@ -166,9 +155,7 @@ public class AuctionHouse implements AuctionProcess {
     @Override
     public BidInfo bid(Bid bid) {
         // Sanity check
-        if (bid == null || !items.containsKey(bid.getItemID())
-        ) {
-            System.out.println("Reject with " + bid.getItemID() + " FOR " + items);
+        if (bid == null || !items.containsKey(bid.getItemID())) {
             return BidInfo.REJECTION;
         }
 
@@ -240,7 +227,6 @@ public class AuctionHouse implements AuctionProcess {
     }
 
     public static void main(String[] args) {
-
-        AuctionHouse ah = new AuctionHouse(42070);
+        AuctionHouse ah = new AuctionHouse(auctionPort);
     }
 }

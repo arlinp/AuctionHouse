@@ -117,9 +117,9 @@ public class Bank implements BankProcess {
     @Override
     public synchronized double getBalance(int AccountID) {
         // Run check that would cause crash
-        for (Integer accountNum : accounts.keySet()){
-            System.out.println(accountNum);
-        }
+//        for (Integer accountNum : accounts.keySet()){
+//            System.out.println(accountNum);
+//        }
 
         if (!accounts.containsKey(AccountID)) {
             System.out.println("CAN'T FIND THAT ACCOUNT");
