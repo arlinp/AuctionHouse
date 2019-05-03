@@ -212,8 +212,8 @@ public class AuctionHouse implements AuctionProcess {
     public static void main(String[] args) {
         if (args.length == 4) {
 
-            int operatingPort = 0;
-            int bankPort = 0;
+            int operatingPort;
+            int bankPort;
 
             try {
                  operatingPort = Integer.parseInt(args[0]);
