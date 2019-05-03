@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -62,7 +63,8 @@ public class AgentApp extends Application{
         Button localTest = new Button("localhost Test");
         localTest.setOnAction(e -> {
             System.out.println("test");
-            localTest();
+//            localTest();
+            agent = new Agent(42069, 42072);
             System.out.println("tedsty2");
             window.setScene(bankAccountScene());
         });
@@ -158,33 +160,22 @@ public class AgentApp extends Application{
      */
     private Scene auctionScene() {
 
-        SplitPane splitPane = new SplitPane();
-        splitPane.setOrientation(Orientation.HORIZONTAL);
+        BorderPane root = new BorderPane();
 
-        //select auctionhouses
-        GridPane houseSelectionRoot = houseSelectionRoot();
-        splitPane.getItems().add(houseSelectionRoot);
+        //select auction houses
+        root.setLeft(houseSelectionRoot());
 
         //select items
-
-        GridPane auctionItemRoot = new GridPane();
-        splitPane.getItems().add(itemSelectionRoot());
-
-        splitPane.getItems().add(bankAccountRoot());
-
+        root.setCenter(itemSelectionRoot());
 
         //manage bids
         
         ScrollPane bidScrollPane = new ScrollPane();
-
         bidVBox = new VBox();
-        
         bidScrollPane.setContent(bidScrollPane);
-        
-        
-        
 
-        return new Scene(splitPane,500, 500);
+
+        return new Scene(root,500, 500);
     }
 
     private GridPane itemSelectionRoot() {
@@ -223,12 +214,8 @@ public class AgentApp extends Application{
         
         //select Item
         tableView.setOnMouseClicked(e -> {
-//            ItemInfo selecteditem = tableView.getSelectionModel().getSelectedItem();
-
-            selectedItemText.setText(tableView
-                    .getSelectionModel()
-                    .getSelectedItem()
-                    .getName());
+            ItemInfo selectedItem = tableView.getSelectionModel().getSelectedItem();
+            selectedItemText.setText(selectedItem.getName());
         });
 
         Button bidButton = new Button("Bid");
@@ -281,8 +268,6 @@ public class AgentApp extends Application{
 
         TableView<AuctionProxy> tableView = new TableView<AuctionProxy>();
 
-
-
         scrollPane.setContent(tableView);
 
 
@@ -302,6 +287,7 @@ public class AgentApp extends Application{
 
         root.add(scrollPane, 1,1);
 
+        root.add(bankAccountRoot(), 1,4);
 
         return root;
 
@@ -334,21 +320,6 @@ public class AgentApp extends Application{
         return gridPane;
 
     }
-
-    private boolean localTest() {
-
-        BankProxy bankProxy = new BankProxy("localHost", bankPort);
-
-        AuctionProxy auctionProxy = new AuctionProxy("localhost", auctionPort);
-        System.out.println("Created connections");
-        agent = new Agent(bankProxy, auctionProxy);
-
-        return true;
-
-    }
-
-
-
 
     public static void main(String[] args) {
 
