@@ -261,7 +261,6 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         synchronized (this) {
             while (!messages.containsKey(packetID)) {
                 try {
-                    System.out.println("Waiting on " + packetID);
                     wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
