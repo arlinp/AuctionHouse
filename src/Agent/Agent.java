@@ -74,6 +74,17 @@ public class Agent implements BankProcess, AuctionProcess {
         return currentAuctionProxy.getItems();
     }
 
+    /**
+     * Check to see if the close is allowed
+     *
+     * @param accountID Account ID to be used for checking
+     * @return True if no active bids, false if active bids
+     */
+    @Override
+    public boolean closeRequest(int accountID) {
+
+        return currentAuctionProxy.closeRequest(accountID);
+    }
 
 
     @Override
