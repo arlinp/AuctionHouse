@@ -7,3 +7,4 @@ Hawk 300
 Duck 70
 Magnets 5
 Lunchbox 50
+Random10thItem 69

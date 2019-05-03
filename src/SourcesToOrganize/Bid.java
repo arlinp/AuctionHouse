@@ -22,7 +22,7 @@ public class Bid implements Serializable {
         return amount;
     }
 
-    public int getAccountNumber() {
+    public int getAccount() {
         return accountNumber;
     }
 
