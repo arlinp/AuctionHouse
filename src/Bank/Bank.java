@@ -54,6 +54,7 @@ public class Bank implements BankProcess {
         // Accept connections while true
         while (isAlive()) {
             try {
+                System.out.println("Accepting Connections");
                 Socket s = ss.accept();
                 BankCommunicator ac = new BankCommunicator(s,this);
                 bankCommunicators.put(ac);

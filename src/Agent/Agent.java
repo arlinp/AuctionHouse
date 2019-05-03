@@ -35,8 +35,10 @@ public class Agent implements BankProcess, AuctionProcess {
 
     public Agent(int bankPort, int auctionPort){
 
-        bankProxy = new BankProxy("locahost", bankPort);
-        auctionProxy = new AuctionProxy("localhost", auctionPort);
+        System.out.println("hegxbv");
+        bankProxy = new BankProxy("localHost", bankPort);
+        System.out.println("sdfgargh");
+        auctionProxy = new AuctionProxy("localHost", auctionPort);
     }
 
 

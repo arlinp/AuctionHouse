@@ -63,7 +63,7 @@ public class AgentApp extends Application{
         Button localTest = new Button("localhost Test");
         localTest.setOnAction(e -> {
             System.out.println("test");
-            agent = new Agent(42069, 42072);
+            agent = new Agent(bankPort, auctionPort);
             System.out.println("tedsty2");
             window.setScene(bankAccountScene());
         });
@@ -184,7 +184,7 @@ public class AgentApp extends Application{
 
     private GridPane itemSelectionRoot() {
 
-        GridPane auctionItemRoot = itemSelectionRoot();
+        GridPane auctionItemRoot = new GridPane();
 
 
         ArrayList<ItemInfo> itemInfos = agent.getItems();

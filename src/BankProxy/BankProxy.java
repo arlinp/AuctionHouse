@@ -53,9 +53,10 @@ public class BankProxy implements BankProcess, Runnable {
     private void connectToServer(String hostname, int port) {
         try {
             while (s == null) {
+                System.out.println("jmkj with " + port + " " + hostname);
                 s = new Socket(hostname, port);
 
-                System.out.println("connected: " + s.isConnected());
+                System.out.println("Connected: " + s.isConnected());
 
                 os = new ObjectOutputStream(s.getOutputStream());
                 is = new ObjectInputStream(s.getInputStream());
