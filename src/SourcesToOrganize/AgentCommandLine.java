@@ -67,7 +67,8 @@ public class AgentCommandLine extends AgentApp{
 //
 //        }
 
-
+        //int accountID = bankProxy.addAccount();
+        int accountID = 0;
 
         //main loop
         while (!input.equals("exit") || input.equals(null)) {
@@ -95,7 +96,7 @@ public class AgentCommandLine extends AgentApp{
                         agent.addAccount(Integer.parseInt(input));
                     }
 
-                    
+
 
 
                     System.out.println("Account ID=" + agent.getAccountID());
@@ -126,51 +127,36 @@ public class AgentCommandLine extends AgentApp{
             //if auction, make bid
             if (input.equals("2")) {
 
-                System.out.println("Items for auction: ");
+
                 ArrayList<ItemInfo> auctionItems = agent.getItems();
+                while(!auctionItems.isEmpty()) {
+                    System.out.println("Items for auction: ");
+                    for (ItemInfo info : auctionItems) {
+                        System.out.println(info);
+                    }
 
-                for(ItemInfo info : auctionItems){
-                    System.out.println(info);
-                }
-
-                System.out.println("Please enter a number to make bid\nOr type \"Menu\" to exit to the menu");
+                    System.out.println("Please enter a number to make bid\nOr type \"Menu\" to exit to the menu");
 
 
-                input = inScanner.nextLine();
-                System.out.println("Bid attempt: " + input);
-                if (input.equalsIgnoreCase("menu")) continue;
-                int itemIndex;
-                try {
-                    itemIndex = Integer.parseInt(input);
-                } catch (NumberFormatException e) {
-                    System.out.println("Please enter a number");
-                    continue;
-                }
-                System.out.println();
+                    input = inScanner.nextLine();
+                    System.out.println("Bid attempt: " + input);
+                    if (input.equalsIgnoreCase("menu")) continue;
+                    int itemIndex = Integer.parseInt(input);
+                    System.out.println();
 
-                System.out.println("Enter amount: ");
-                input = inScanner.nextLine();
-                double amount = Double.parseDouble(input);
+                    System.out.println("Enter amount: ");
+                    input = inScanner.nextLine();
+                    double amount = Double.parseDouble(input);
 
 //                System.out.println("making bid on: " + auctionItems.get(itemIndex) + " " +
 //                        "for : " + amount);
 //
 //                auctionProxy.bid(new Bid(amount,accountID,auctionItems.get(itemIndex).getItemID()));
 
-                agent.bid(new Bid(amount, agent.getAccountID(), itemIndex));
-            }
-
-            if (input.equalsIgnoreCase("exit")) {
-                System.out.println("Got here");
-                if (agent.closeRequest(agent.getAccountID())) continue;
-                else {
-                    System.out.println("Returned false");
-                    input = "";
+                    agent.bid(new Bid(amount, agent.getAccountID(), itemIndex));
                 }
             }
         }
-
-
     }
 
     private void localTest() {
@@ -178,7 +164,7 @@ public class AgentCommandLine extends AgentApp{
 
         agent = new Agent(
                 new BankProxy("localHost", bankPort, this),
-                new AuctionProxy("localHost", auctionPort));
+                new AuctionProxy("localhost", auctionPort));
 
     }
 

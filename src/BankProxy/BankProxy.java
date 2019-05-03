@@ -99,6 +99,29 @@ public class BankProxy implements BankProcess, Runnable {
     }
 
     /**
+     * Makes an account for auction house or agent
+     *
+     * @return Account ID
+     */
+    public int addAccount() {
+        BankRequest request = new BankRequest(BankInfo.NEWACCOUNT);
+
+        try{
+            os.writeObject(request);
+            waitOn(request.getPacketID());
+
+            BankRequest response = messages.get(request.getPacketID());
+            messages.remove(response.getPacketID());
+            return response.getID();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+
+    }
+
+    /**
      * Get the balance of the Account number
      *
      * @param AccountID Unique Identifier of Account

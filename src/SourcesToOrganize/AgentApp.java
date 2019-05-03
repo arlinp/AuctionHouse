@@ -39,7 +39,9 @@ public class AgentApp extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+
         window = primaryStage;
+        window.setTitle("Distributed Auctions - Agent");
 
         primaryStage.setScene(introScene());
 
@@ -59,16 +61,6 @@ public class AgentApp extends Application{
         title.setFont(Font.font(50));
 
 
-        //test on this computer
-        Button localTest = new Button("localhost Test");
-        localTest.setOnAction(e -> {
-            System.out.println("test");
-            agent = new Agent(bankPort, auctionPort);
-            System.out.println("tedsty2");
-            window.setScene(bankAccountScene());
-        });
-
-
         //new account taking input text
         TextField bankHostInput = new TextField();
         TextField auctionHostInput = new TextField();
@@ -81,7 +73,19 @@ public class AgentApp extends Application{
                     new AuctionProxy(auctionHostInput.getText(), auctionPort));
         });
 
+        //test on this computer
+        Button localTest = new Button("localhost Test");
+        localTest.setOnAction(e -> {
 
+            System.out.println("make agent");
+            agent = new Agent(bankPort, auctionPort);
+            System.out.println("agent made");
+            window.setScene(bankAccountScene());
+        });
+
+
+
+        //add to intro root
         root.setAlignment(Pos.CENTER);
 
         root.add(title,1,1);
@@ -100,7 +104,11 @@ public class AgentApp extends Application{
     }
 
     /**
-     * Asks User to set up bank account, enter bank account number
+     * Asks User to set up bank account
+     * enter bank account number
+     * add funds
+     *
+     * enter auction
      * @return
      */
     private Scene bankAccountScene() {
@@ -110,23 +118,28 @@ public class AgentApp extends Application{
 
         Text notification = new Text();
 
+
         //new Bank Account
-        TextField bankAccountInput = new TextField("5");
+//        TextField bankAccountInput = new TextField("5");
 
         Button bankLogin = new Button("make new Account");
         bankLogin.setOnAction(e -> {
 
-            agent.addAccount(Integer.parseInt(bankAccountInput.getText()));
+            //set agent account number
+//            agent.addAccount(Integer.parseInt(bankAccountInput.getText()));
+//            notification.setText("account " + bankAccountInput.getText() + " made");
 
-            notification.setText("account " + bankAccountInput.getText() + " made");
+            agent.addAccount();
 
         });
+
 
         //add funds input
         TextField addFundsInput = new TextField("1000");
 
         Button addFundsButton = new Button("addFunds");
         addFundsButton.setOnAction(e -> {
+
             double fundsToAdd = Double.parseDouble(addFundsInput.getText());
             agent.addFunds(fundsToAdd);
 
@@ -135,11 +148,12 @@ public class AgentApp extends Application{
 
         Button auctionButton = new Button("Start Auction");
         auctionButton.setOnAction(e-> {
+
             window.setScene(auctionScene());
         });
 
 
-        root.add(bankAccountInput,1,1);
+//        root.add(bankAccountInput,1,1);
         root.add(bankLogin, 2,1);
 
         root.add(addFundsInput, 1, 3);
