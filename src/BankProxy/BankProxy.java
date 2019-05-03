@@ -357,7 +357,7 @@ public class BankProxy implements BankProcess, Runnable {
     public void close() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                open = false;
+                //open = false;
                 s.close();
                 System.out.println("shut down!");
             } catch (IOException e) {

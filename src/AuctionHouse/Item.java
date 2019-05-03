@@ -145,6 +145,7 @@ public class Item implements Runnable {
                 bid.getAc().notifyBid(BidInfo.WINNER, itemID, bid.getAmount());
                 bank.transferFunds(bid.getAccountNumber(), auctionID, bid.getLockID());
                 auction.removeItem(itemID);
+                //auction.bids.remove(bid);
             }
         }
     }

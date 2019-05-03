@@ -95,7 +95,7 @@ public class AuctionHouse implements AuctionProcess {
 
                 lineArr = line.split(" ");
 
-                ItemInfo itemInfo = new ItemInfo(lineArr[0], "", System.currentTimeMillis()+40000, Integer.parseInt(lineArr[1]));
+                ItemInfo itemInfo = new ItemInfo(lineArr[0], "", System.currentTimeMillis()+40000, Integer.parseInt(lineArr[1]), counter++);
                 Item item = new Item(bank, this, itemInfo, auctionID);
 
                 //start the first three item threads
@@ -134,13 +134,13 @@ public class AuctionHouse implements AuctionProcess {
             Item item = items.remove(itemID);
 
             // Add a new item to replace it
-                if(!itemsNotUpForAuction.isEmpty()) {
+            if(!itemsNotUpForAuction.isEmpty()) {
 
-                    Item itemUp = itemsNotUpForAuction.remove(0);
-                    items.put(itemUp.getItemID(), itemUp);
-                    itemUp.startThread();
-                }else{
-                    System.out.println("No more items in the Auction house!");}
+                Item itemUp = itemsNotUpForAuction.remove(0);
+                items.put(itemUp.getItemID(), itemUp);
+                itemUp.startThread();
+            }else{
+                System.out.println("No more items in the Auction house!");}
         }
     }
 
@@ -172,6 +172,20 @@ public class AuctionHouse implements AuctionProcess {
         Item item = items.get(bid.getItemID());
 
         return item.setBid(bid);
+    }
+
+    /**
+     * Close the connection
+     */
+    public void close() {
+        System.out.println("HERE SHUTTING DOWN");
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+//            try {
+                System.out.println("shut down!");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        }));
     }
 
     /**

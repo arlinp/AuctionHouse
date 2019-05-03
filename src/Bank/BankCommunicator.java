@@ -67,7 +67,17 @@ public class BankCommunicator implements Runnable {
             } catch (IOException | ClassNotFoundException e) {
                 if (Bank.BANKCOMMDEBUG) {
                     System.out.println("Error occured!");
-                    e.printStackTrace();
+                    System.out.println("Handle closing better");
+                    //e.printStackTrace();
+
+                    try {
+                        s.close();
+                    } catch (IOException e1) {
+                        System.out.println("WASN'T ABLE TO CLOSE PROPERLY");
+                        e1.printStackTrace();
+                    }
+
+
                 }
                 break;
             }

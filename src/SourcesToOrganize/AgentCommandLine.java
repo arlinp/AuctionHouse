@@ -16,7 +16,7 @@ public class AgentCommandLine extends AgentApp{
     LinkedBlockingQueue<NetworkDevice> servers;
 
     AgentCommandLine(){
-        boolean test = false;
+        boolean test = true;
 
         Scanner inScanner = new Scanner(System.in);
         String input;
@@ -31,7 +31,7 @@ public class AgentCommandLine extends AgentApp{
         BankProxy bankProxy = null;
         AuctionProxy auctionProxy = null;
 
-        try {
+//        try {
 
 
             if (input.equals("1")) {
@@ -42,28 +42,29 @@ public class AgentCommandLine extends AgentApp{
 
             }
 
-            if (input.equals("2")) {
+//            if (input.equals("2")) {
+//
+//                System.out.println("enter bank host:");
+//                bankProxy = new BankProxy(inScanner.nextLine(), 42071, this);
+//
+//
+//                System.out.println("enter auctionhouse host:");
+//                auctionProxy = new AuctionProxy(inScanner.nextLine(), 42070);
+//
+//                agent = new Agent(bankProxy, auctionProxy);
+//
+//            }
+//
+//            System.out.println(bankProxy);
+            //if (bankProxy == null) throw new ConnectException();
 
-                System.out.println("enter bank host:");
-                bankProxy = new BankProxy(inScanner.nextLine(), 42071, this);
+            //if (auctionProxy == null) throw new ConnectException();
 
-
-                System.out.println("enter auctionhouse host:");
-                auctionProxy = new AuctionProxy(inScanner.nextLine(), 42070);
-
-                agent = new Agent(bankProxy, auctionProxy);
-
-            }
-
-            if (bankProxy == null) throw new ConnectException();
-
-            if (auctionProxy == null) throw new ConnectException();
-
-        } catch (ConnectException e) {
-            System.out.println("A connect exception happened");
-            e.printStackTrace();
-
-        }
+//        } catch (ConnectException e) {
+//            System.out.println("A connect exception happened");
+//            e.printStackTrace();
+//
+//        }
 
         //int accountID = bankProxy.addAccount();
         int accountID = 0;
@@ -127,16 +128,15 @@ public class AgentCommandLine extends AgentApp{
 
                 System.out.println("Items for auction: ");
                 ArrayList<ItemInfo> auctionItems = agent.getItems();
-
                 for(ItemInfo info : auctionItems){
                     System.out.println(info);
                 }
 
                 System.out.println("enter number to make bid");
 
-                for (int i = 0; i < auctionItems.size(); i++) {
-                    System.out.println("" + i + " : " + auctionItems.get(i));
-                }
+//                for (int i = 0; i < auctionItems.size(); i++) {
+//                    System.out.println("" + i + " : " + auctionItems.get(i));
+//                }
 
                 input = inScanner.nextLine();
 
@@ -163,7 +163,8 @@ public class AgentCommandLine extends AgentApp{
 
         agent = new Agent(
                 new BankProxy("localHost", 42071, this),
-                new AuctionProxy("localhost", 42070));
+                new AuctionProxy("localhost", 42073));
+
     }
 
     @Override

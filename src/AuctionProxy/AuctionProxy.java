@@ -177,13 +177,15 @@ public class AuctionProxy implements AuctionProcess, Runnable {
      */
     public void close() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                open = false;
-                s.close();
-                System.out.println("shut down!");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                open = false;
+//                s.close();
+//                System.out.println("shut down!");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
+            System.out.println("shut down!");
         }));
     }
 
@@ -239,9 +241,16 @@ public class AuctionProxy implements AuctionProcess, Runnable {
                                 "here was $" + amountPaid + " transferred fr" +
                                 "om your bank account. Please allow 6-8 week" +
                                 "s in delivery for your item to arrive");
+
                         break;
                 }
                 break;
+        }
+    }
+
+    public void closeDown(){
+        if(messages.isEmpty()){
+            close();
         }
     }
 
