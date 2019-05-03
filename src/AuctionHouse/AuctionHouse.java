@@ -127,18 +127,22 @@ public class AuctionHouse implements AuctionProcess {
      * @param itemID
      * @return
      */
-    public void removeItem(int itemID) {
+    public synchronized void removeItem(int itemID) {
         if (items.containsKey(itemID)) {
-            int index = itemInfos.indexOf(items.get(itemID).getItemInfo());
+
             itemInfos.remove(items.get(itemID).getItemInfo());
-            Item item = items.remove(itemID);
+            items.remove(itemID);
 
             // Add a new item to replace it
             if(!itemsNotUpForAuction.isEmpty()) {
 
                 Item itemUp = itemsNotUpForAuction.remove(0);
+                ItemInfo itemInfo = itemUp.getItemInfo();
+                itemInfos.add(itemInfo);
+                System.out.println(itemInfo);
                 items.put(itemUp.getItemID(), itemUp);
                 itemUp.startThread();
+
             }else{
                 System.out.println("No more items in the Auction house!");}
         }

@@ -70,7 +70,7 @@ public class AgentCommandLine extends AgentApp{
         int accountID = 0;
 
         //main loop
-        while (!input.equals("exit")) {
+        while (!input.equals("exit") || input.equals(null)) {
 
             //access bank or access auction
             System.out.println("what would you like to do?");
@@ -128,6 +128,7 @@ public class AgentCommandLine extends AgentApp{
 
                 System.out.println("Items for auction: ");
                 ArrayList<ItemInfo> auctionItems = agent.getItems();
+
                 for(ItemInfo info : auctionItems){
                     System.out.println(info);
                 }
