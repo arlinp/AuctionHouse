@@ -68,15 +68,8 @@ public class AuctionRequest extends Packet implements Serializable {
     }
 
     public void setItems(ArrayList<ItemInfo> items) {
-
         if (items == null) this.items = null;
-        else {
-            if (this.items == null) this.items = new ArrayList<>();
-            for (ItemInfo item : items) {
-                this.items.add((ItemInfo) item.clone());
-            }
-        }
-
+        else this.items = items;
     }
 
 

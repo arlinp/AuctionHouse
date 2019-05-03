@@ -13,22 +13,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static SourcesToOrganize.AgentApp.auctionPort;
 import static SourcesToOrganize.AgentApp.bankPort;
 
 public class AuctionHouse implements AuctionProcess {
 
-
     public static final long ITEM_WAIT_TIME = 25000;
-
-
-//    public AuctionHouse(ClientProxy bankProxy, ServerProxy auctionHouseServer) {
-//    }
-
     private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
-    private ArrayList<Item> itemsNotUpForAuction = new ArrayList<Item>();
-    private ArrayList<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
+    private LinkedBlockingQueue<Item> itemsNotUpForAuction = new LinkedBlockingQueue<Item>();
+    private LinkedBlockingQueue<ItemInfo> itemInfos = new LinkedBlockingQueue<ItemInfo>();
     private BankProxy bank;
     private int auctionID;
     private BufferedReader bufferedReader;
@@ -56,12 +51,6 @@ public class AuctionHouse implements AuctionProcess {
             try {
                 Socket s = ss.accept();
                 AuctionCommunicator ac = new AuctionCommunicator(s,this);
-
-                System.out.println("Starting to send");
-//                Thread.sleep(200);
-
-//                ac.notifyBid(BidInfo.OUTBID, 1002, 100.00);
-//                ac.notifyBid(BidInfo.WINNER, 1001, 100.00);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -123,17 +112,24 @@ public class AuctionHouse implements AuctionProcess {
             items.remove(itemID);
 
             // Add a new item to replace it
-            if(!itemsNotUpForAuction.isEmpty()) {
+            if (!itemsNotUpForAuction.isEmpty()) {
 
-                Item itemUp = itemsNotUpForAuction.remove(0);
+                Item itemUp = null;
+                try {
+                    itemUp = itemsNotUpForAuction.take();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 ItemInfo itemInfo = itemUp.getItemInfo();
                 itemInfos.add(itemInfo);
                 System.out.println(itemInfo);
                 items.put(itemUp.getItemID(), itemUp);
                 itemUp.startThread();
 
-            }else{
-                System.out.println("No more items in the Auction house!");}
+            } else {
+                System.out.println("No more items in the Auction house!");
+            }
         }
     }
 
@@ -180,8 +176,7 @@ public class AuctionHouse implements AuctionProcess {
     public ItemInfo getItemInfo(int itemID) {
         if (items.get(itemID) != null) {
             return items.get(itemID).getItemInfo();
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -193,9 +188,11 @@ public class AuctionHouse implements AuctionProcess {
      */
     @Override
     public ArrayList<ItemInfo> getItems() {
-
-        return itemInfos;
-
+        ArrayList<ItemInfo> items = new ArrayList<ItemInfo>();
+        for (ItemInfo item : this.itemInfos) {
+            items.add((ItemInfo) item.clone());
+        }
+        return items;
     }
 
     /**
@@ -206,14 +203,9 @@ public class AuctionHouse implements AuctionProcess {
      */
     @Override
     public boolean closeRequest(int accountID) {
-        System.out.println("DID IT EVER EVEN CHECK?");
         for (Item item : items.values()) {
-            if (item.contains(accountID)) {
-                System.out.println("False on" +item);
-                return false;
-            }
+            if (item.contains(accountID)) return false;
         }
-        System.out.println("returned true");
         return true;
     }
 
