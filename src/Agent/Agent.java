@@ -18,16 +18,14 @@ public class Agent implements BankProcess, AuctionProcess {
 
     int accountID = 0;
 
-    BankProxy bankProxy = null;
-    AuctionProxy auctionProxy = null;
-
-    ArrayList<AuctionProxy> connectedAuctionProxys = new ArrayList<AuctionProxy>();
-    AuctionProxy currentAuctionProxy;
+    private BankProxy bankProxy = null;
+    private AuctionProxy auctionProxy = null;
+    private ArrayList<AuctionProxy> connectedAuctionProxys = new ArrayList<AuctionProxy>();
+    private AuctionProxy currentAuctionProxy;
 
     LinkedList<Bid> bids = new LinkedList<>();
 
     public Agent(BankProxy bankProxy, AuctionProxy auctionProxy){
-
 //        this.auctionProxy = auctionProxy;
         connectedAuctionProxys.add(auctionProxy);
         currentAuctionProxy = auctionProxy;
@@ -71,7 +69,29 @@ public class Agent implements BankProcess, AuctionProcess {
 
     @Override
     public synchronized ArrayList<ItemInfo> getItems() {
-        return currentAuctionProxy.getItems();
+        ArrayList<ItemInfo> itemInfos = new ArrayList<>();
+
+        for (AuctionProxy auctionProxy : connectedAuctionProxys){
+            itemInfos.addAll(auctionProxy.getItems());
+        }
+
+        return itemInfos;
+
+    }
+
+    public boolean addAuctionProxy(AuctionProxy auctionProxy){
+        connectedAuctionProxys.add(auctionProxy);
+        return true;
+    }
+
+    public boolean addAuctionProxy(String host, int port){
+
+        try{
+            connectedAuctionProxys.add(new AuctionProxy(host, port));
+        } catch (Exception e){
+            return false;
+        }
+        return true;
     }
 
     /**
