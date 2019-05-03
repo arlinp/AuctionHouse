@@ -17,7 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import AuctionProxy.BidInfo;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -77,8 +76,8 @@ public class AgentApp extends Application{
         labTest.setOnAction(e -> {
 
             agent = new Agent(
-                    new BankProxy(bankHostInput.getText(), bankPort, this),
-                    new AuctionProxy("localHost", auctionPort));
+                    new BankProxy(bankHostInput.getText(), bankPort),
+                    new AuctionProxy(auctionHostInput.getText(), auctionPort));
         });
 
 
@@ -190,8 +189,7 @@ public class AgentApp extends Application{
 
     private GridPane itemSelectionRoot() {
 
-        System.out.println("Ah shit, here we go again");
-        GridPane auctionItemRoot = new GridPane();
+        GridPane auctionItemRoot = itemSelectionRoot();
 
 
         ArrayList<ItemInfo> itemInfos = agent.getItems();
@@ -250,7 +248,7 @@ public class AgentApp extends Application{
             
             bidVBox.getChildren().add(makeBidGroup(bid, selectedItem));
 
-            BidInfo status = agent.bid(bid);
+            agent.bid(bid);
         });
 
         
@@ -343,7 +341,7 @@ public class AgentApp extends Application{
 
         AuctionProxy auctionProxy = new AuctionProxy("localhost", auctionPort);
         System.out.println("Created connections");
-        agent = new Agent(bankProxy, new AuctionProxy("localHost", auctionPort));
+        agent = new Agent(bankProxy, auctionProxy);
 
         return true;
 

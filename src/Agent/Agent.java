@@ -16,25 +16,36 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Agent implements BankProcess, AuctionProcess {
 
 
-
     int accountID = 0;
+
     BankProxy bankProxy = null;
-    private ArrayList<AuctionProxy> connectedAuctionProxys = new ArrayList<AuctionProxy>();
-    private AuctionProxy currentAuctionProxy;
+    AuctionProxy auctionProxy = null;
+
+    ArrayList<AuctionProxy> connectedAuctionProxys = new ArrayList<AuctionProxy>();
+    AuctionProxy currentAuctionProxy;
 
     LinkedList<Bid> bids = new LinkedList<>();
 
-    public Agent(BankProxy bankProxy, AuctionProxy auctionProxy) {
+    public Agent(BankProxy bankProxy, AuctionProxy auctionProxy){
 
-
+//        this.auctionProxy = auctionProxy;
         connectedAuctionProxys.add(auctionProxy);
         currentAuctionProxy = auctionProxy;
 
         this.bankProxy = bankProxy;
     }
 
-    public int addAccount(int accountID) {
+    public Agent(int bankPort, int auctionPort){
+
+        bankProxy = new BankProxy("locahost", bankPort);
+        auctionProxy = new AuctionProxy("localhost", auctionPort);
+    }
+
+
+    public int addAccount(int accountID){
+
         setAccountID(bankProxy.addAccount(accountID));
+
         return accountID;
     }
 
@@ -64,16 +75,6 @@ public class Agent implements BankProcess, AuctionProcess {
     }
 
 
-    /**
-     * Check to see if the close is allowed
-     *
-     * @param accountID Account ID to be used for checking
-     * @return True if no active bids, false if active bids
-     */
-    @Override
-    public boolean closeRequest(int accountID) {
-        return currentAuctionProxy.closeRequest(accountID);
-    }
 
     @Override
     public double getBalance(int AccountID) {
@@ -84,14 +85,16 @@ public class Agent implements BankProcess, AuctionProcess {
         return bankProxy.getBalance(accountID);
     }
 
+
     @Override
     public boolean addFunds(int AccountID, double amount) {
         return bankProxy.addFunds(AccountID, amount);
     }
-
     public boolean addFunds(double amount) {
         return bankProxy.addFunds(accountID, amount);
     }
+
+
 
     @Override
     public boolean removeFunds(int AccountID, double amount) {
