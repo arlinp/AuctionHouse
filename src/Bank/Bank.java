@@ -33,6 +33,8 @@ public class Bank implements BankProcess {
     // TODO replace with Thread pool
     private LinkedBlockingQueue<BankCommunicator> bankCommunicators = new LinkedBlockingQueue<>();
 
+    private int accountCount = 0;
+
     /**
      * Constructor for Bank
      *
@@ -90,6 +92,27 @@ public class Bank implements BankProcess {
         // created with a random number.
         //int generatedID = generateAccountID();
         Account newAccount = new Account(ID);
+
+        //Save the Account ID and Account to HashTable
+        accounts.put(newAccount.getUniqueID(), newAccount);
+
+        // Return new Unique ID
+        return newAccount.getUniqueID();
+    }
+
+    /**
+     * Makes an account for auction house or agent
+     *
+     * @return Account ID
+     */
+    public synchronized int addAccount() {
+        // Iterate counter
+
+        // Add a new account to the existing accounts. New account
+        // created with a random number.
+        //int generatedID = generateAccountID();
+        Account newAccount = new Account(accountCount);
+        accountCount++;
 
         //Save the Account ID and Account to HashTable
         accounts.put(newAccount.getUniqueID(), newAccount);

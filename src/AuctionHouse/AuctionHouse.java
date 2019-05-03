@@ -29,7 +29,7 @@ public class AuctionHouse implements AuctionProcess {
     private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
     private ArrayList<Item> itemsNotUpForAuction = new ArrayList<Item>();
     private ArrayList<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
-    private BankProxy bank;
+    private BankProxy bankProxy;
     private int auctionID;
     private BufferedReader bufferedReader;
     private static int counter = 0;
@@ -37,8 +37,9 @@ public class AuctionHouse implements AuctionProcess {
 
     public AuctionHouse(int port) {
 
-        bank = new BankProxy("127.0.0.1", bankPort, null);
-        auctionID = bank.addAccount(8697);
+        bankProxy = new BankProxy("127.0.0.1", bankPort, null);
+//        auctionID = bankProxy.addAccount(8697);
+        bankProxy.addAccount();
 
         readInItems();
 
@@ -50,7 +51,7 @@ public class AuctionHouse implements AuctionProcess {
             e.printStackTrace();
         }
 
-        bank.openServer(new NetworkDevice("127.0.0.1",port));
+        bankProxy.openServer(new NetworkDevice("127.0.0.1",port));
 
         while (true) {
             try {
@@ -85,7 +86,7 @@ public class AuctionHouse implements AuctionProcess {
                 lineArr = line.split(" ");
 
                 ItemInfo itemInfo = new ItemInfo(lineArr[0], Integer.parseInt(lineArr[1]), counter++);
-                Item item = new Item(bank, this, itemInfo, auctionID);
+                Item item = new Item(bankProxy, this, itemInfo, auctionID);
 
                 //start the first three item threads
                 if(itemNum < 3){

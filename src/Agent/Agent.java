@@ -35,16 +35,26 @@ public class Agent implements BankProcess, AuctionProcess {
 
     public Agent(int bankPort, int auctionPort){
 
-        System.out.println("hegxbv");
+        System.out.println("make BankP");
         bankProxy = new BankProxy("localHost", bankPort);
-        System.out.println("sdfgargh");
-        auctionProxy = new AuctionProxy("localHost", auctionPort);
+
+        System.out.println("make add AuctionP");
+        AuctionProxy auctionProxy = new AuctionProxy("localHost", auctionPort);
+        addAuctionProxy(auctionProxy);
+        currentAuctionProxy = auctionProxy;
     }
 
 
     public int addAccount(int accountID){
 
         setAccountID(bankProxy.addAccount(accountID));
+
+        return accountID;
+    }
+
+    public int addAccount(){
+
+        if (accountID == 0) setAccountID(bankProxy.addAccount());
 
         return accountID;
     }
