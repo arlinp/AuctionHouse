@@ -45,6 +45,10 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         bids = new ArrayList<>();
     }
 
+    /**
+     * @param hostname
+     * @param port
+     */
     private void connectToServer(String hostname, int port) {
         try {
             s = new Socket(hostname, port);
@@ -55,9 +59,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
 
             is = new ObjectInputStream(s.getInputStream());
             System.out.println("Created the IS + " + is);
-//
-//            os = new ObjectOutputStream(s.getOutputStream());
-//            is = new ObjectInputStream(s.getInputStream());
+
         } catch (IOException e) {
             try {
                 Thread.sleep(1000);
@@ -177,23 +179,6 @@ public class AuctionProxy implements AuctionProcess, Runnable {
 
         return false;
     }
-
-    /**
-     * Close the connection
-     */
-    public void close() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-//            try {
-//                open = false;
-//                s.close();
-//                System.out.println("shut down!");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-            System.out.println("shut down!");
-        }));
-    }
-
 
     // Separate to handle notifies
 
