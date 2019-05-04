@@ -442,7 +442,7 @@ public class BankProxy implements BankProcess, Runnable {
         while (isOpen()) {
 
             // Attempt to read and parse incoming messages
-            BankRequest response = null;
+            BankRequest response;
             try {
                 response = (BankRequest)is.readObject();
             } catch (IOException | ClassNotFoundException e) {
@@ -457,7 +457,6 @@ public class BankProxy implements BankProcess, Runnable {
             } else {
 //                System.out.println("Processing");
                 processMessage(response);
-
             }
         }
 
