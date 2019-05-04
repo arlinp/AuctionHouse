@@ -1,6 +1,8 @@
 # Auction House
 
-This java program is to ...
+This java program is to simulate a system of multiple auction houses selling items, 
+multiple agents buying items, and a bank to keep track of everyone’s funds. 
+The bank will exist on one machine at a static known address, the agents and auction houses will be dynamically created on other machines.
 
 ## Getting Started
 
