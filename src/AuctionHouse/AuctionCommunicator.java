@@ -70,7 +70,7 @@ public class AuctionCommunicator implements Runnable{
      * @param ar AuctionRequest to handle
      */
     private void processMessage(AuctionRequest ar) {
-//        System.out.println("THE TYPE OF REQUEST IS: " + ar.getType() + " " + ar.getPacketID());
+
         AuctionRequest newAR = new AuctionRequest(ar.getType(), ar.getPacketID());
 
         try {
@@ -101,6 +101,11 @@ public class AuctionCommunicator implements Runnable{
         }
     }
 
+    /**
+     * @param status bid status
+     * @param itemID item bid on
+     * @param amount Amount of the bid
+     */
     public void notifyBid(BidInfo status, int itemID, double amount) {
         AuctionRequest ar = new AuctionRequest(AuctionInfo.BID);
         ar.setAck(false);
@@ -114,7 +119,5 @@ public class AuctionCommunicator implements Runnable{
             e.printStackTrace();
         }
     }
-
-
 
 }
