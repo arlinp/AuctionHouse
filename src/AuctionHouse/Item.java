@@ -155,6 +155,13 @@ public class Item implements Runnable {
         }
     }
 
+    /**
+     * Ends an individual item's auction if
+     * it was sold.
+     * Transfers the fund from the bank to the winning
+     * account.
+     * Removes item from Auction House.
+     */
     private synchronized void endAuction() {
         synchronized (bid) {
             if (bid != null) {
@@ -168,6 +175,13 @@ public class Item implements Runnable {
     }
 
 
+    /**
+     * Checks a bid's reference to an
+     * Agent
+     *
+     * @param accountID The ID of the bidder
+     * @return is it this account's bid?
+     */
     public boolean contains(int accountID) {
         if (open && bid != null && bid.getAccount() == accountID) return true;
         else return false;
