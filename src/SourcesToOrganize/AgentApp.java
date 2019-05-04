@@ -78,7 +78,8 @@ public class AgentApp extends Application{
         localTest.setOnAction(e -> {
 
             System.out.println("make agent");
-            agent = new Agent(bankPort, auctionPort);
+//            agent = new Agent(bankPort, auctionPort);
+            agent = new Agent(bankPort);
             System.out.println("agent made");
             window.setScene(bankAccountScene());
         });
@@ -148,6 +149,12 @@ public class AgentApp extends Application{
 
         Button auctionButton = new Button("Start Auction");
         auctionButton.setOnAction(e-> {
+
+            agent.connectToAuctions();
+
+            for (AuctionProxy auctionProxy : agent.getConnectedAuctionProxys()){
+
+            }
 
             window.setScene(auctionScene());
         });
@@ -287,16 +294,14 @@ public class AgentApp extends Application{
 
         TableView<AuctionProxy> tableView = new TableView<AuctionProxy>();
 
-
-
         scrollPane.setContent(tableView);
 
-
+        //auction host column
         TableColumn<AuctionProxy, String> hostCol = new TableColumn<>("Host");
         hostCol.setCellValueFactory(new PropertyValueFactory<>("hostname"));
         tableView.getColumns().add(hostCol);
 
-        //price columns
+        //price column
         TableColumn<AuctionProxy, String> portCol = new TableColumn<>("Port#");
         portCol.setCellValueFactory(new PropertyValueFactory<>("port"));
         tableView.getColumns().add(portCol);

@@ -1,17 +1,14 @@
 package Bank;
 
-import AuctionHouse.AuctionCommunicator;
 import BankProxy.BankProcess;
 import SourcesToOrganize.NetworkDevice;
 
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import static SourcesToOrganize.AgentApp.bankPort;
@@ -29,9 +26,10 @@ public class Bank implements BankProcess {
     public  Random ran = new Random();
     private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
     private HashMap<Integer, Double> lockedMoney = new HashMap<Integer, Double>();
-    private LinkedBlockingQueue<NetworkDevice> networkDevices = new LinkedBlockingQueue<>();
+    private LinkedBlockingQueue<NetworkDevice> auctionNetworkDevices = new LinkedBlockingQueue<>();
     // TODO replace with Thread pool
     private LinkedBlockingQueue<BankCommunicator> bankCommunicators = new LinkedBlockingQueue<>();
+
 
     private int accountCount = 0;
 
@@ -302,7 +300,7 @@ public class Bank implements BankProcess {
      */
     @Override
     public boolean openServer(NetworkDevice networkDevice) {
-        networkDevices.add(networkDevice);
+        auctionNetworkDevices.add(networkDevice);
         return false;
     }
 
@@ -314,7 +312,7 @@ public class Bank implements BankProcess {
      */
     @Override
     public boolean closeServer(NetworkDevice networkDevice) {
-        networkDevices.remove(networkDevice);
+        auctionNetworkDevices.remove(networkDevice);
         return false;
     }
 
@@ -325,7 +323,7 @@ public class Bank implements BankProcess {
      */
     @Override
     public LinkedBlockingQueue<NetworkDevice> getServers() {
-        return networkDevices;
+        return auctionNetworkDevices;
     }
 
     /**
