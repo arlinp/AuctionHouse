@@ -12,6 +12,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import SourcesToOrganize.Bid;
 import AuctionHouse.ItemInfo;
 
+/**
+ * Auction Proxy used for communication
+ * in the network by the Auction house
+ */
 public class AuctionProxy implements AuctionProcess, Runnable {
 
     private ConcurrentHashMap<Integer, AuctionRequest> messages = new ConcurrentHashMap<Integer, AuctionRequest>();
@@ -27,8 +31,8 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     /**
      * Proxy design for the Auction House. Creates a socket from the passed parameters
      *
-     * @param hostname
-     * @param port
+     * @param hostname host name
+     * @param port port number
      */
     public AuctionProxy(String hostname, int port) {
         open = true;
@@ -46,8 +50,9 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     }
 
     /**
-     * @param hostname
-     * @param port
+     * Used for connecting to a server
+     * @param hostname host name
+     * @param port (int) port number
      */
     private void connectToServer(String hostname, int port) {
         try {
@@ -78,12 +83,11 @@ public class AuctionProxy implements AuctionProcess, Runnable {
      */
     @Override
     public BidInfo bid(Bid bid) {
-        // TODO itemID is redundant, as already contained in bid
+
         AuctionRequest ar = new AuctionRequest(AuctionInfo.BID);
         ar.setBid(bid);
         bids.add(bid);
 
-        // TODO Need to reimplement BID to project specification (e.g. Returns various decisions)
         try {
             os.writeObject(ar);
             waitOn(ar.getPacketID());
@@ -180,8 +184,6 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         return false;
     }
 
-    // Separate to handle notifies
-
     @Override
     public void run() {
         while (isOpen()) {
@@ -209,6 +211,14 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         }
     }
 
+    /**
+     * Processes messages received about actions
+     * Auction should take. This takes care
+     * of notifying whether an Agent has been
+     * outbid on an item or won it.
+     *
+     * @param newAr an AuctionRequest
+     */
     private void processMessage(AuctionRequest newAr) {
         switch(newAr.getType()) {
             case BID:
@@ -235,6 +245,9 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         }
     }
 
+    /**
+     * @return Whether the proxy is open
+     */
     private boolean isOpen() {
         return open;
     }
