@@ -39,7 +39,8 @@ public class AgentCommandLine extends AgentApp{
 
 //                bankProxy = new BankProxy("localHost", 42069, this);
 //                auctionProxy = new AuctionProxy("localhost", 42070);
-                localTest();
+//                localTest();
+                agent = new Agent("localhost", 42069);
 
             }
 
@@ -174,16 +175,7 @@ public class AgentCommandLine extends AgentApp{
         }
     }
 
-    private void localTest() {
 
-
-        agent = new Agent(
-                new BankProxy("localHost", bankPort, this),
-                new AuctionProxy("localhost", auctionPort));
-        ArrayList<AuctionProxy> proxys = agent.getConnectedAuctionProxys();
-        //proxys.get()
-
-    }
 
     @Override
     public void addAuctionHouse(NetworkDevice networkDevice) {

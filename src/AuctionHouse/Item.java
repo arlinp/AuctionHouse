@@ -131,7 +131,7 @@ public class Item implements Runnable {
         do {
             currentBid = bid;
             try {
-                synchronized (this) { wait(AuctionHouse.waitTime); }
+                synchronized (this) { wait(AuctionHouse.ITEM_WAIT_TIME); }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

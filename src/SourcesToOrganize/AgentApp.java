@@ -69,9 +69,6 @@ public class AgentApp extends Application{
         labTest.setOnAction(e -> {
 
             agent = new Agent(bankHostInput.getText(), 42069);
-//            agent = new Agent(
-//                    new BankProxy(bankHostInput.getText(), bankPort),
-//                    new AuctionProxy(auctionHostInput.getText(), auctionPort));
         });
 
         //test on this computer
@@ -79,9 +76,11 @@ public class AgentApp extends Application{
         localTest.setOnAction(e -> {
 
             System.out.println("make agent");
-//            agent = new Agent(bankPort, auctionPort);
-            agent = new Agent(bankPort);
+
+            agent = new Agent("localhost", bankPort);
+
             System.out.println("agent made");
+
             window.setScene(bankAccountScene());
         });
 
@@ -120,16 +119,8 @@ public class AgentApp extends Application{
 
         Text notification = new Text();
 
-
-        //new Bank Account
-//        TextField bankAccountInput = new TextField("5");
-
         Button bankLogin = new Button("make new Account");
         bankLogin.setOnAction(e -> {
-
-            //set agent account number
-//            agent.addAccount(Integer.parseInt(bankAccountInput.getText()));
-//            notification.setText("account " + bankAccountInput.getText() + " made");
 
             agent.addAccount();
 

@@ -15,60 +15,40 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Agent implements BankProcess, AuctionProcess {
 
-
+    //manage bank account and get auction connections
+    private BankProxy bankProxy = null;
     int accountID = 0;
 
-    private BankProxy bankProxy = null;
-    private AuctionProxy auctionProxy = null;
+    //connected auctions
     private ArrayList<AuctionProxy> connectedAuctionProxys = new ArrayList<>();
+    private LinkedBlockingQueue<NetworkDevice> connectedAuctionNetworkDevices;
     private AuctionProxy currentAuctionProxy;
 
+    //bids made on items
     private LinkedList<Bid> bids = new LinkedList<>();
-    private LinkedBlockingQueue<NetworkDevice> connectedAuctionNetworkDevices;
 
-    public Agent(BankProxy bankProxy, AuctionProxy auctionProxy){
-//        this.auctionProxy = auctionProxy;
-        connectedAuctionProxys.add(auctionProxy);
-        currentAuctionProxy = auctionProxy;
 
-        this.bankProxy = bankProxy;
+    /**
+     * connect to the bank to make an account and receive auction info
+     * @param bankHost
+     * @param bankPort
+     */
+    public Agent(String bankHost, int bankPort){
+
+        bankProxy = new BankProxy(bankHost, bankPort);
     }
 
-    public Agent(int bankPort, int auctionPort){
-
-        System.out.println("make BankP");
-        bankProxy = new BankProxy("localHost", bankPort);
-
-        System.out.println("make add AuctionP");
-        AuctionProxy auctionProxy = new AuctionProxy("localHost", auctionPort);
-        addAuctionProxy(auctionProxy);
-        currentAuctionProxy = auctionProxy;
-    }
-
-    public Agent(int bankPort){
-
-        bankProxy = new BankProxy("localhost", bankPort);
-    }
-
-    public Agent(String bankhost, int bankport){
-
-        bankProxy = new BankProxy(bankhost, bankport);
-    }
-
-
-    public int addAccount(int accountID){
-
-        setAccountID(bankProxy.addAccount(accountID));
-
-        return accountID;
-    }
-
+    /**
+     * request for a new bank account
+     * @return account number
+     */
     public int addAccount(){
 
         if (accountID == 0) setAccountID(bankProxy.addAccount());
 
         return accountID;
     }
+
 
     public ArrayList<AuctionProxy> getConnectedAuctionProxys() {
         return connectedAuctionProxys;
