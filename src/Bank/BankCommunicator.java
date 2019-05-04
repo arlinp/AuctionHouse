@@ -68,11 +68,13 @@ public class BankCommunicator implements Runnable {
                 processMessage(br);
             } catch (IOException | ClassNotFoundException e) {
                 if (Bank.BANKCOMMDEBUG) {
-                    System.out.println("Error occured!");
-                    System.out.println("Handle closing better");
-                    //e.printStackTrace();
+
+//                    System.out.println("Error occured!");
+//                    System.out.println("Handle closing better");
+//                    e.printStackTrace();
 
                     try {
+                        System.out.println("Closing " + s);
                         s.close();
                     } catch (IOException e1) {
                         System.out.println("WASN'T ABLE TO CLOSE PROPERLY");
@@ -86,6 +88,7 @@ public class BankCommunicator implements Runnable {
         }
 
         if (Bank.BANKCOMMDEBUG) System.out.println("Connection broke for " + s.getInetAddress());
+
     }
 
     /**

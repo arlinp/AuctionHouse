@@ -430,7 +430,7 @@ public class BankProxy implements BankProcess, Runnable {
             // Attempt to read and parse incoming messages
             BankRequest response = null;
             try {
-                response = (BankRequest) is.readObject();
+                response = (BankRequest)is.readObject();
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }

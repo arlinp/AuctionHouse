@@ -135,11 +135,11 @@ public class AuctionHouse implements AuctionProcess {
                 itemUp.startThread();
 
             }else{
-                if(items.isEmpty()){
-
-                    alive = false;
-                }
-                System.out.println("No more items in the Auction house!");}
+//                if(items.isEmpty()){
+//
+//                    alive = false;
+//                }
+                System.out.println("Auction House says: No more items in the Auction house!");}
         }
     }
 

@@ -71,7 +71,10 @@ public class AgentCommandLine extends AgentApp{
         int accountID = 0;
 
         //main loop
-        while (!input.equals("exit") || input.equals(null)) {
+        while (!input.equals("exit")
+                //|| input.equalsIgnoreCase("menu")
+        )
+        {
 
             //access bank or access auction
             System.out.println("what would you like to do?");
@@ -129,6 +132,7 @@ public class AgentCommandLine extends AgentApp{
 
 
                 ArrayList<ItemInfo> auctionItems = agent.getItems();
+
                 while(!auctionItems.isEmpty()) {
                     System.out.println("Items for auction: ");
                     for (ItemInfo info : auctionItems) {
@@ -139,8 +143,10 @@ public class AgentCommandLine extends AgentApp{
 
 
                     input = inScanner.nextLine();
+
+                    if (input.equalsIgnoreCase("menu")) break;
+
                     System.out.println("Bid attempt: " + input);
-                    if (input.equalsIgnoreCase("menu")) continue;
                     int itemIndex = Integer.parseInt(input);
                     System.out.println();
 
@@ -155,7 +161,16 @@ public class AgentCommandLine extends AgentApp{
 
                     agent.bid(new Bid(amount, agent.getAccountID(), itemIndex));
                 }
+                    System.out.println("Sorry, no more items in this auction");
             }
+        }
+
+        if(input.equals("exit")){
+            //check if any bids
+            //tryToClose();
+            System.out.println("You quit the program");
+            System.out.println("Let's check to see if there are any bids first");
+            //while(auctionProxy.)
         }
     }
 
@@ -165,6 +180,8 @@ public class AgentCommandLine extends AgentApp{
         agent = new Agent(
                 new BankProxy("localHost", bankPort, this),
                 new AuctionProxy("localhost", auctionPort));
+        ArrayList<AuctionProxy> proxys = agent.getConnectedAuctionProxys();
+        //proxys.get()
 
     }
 
