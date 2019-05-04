@@ -42,9 +42,10 @@ public class AgentApp extends Application{
 
         window = primaryStage;
         window.setTitle("Distributed Auctions - Agent");
+        window.setMinWidth(700);
 
         primaryStage.setScene(introScene());
-
+        // default value = n
         primaryStage.show();
     }
 
@@ -94,8 +95,6 @@ public class AgentApp extends Application{
         root.add(new Label("Bank Host"), 0, 4);
         root.add(bankHostInput, 1,4);
 
-        root.add(new Label("AuctionHost"), 0, 5);
-//        root.add(auctionHostInput, 1, 5);
         root.add(labTest, 1, 6);
 
         root.add(localTest, 1,9);
@@ -144,10 +143,6 @@ public class AgentApp extends Application{
 
             agent.connectToAuctions();
 
-            for (AuctionProxy auctionProxy : agent.getConnectedAuctionProxys()){
-
-            }
-
             window.setScene(auctionScene());
         });
 
@@ -178,11 +173,11 @@ public class AgentApp extends Application{
         //select auction houses
         root.setLeft(houseSelectionRoot());
 
-
+        //select items
         root.setCenter(itemSelectionRoot());
 
         //manage bids
-        
+
         ScrollPane bidScrollPane = new ScrollPane();
 
         bidVBox = new VBox();

@@ -15,6 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Agent implements BankProcess, AuctionProcess {
 
+
     //manage bank account and get auction connections
     private BankProxy bankProxy = null;
     int accountID = 0;
@@ -59,6 +60,11 @@ public class Agent implements BankProcess, AuctionProcess {
     }
 
     @Override
+    public int addAccount(int ID) {
+        return 0;
+    }
+
+    @Override
     public BidInfo bid(Bid bid) {
         addToBids(bid);
         BidInfo info = currentAuctionProxy.bid(bid);
@@ -92,7 +98,10 @@ public class Agent implements BankProcess, AuctionProcess {
 
     public void connectToAuctions(){
 
-        connectedAuctionNetworkDevices = bankProxy.getServers();
+        for ( NetworkDevice n : bankProxy.getServers()){
+
+            connectedAuctionProxys.add(new AuctionProxy(n.getIpAddress(), n.getPort()));
+        }
     }
 
     public boolean addAuctionProxy(AuctionProxy auctionProxy){
@@ -200,10 +209,6 @@ public class Agent implements BankProcess, AuctionProcess {
         return bankProxy.getServers();
     }
 
-//    @Override
-//    public boolean openServer(String ipAddress, int port) {
-//        return bankProxy.openServer(ipAddress,port);
-//    }
 
     public int getAccountID() {
         return accountID;
