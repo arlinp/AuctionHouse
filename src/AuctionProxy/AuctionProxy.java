@@ -189,17 +189,20 @@ public class AuctionProxy implements AuctionProcess, Runnable {
             AuctionRequest newAr = null;
             try {
                 newAr = (AuctionRequest) is.readObject();
+
+                if (newAr.getAck()) {
+                    messages.put(newAr.getPacketID(), newAr);
+                    synchronized (this) { notify(); }
+                } else {
+                    processMessage(newAr);
+                }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                System.out.println("An agent has left the auction house");
+                //e.printStackTrace();
             }
 
             // Either notify or process immediately
-            if (newAr.getAck()) {
-                messages.put(newAr.getPacketID(), newAr);
-                synchronized (this) { notify(); }
-            } else {
-                processMessage(newAr);
-            }
+
         }
     }
 
