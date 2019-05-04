@@ -329,6 +329,12 @@ public class Bank implements BankProcess {
         }
     }
 
+    /**
+     * Starts a new Bank on a port given as an argument
+     * or default on bankPort.
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         if (args.length == 1) {
             int operatingPort;
