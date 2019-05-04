@@ -20,12 +20,7 @@ import static SourcesToOrganize.AgentApp.bankPort;
 
 public class AuctionHouse implements AuctionProcess {
 
-
     public static long waitTime = 50000;
-
-
-//    public AuctionHouse(ClientProxy bankProxy, ServerProxy auctionHouseServer) {
-//    }
 
     private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
     private ArrayList<Item> itemsNotUpForAuction = new ArrayList<Item>();
@@ -35,15 +30,17 @@ public class AuctionHouse implements AuctionProcess {
     private int auctionID;
     private BufferedReader bufferedReader;
     private static int counter = 0;
-    private boolean alive = true;
+    private boolean alive;
 
 
     public AuctionHouse(int operatingPort, String bankHostname, int bankPort) {
 
         bankProxy = new BankProxy(bankHostname, bankPort, null);
-//        auctionID = bankProxy.addAccount(8697);
+
+        //Make a bank account for the auction house
         bankProxy.addAccount();
 
+        //Read items this house will sell
         readInItems();
 
         ServerSocket ss = null;
@@ -75,6 +72,12 @@ public class AuctionHouse implements AuctionProcess {
 
     }
 
+    /**
+     * Read in the items from test file.
+     * File should be placed in 'resources' directory
+     * Saves 3 items to list of currently auctioned items
+     * and saves the rest to a list to be used later.
+     */
     private void readInItems() {
         try {
             BufferedReader br = new BufferedReader(new FileReader("resources/items.txt"));
@@ -100,7 +103,6 @@ public class AuctionHouse implements AuctionProcess {
                     itemNum++;
                 }
                 else {
-                    //itemsNotUpForAuction.put(item.getItemID(), item);
                     itemsNotUpForAuction.add(item);
                 }
 
@@ -108,17 +110,11 @@ public class AuctionHouse implements AuctionProcess {
         } catch (IOException e){
             e.printStackTrace();
         }
-        System.out.println("Got here");
     }
-
-    // TODO check when to close an auction house and gracefully close it
-    // TODO in proxy, check if we can leave an Auction house
-
 
     /**
      *
-     * @param itemID
-     * @return
+     * @param itemID Item ID
      */
     public synchronized void removeItem(int itemID) {
         if (items.containsKey(itemID)) {
@@ -136,12 +132,10 @@ public class AuctionHouse implements AuctionProcess {
                 items.put(itemUp.getItemID(), itemUp);
                 itemUp.startThread();
 
-            }else{
-//                if(items.isEmpty()){
-//
-//                    alive = false;
-//                }
-                System.out.println("Auction House says: No more items in the Auction house!");}
+            }
+            else {
+                System.out.println("Auction House says: No more items in the Auction house!");
+            }
         }
     }
 
@@ -166,10 +160,16 @@ public class AuctionHouse implements AuctionProcess {
         return info;
     }
 
+    /**
+     * @param bid bid to synchronously add
+     */
     public synchronized void addBid(Bid bid){
         bids.add(bid);
     }
 
+    /**
+     * @param bid bid to synchronously remove
+     */
     public synchronized void removeBid(Bid bid){
         bids.remove(bid);
     }
@@ -221,11 +221,19 @@ public class AuctionHouse implements AuctionProcess {
         return true;
     }
 
+    /**
+     * @return state of auction house
+     */
     public boolean isAlive() {
         return alive;
     }
 
+    /**
+     * Starts a new Auction House
+     * @param args
+     */
     public static void main(String[] args) {
+
         if (args.length == 4) {
 
             int operatingPort;
@@ -247,8 +255,6 @@ public class AuctionHouse implements AuctionProcess {
         } else {
             AuctionHouse ah = new AuctionHouse(auctionPort, "localhost", bankPort);
         }
-
-
 
     }
 }
