@@ -68,17 +68,13 @@ public class BankCommunicator implements Runnable {
                 processMessage(br);
             } catch (IOException | ClassNotFoundException e) {
                 if (Bank.BANKCOMMDEBUG) {
-
-//                    System.out.println("Error occured!");
-//                    System.out.println("Handle closing better");
-//                    e.printStackTrace();
-
                     try {
                         System.out.println("Closing " + s);
                         s.close();
                     } catch (IOException e1) {
-                        System.out.println("WASN'T ABLE TO CLOSE PROPERLY");
+
                         e1.printStackTrace();
+                        return;
                     }
 
 
@@ -192,7 +188,11 @@ public class BankCommunicator implements Runnable {
     }
 
 
-
+    /**
+     * notifies of a new auction
+     *
+     * @param networkDevice network device of new auction
+     */
     public void notifyNewAuction(NetworkDevice networkDevice) {
         BankRequest ar = new BankRequest(BankInfo.OPENAUCTION);
         ar.setAck(false);
@@ -202,6 +202,7 @@ public class BankCommunicator implements Runnable {
             os.writeObject(ar);
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
     }
 
