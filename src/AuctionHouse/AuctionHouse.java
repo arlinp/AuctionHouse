@@ -29,6 +29,7 @@ public class AuctionHouse implements AuctionProcess {
     private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
     private ArrayList<Item> itemsNotUpForAuction = new ArrayList<Item>();
     private ArrayList<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
+    private ArrayList<Bid> bids;
     private BankProxy bankProxy;
     private int auctionID;
     private BufferedReader bufferedReader;
@@ -159,8 +160,17 @@ public class AuctionHouse implements AuctionProcess {
         // Get the item to be bid upon
         Item item = items.get(bid.getItemID());
         BidInfo info = item.setBid(bid);
+        addBid(bid);
 
         return info;
+    }
+
+    public synchronized void addBid(Bid bid){
+        bids.add(bid);
+    }
+
+    public synchronized void removeBid(Bid bid){
+        bids.remove(bid);
     }
 
     /**

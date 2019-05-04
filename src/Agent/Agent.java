@@ -50,7 +50,6 @@ public class Agent implements BankProcess, AuctionProcess {
         return accountID;
     }
 
-
     public ArrayList<AuctionProxy> getConnectedAuctionProxys() {
         return connectedAuctionProxys;
     }

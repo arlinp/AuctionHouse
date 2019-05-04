@@ -6,6 +6,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Account class for use within the bank
+ * This is a Bank Account that manages each
+ * Agent's individual account.
  */
 public class Account {
 
@@ -119,6 +121,12 @@ public class Account {
     public synchronized int getUniqueID() {
         return uniqueID;
     }
+
+
+    /**
+     * Sets the ID @param ID
+     * extra method in case needed
+     */
     public synchronized void setUniqueID(int ID) { uniqueID = ID; }
 
 }
