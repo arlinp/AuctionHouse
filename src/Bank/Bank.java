@@ -341,8 +341,20 @@ public class Bank implements BankProcess {
 
 
     public static void main(String[] args) {
-        System.out.println("Starting auction house on port: 42073");
-        Bank ah = new Bank(bankPort);
+        if (args.length == 1) {
+            int operatingPort;
+            try {
+                operatingPort = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                System.out.println("Input not correct:\n Correct usage: Bank" +
+                        " <Operating Port>");
+                return;
+            }
+
+            Bank bank = new Bank(operatingPort);
+        } else {
+            Bank bank = new Bank(bankPort);
+        }
 
 
     }

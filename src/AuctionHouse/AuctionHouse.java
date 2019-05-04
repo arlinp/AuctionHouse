@@ -3,6 +3,7 @@ package AuctionHouse;
 import AuctionProxy.AuctionProcess;
 import AuctionProxy.BidInfo;
 import BankProxy.BankProxy;
+import SourcesToOrganize.AgentApp;
 import SourcesToOrganize.Bid;
 import SourcesToOrganize.NetworkDevice;
 
@@ -20,7 +21,7 @@ import static SourcesToOrganize.AgentApp.bankPort;
 public class AuctionHouse implements AuctionProcess {
 
 
-    public static final long ITEM_WAIT_TIME = 25000;
+    public static long waitTime = 50000;
 
 
 //    public AuctionHouse(ClientProxy bankProxy, ServerProxy auctionHouseServer) {
@@ -37,9 +38,9 @@ public class AuctionHouse implements AuctionProcess {
     private boolean alive = true;
 
 
-    public AuctionHouse(int port) {
+    public AuctionHouse(int operatingPort, String bankHostname, int bankPort) {
 
-        bankProxy = new BankProxy("127.0.0.1", bankPort, null);
+        bankProxy = new BankProxy(bankHostname, bankPort, null);
 //        auctionID = bankProxy.addAccount(8697);
         bankProxy.addAccount();
 
@@ -47,13 +48,13 @@ public class AuctionHouse implements AuctionProcess {
 
         ServerSocket ss = null;
         try {
-            System.out.println(port);
-            ss = new ServerSocket(port);
+            System.out.println(operatingPort);
+            ss = new ServerSocket(operatingPort);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        bankProxy.openServer(new NetworkDevice("127.0.0.1",port));
+        bankProxy.openServer(new NetworkDevice("127.0.0.1",operatingPort));
 
         while (true) {
             try {
@@ -225,6 +226,29 @@ public class AuctionHouse implements AuctionProcess {
     }
 
     public static void main(String[] args) {
-        AuctionHouse ah = new AuctionHouse(auctionPort);
+        if (args.length == 4) {
+
+            int operatingPort;
+            int bankPort;
+
+            try {
+                operatingPort = Integer.parseInt(args[0]);
+                bankPort = Integer.parseInt(args[2]);
+                waitTime = Long.parseLong(args[3]);
+
+            } catch (NumberFormatException e) {
+                System.out.println("Input not correct:\n Correct usage: Auct" +
+                        "ionHouse <Operating Port> <Bank Host> <Bank Port> <" +
+                        "Wait Time>");
+                return;
+            }
+
+            AuctionHouse ah = new AuctionHouse(operatingPort,args[1],bankPort);
+        } else {
+            AuctionHouse ah = new AuctionHouse(auctionPort, "localhost", bankPort);
+        }
+
+
+
     }
 }
