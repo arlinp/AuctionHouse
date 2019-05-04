@@ -80,15 +80,15 @@ public class AgentCommandLine extends AgentApp{
 
                 if (agent.getAccountID() == 0) {
 
-                    System.out.println("Your Account ID is: ");
-                    System.out.println(" or nothing...");
-                    input = inScanner.nextLine();
-
-                    if (input.equals("")) {
-                        agent.addAccount(5);
-                    } else {
-                        agent.addAccount(Integer.parseInt(input));
-                    }
+//                    System.out.println("Your Account ID is: ");
+//                    System.out.println(" or nothing...");
+//                    input = inScanner.nextLine();
+//
+//                    if (input.equals("")) {
+                        agent.addAccount();
+//                    } else {
+//                        agent.addAccount(Integer.parseInt(input));
+//                    }
 
 
 

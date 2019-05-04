@@ -2,13 +2,11 @@ package SourcesToOrganize;
 
 import Agent.Agent;
 import AuctionHouse.ItemInfo;
-import AuctionProxy.AuctionProxy;
-import BankProxy.BankProxy;
 import javafx.application.Application;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -24,6 +22,8 @@ import java.util.LinkedList;
 
 public class AgentApp extends Application{
 
+    private static final double APP_WIDTH = 500;
+    private static final double APP_HEIGHT = 500;
     public static int bankPort = 42070;
     public static int auctionPort = 42069;
     Stage window;
@@ -45,47 +45,42 @@ public class AgentApp extends Application{
         window.setTitle("Distributed Auctions - Agent");
         window.setMinWidth(700);
 
-        primaryStage.setScene(introScene());
+        primaryStage.setScene( new Scene(introRoot(), APP_WIDTH, APP_HEIGHT));
         // default value = n
         primaryStage.show();
     }
 
     /**
-     * User enters the host of the bank they want to connect to
+     * Asks users to connect to the bank.
+     * Then transfers them to bank account scene
      * @return Scene for GUI
      */
-    private Scene introScene() {
+    private Parent introRoot() {
 
         GridPane root = new GridPane();
 
-
+        //title
         Text title = new Text("Agent");
         title.setFont(Font.font(50));
 
-
         //new account taking input text
         TextField bankHostInput = new TextField();
-//        TextField auctionHostInput = new TextField();
 
-        Button labTest = new Button("Lab Test");
-        labTest.setOnAction(e -> {
+        //connect to bank host on port 42069
+        Button labTestButton = new Button("Lab Test");
+        labTestButton.setOnAction(e -> {
 
             agent = new Agent(bankHostInput.getText(), 42069);
         });
 
         //test on this computer
-        Button localTest = new Button("localhost Test");
-        localTest.setOnAction(e -> {
-
-            System.out.println("make agent");
+        Button localTestButton = new Button("localhost Test");
+        localTestButton.setOnAction(e -> {
 
             agent = new Agent("localhost", bankPort);
 
-            System.out.println("agent made");
-
-            window.setScene(bankAccountScene());
+            window.setScene( new Scene(bankIntroRoot(), APP_WIDTH, APP_HEIGHT));
         });
-
 
 
         //add to intro root
@@ -96,11 +91,11 @@ public class AgentApp extends Application{
         root.add(new Label("Bank Host"), 0, 4);
         root.add(bankHostInput, 1,4);
 
-        root.add(labTest, 1, 6);
+        root.add(labTestButton, 1, 6);
 
-        root.add(localTest, 1,9);
+        root.add(localTestButton, 1,9);
 
-        return new Scene(root, 500, 500);
+        return root;
 
     }
 
@@ -112,13 +107,13 @@ public class AgentApp extends Application{
      * enter auction
      * @return
      */
-    private Scene bankAccountScene() {
+    private Parent bankIntroRoot() {
 
         GridPane root = new GridPane();
         root.setAlignment(Pos.CENTER);
 
-        Button bankLogin = new Button("make new Account");
-        bankLogin.setOnAction(e -> {
+        Button bankLoginButton = new Button("make new Account");
+        bankLoginButton.setOnAction(e -> {
 
             agent.addAccount();
 
@@ -128,6 +123,7 @@ public class AgentApp extends Application{
         //add funds input
         TextField addFundsInput = new TextField("1000");
 
+        //add funds to account
         Button addFundsButton = new Button("addFunds");
         addFundsButton.setOnAction(e -> {
 
@@ -137,17 +133,18 @@ public class AgentApp extends Application{
             notification.setText("added " + fundsToAdd + " dollars");
         });
 
+        //gets auction from bank to start bidding
         Button auctionButton = new Button("Start Auction");
         auctionButton.setOnAction(e-> {
 
             agent.connectToAuctions();
 
-            window.setScene(auctionScene());
+            window.setScene( new Scene(auctionRoot(), APP_WIDTH, APP_HEIGHT));
         });
 
 
-//        root.add(bankAccountInput,1,1);
-        root.add(bankLogin, 2,1);
+        //add components to gui root
+        root.add(bankLoginButton, 2,1);
 
         root.add(addFundsInput, 1, 3);
         root.add(addFundsButton, 2, 3);
@@ -156,15 +153,15 @@ public class AgentApp extends Application{
 
         root.add(notification,1,9);
 
-        return new Scene(root, 500, 500);
 
+        return root;
     }
 
     /**
      * shows user the items up for auction, allows user to bid on items
      * @return
      */
-    private Scene auctionScene() {
+    private Parent auctionRoot() {
 
 
         BorderPane root = new BorderPane();
@@ -184,9 +181,14 @@ public class AgentApp extends Application{
         bidScrollPane.setContent(bidScrollPane);
 
 
-        return new Scene(root,500, 500);
+        return root;
     }
 
+    /**
+     * displays all items from all connected auction and allows
+     * user to bid on an item
+     * @return
+     */
     private GridPane itemSelectionRoot() {
 
         GridPane auctionItemRoot = new GridPane();
@@ -228,25 +230,30 @@ public class AgentApp extends Application{
 
         });
 
-        Button bidButton = new Button("Bid");
 
+        //enter the amount to bid with
         Label amountLabel = new Label("Bid Amount");
         TextField amountInput = new TextField();
 
         //bid on Item
+        Button bidButton = new Button("Bid");
         bidButton.setOnAction(e -> {
+            //get selected item
             ItemInfo selectedItem = tableView.getSelectionModel().getSelectedItem();
 
+            //get amount to start bid
             Double amount = Double.parseDouble(amountInput.getText());
 
+            //create bid to send to house
             Bid bid = new Bid(amount, agent.getAccountID(), selectedItem.getItemID());
-            
+
+            displayNewBid(bid);
+
             bids.add(bid);
-            
-            bidVBox.getChildren().add(makeBidGroup(bid, selectedItem));
 
             agent.bid(bid);
-
+            bids.add(bid);
+            bidVBox.getChildren().add(makeBidGroup(bid, selectedItem));
 
         });
 
@@ -261,6 +268,12 @@ public class AgentApp extends Application{
         return auctionItemRoot;
     }
 
+    private void displayNewBid(Bid bid) {
+
+
+
+    }
+
     private Group makeBidGroup(Bid bid, ItemInfo info) {
 
         Group bidGroup = new Group();
@@ -270,39 +283,6 @@ public class AgentApp extends Application{
         bidGroup.getChildren().add(new Text("$" + info.getPrice()));
 
         return bidGroup;
-    }
-
-    private GridPane houseSelectionRoot() {
-
-        GridPane root = new GridPane();
-
-        ScrollPane scrollPane = new ScrollPane();
-
-        TableView<AuctionProxy> tableView = new TableView<AuctionProxy>();
-
-        scrollPane.setContent(tableView);
-
-        //auction host column
-        TableColumn<AuctionProxy, String> hostCol = new TableColumn<>("Host");
-        hostCol.setCellValueFactory(new PropertyValueFactory<>("hostname"));
-        tableView.getColumns().add(hostCol);
-
-        //price column
-        TableColumn<AuctionProxy, String> portCol = new TableColumn<>("Port#");
-        portCol.setCellValueFactory(new PropertyValueFactory<>("port"));
-        tableView.getColumns().add(portCol);
-
-        for (AuctionProxy proxy : agent.getConnectedAuctionProxys()){
-            tableView.getItems().add(proxy);
-        }
-
-
-        root.add(scrollPane, 1,1);
-        root.add(bankAccountRoot(), 1,4);
-
-
-        return root;
-
     }
 
 
