@@ -21,6 +21,7 @@ public class BankCommunicator implements Runnable {
     private ObjectOutputStream os;
 
     private boolean auctionCommunicator = false;
+    private LinkedBlockingQueue<NetworkDevice> auctions;
 
     /**
      * Thread for communication with a single socket
@@ -59,7 +60,7 @@ public class BankCommunicator implements Runnable {
         while(s.isConnected() && bank.isAlive()) {
             try {
                 // Process BankRequest from input stream
-                BankRequest br = (BankRequest) is.readObject();
+                BankRequest br = (BankRequest)is.readObject();
 
                 // Throw error if br is not processable
                 if (br == null) throw new ClassNotFoundException();
@@ -169,11 +170,11 @@ public class BankCommunicator implements Runnable {
                 if (Bank.BANKCOMMDEBUG) System.out.println("\tStopped distributing the server of " + br.getNetworkDevice());
                 break;
             case GETAUCTIONS:
-                LinkedBlockingQueue<NetworkDevice> list = bank.getServers();
-
+                auctions = bank.getServers();
+                //arlin
                 if (Bank.BANKCOMMDEBUG) {
                     System.out.print("\tSending the following servers: \n\t");
-                    for (NetworkDevice nd : list) {
+                    for (NetworkDevice nd : auctions) {
                         System.out.print(nd + " ");
                     }
                     System.out.println();

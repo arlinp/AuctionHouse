@@ -31,6 +31,9 @@ public class Bank implements BankProcess {
     private LinkedBlockingQueue<BankCommunicator> bankCommunicators = new LinkedBlockingQueue<>();
 
 
+    //Flags
+    private boolean alive = true;
+
     private int accountCount = 0;
 
     /**
@@ -49,12 +52,14 @@ public class Bank implements BankProcess {
             e.printStackTrace();
         }
 
-        if (BANKDEBUG) System.out.println("Accepting Connections...");
+        if (BANKDEBUG){ System.out.println("Accepting Connections...");
+        System.out.println("Port is: " + port);}
 
         // Accept connections while true
         while (isAlive()) {
             try {
-                System.out.println("Accepting Connections");
+                System.out.println("Accepting Connections...");
+                System.out.printf("Port is: " + port);
                 Socket s = ss.accept();
                 BankCommunicator ac = new BankCommunicator(s,this);
                 bankCommunicators.put(ac);
@@ -67,14 +72,13 @@ public class Bank implements BankProcess {
         }
     }
 
-    // TODO implement
     /**
      * Checks whether the Bank is alive
      *
      * @return boolean for aliveness
      */
     public boolean isAlive() {
-        return true;
+        return alive;
     }
 
     /**
@@ -122,8 +126,6 @@ public class Bank implements BankProcess {
     public int generateAccountID() {
         // Generate a random ID
         int number = ran.nextInt(1000);
-
-        //TODO Check Hashmap TEST THIS TO MAKE SURE IT WORKS
 
         if(accounts.containsKey(number)){
             generateAccountID();
@@ -327,7 +329,8 @@ public class Bank implements BankProcess {
     }
 
     /**
-     *
+     *  Notifies the connected agent that there is a new
+     *  auction
      * @param networkDevice
      */
     public void notifyAuction(NetworkDevice networkDevice) {
@@ -338,21 +341,8 @@ public class Bank implements BankProcess {
 
 
     public static void main(String[] args) {
-        if (args.length == 1) {
-            int operatingPort;
-            try {
-                operatingPort = Integer.parseInt(args[0]);
-            } catch (NumberFormatException e) {
-                System.out.println("Input not correct:\n Correct usage: Bank" +
-                        " <Operating Port>");
-                return;
-            }
-
-            Bank bank = new Bank(operatingPort);
-        } else {
-            Bank bank = new Bank(bankPort);
-        }
-
+        System.out.println("Starting auction house on port: 42073");
+        Bank ah = new Bank(bankPort);
 
 
     }

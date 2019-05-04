@@ -50,7 +50,6 @@ public class Agent implements BankProcess, AuctionProcess {
         return accountID;
     }
 
-
     public ArrayList<AuctionProxy> getConnectedAuctionProxys() {
         return connectedAuctionProxys;
     }
@@ -132,16 +131,30 @@ public class Agent implements BankProcess, AuctionProcess {
     }
 
 
+    /**
+     * Gets balance
+     *
+     * @param AccountID Unique Identifier of Account
+     * @return balance of account
+     */
     @Override
     public double getBalance(int AccountID) {
         return bankProxy.getBalance(AccountID);
     }
 
+    /**
+     * @return balance
+     */
     public double getBalance() {
         return bankProxy.getBalance(accountID);
     }
 
 
+    /**
+     * @param AccountID Unique Identifier of Account
+     * @param amount    Amount of Money
+     * @return
+     */
     @Override
     public boolean addFunds(int AccountID, double amount) {
         return bankProxy.addFunds(AccountID, amount);

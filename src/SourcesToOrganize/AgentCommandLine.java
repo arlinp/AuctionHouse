@@ -16,6 +16,9 @@ public class AgentCommandLine extends AgentApp{
     private Agent agent;
     LinkedBlockingQueue<NetworkDevice> servers;
 
+    /**
+     * Main running
+     */
     AgentCommandLine(){
         boolean test = true;
 
@@ -37,9 +40,6 @@ public class AgentCommandLine extends AgentApp{
 
             if (input.equals("1")) {
 
-//                bankProxy = new BankProxy("localHost", 42069, this);
-//                auctionProxy = new AuctionProxy("localhost", 42070);
-//                localTest();
                 agent = new Agent("localhost", 42069);
 
             }
@@ -69,12 +69,9 @@ public class AgentCommandLine extends AgentApp{
 //        }
 
         //int accountID = bankProxy.addAccount();
-        int accountID = 0;
 
-        //main loop
-        while (!input.equals("exit")
-                //|| input.equalsIgnoreCase("menu")
-        )
+        //main loop goes until "exit"
+        while (!input.equals("exit"))
         {
 
             //access bank or access auction
