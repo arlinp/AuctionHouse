@@ -1,6 +1,9 @@
 package AuctionProxy;
 
+/**
+ * Enumeration of Auction messages
+ * Used by AuctionCommunicator and AuctionProxy
+ */
 public enum AuctionInfo {
-    // TODO a Remove and contains?
-    BID,GET,GETALL,CLOSEREQUEST
+    BID, GET, GETALL, CLOSEREQUEST;
 }
