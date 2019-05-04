@@ -33,13 +33,14 @@ public class AuctionHouse implements AuctionProcess {
     private int auctionID;
     private BufferedReader bufferedReader;
     private static int counter = 0;
+    private boolean alive = true;
 
 
     public AuctionHouse(int port) {
 
         bankProxy = new BankProxy("127.0.0.1", bankPort, null);
 //        auctionID = bankProxy.addAccount(8697);
-        auctionID = bankProxy.addAccount();
+        bankProxy.addAccount();
 
         readInItems();
 
@@ -134,6 +135,10 @@ public class AuctionHouse implements AuctionProcess {
                 itemUp.startThread();
 
             }else{
+                if(items.isEmpty()){
+
+                    alive = false;
+                }
                 System.out.println("No more items in the Auction house!");}
         }
     }
@@ -153,22 +158,9 @@ public class AuctionHouse implements AuctionProcess {
 
         // Get the item to be bid upon
         Item item = items.get(bid.getItemID());
+        BidInfo info = item.setBid(bid);
 
-        return item.setBid(bid);
-    }
-
-    /**
-     * Close the connection
-     */
-    public void close() {
-        System.out.println("HERE SHUTTING DOWN");
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-//            try {
-                System.out.println("shut down!");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-        }));
+        return info;
     }
 
     /**
@@ -219,7 +211,7 @@ public class AuctionHouse implements AuctionProcess {
     }
 
     public boolean isAlive() {
-        return true;
+        return alive;
     }
 
     public static void main(String[] args) {

@@ -12,6 +12,9 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static SourcesToOrganize.AgentApp.auctionPort;
+import static SourcesToOrganize.AgentApp.bankPort;
+
 public class AgentAppCopy{
 
 
@@ -19,8 +22,8 @@ public class AgentAppCopy{
 
 
         //Start the bidders with their accounts
-        Bidder Bidder1 = new Bidder(1, 42073, 42072);
-//        Bidder Bidder3 = new Bidder(3, 42069, 42070);
+        Bidder Bidder1 = new Bidder(1, bankPort, auctionPort);
+        Bidder Bidder3 = new Bidder(3, bankPort, auctionPort);
 //        Bidder Bidder4 = new Bidder(4, 42069, 42070);
 //        Bidder Bidder5 = new Bidder(5, 42069, 42070);
 //        Bidder Bidder6 = new Bidder(6, 42069, 42070);
@@ -35,7 +38,7 @@ public class AgentAppCopy{
 
         new Thread(Bidder1).start();
 //        new Thread(Bidder2).start();
-//        new Thread(Bidder3).start();
+        new Thread(Bidder3).start();
 //        new Thread(Bidder4).start();
 //        new Thread(Bidder5).start();
 //        new Thread(Bidder6).start();
@@ -53,7 +56,7 @@ public class AgentAppCopy{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Bidder Bidder2 = new Bidder(2, 42073, 42072);
+        Bidder Bidder2 = new Bidder(2, bankPort, auctionPort);
         new Thread(Bidder2).start();
 
     }

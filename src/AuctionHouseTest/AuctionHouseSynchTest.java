@@ -4,12 +4,15 @@ import AuctionHouse.AuctionHouse;
 import AuctionHouse.ItemInfo;
 import SourcesToOrganize.Bid;
 
+import static SourcesToOrganize.AgentApp.auctionPort;
+import static SourcesToOrganize.AgentApp.bankPort;
+
 public class AuctionHouseSynchTest {
 
     public static void main(String[] args) {
 
         System.out.println("Starting... ");
-        AuctionHouse auction = new AuctionHouse(42069);
+        AuctionHouse auction = new AuctionHouse(auctionPort, "localhost", bankPort);
 
         System.out.println("Created, now printing");
         for (ItemInfo item : auction.getItems()) {
