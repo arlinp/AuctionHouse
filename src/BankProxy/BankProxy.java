@@ -31,8 +31,8 @@ public class BankProxy implements BankProcess, Runnable {
      *
      * @param hostname Hostname or IP
      * @param port Port number
+     * @param client Agent client
      */
-//    public BankProxy(String hostname, int port, AgentApp client) {
     public BankProxy(String hostname, int port, Agent client) {
 
         open = true;
@@ -59,6 +59,12 @@ public class BankProxy implements BankProcess, Runnable {
 
     }
 
+    /**
+     * Proxy design for the BankProxy. Creates a socket from the passed parameters
+     *
+     * @param hostname Hostname or IP
+     * @param port Port number
+     */
     public BankProxy(String hostname, int port) {
 
         open = true;
@@ -69,6 +75,12 @@ public class BankProxy implements BankProcess, Runnable {
     }
 
 
+    /**
+     * Connects to a new server
+     *
+     * @param hostname name of host
+     * @param port port to connect to
+     */
     private void connectToServer(String hostname, int port) {
         try {
             while (s == null) {
@@ -94,7 +106,9 @@ public class BankProxy implements BankProcess, Runnable {
 
     /**
      * Makes an account for auction house or agent
+     * with given ID
      *
+     * @param ID Account ID
      * @return Account ID
      */
     @Override
@@ -405,22 +419,9 @@ public class BankProxy implements BankProcess, Runnable {
         return null;
     }
 
-
-    // TODO Implement notify bank of myself (A New AuctionHouse)
-
-    public void close() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                //open = false;
-                s.close();
-                System.out.println("shut down!");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }));
-    }
-
-
+    /**
+     * @return status of the bank
+     */
     private boolean isOpen() {
         return open;
     }
@@ -446,6 +447,7 @@ public class BankProxy implements BankProcess, Runnable {
                 response = (BankRequest)is.readObject();
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
+                return;
             }
 
             // Process the messages
@@ -461,8 +463,12 @@ public class BankProxy implements BankProcess, Runnable {
 
     }
 
-
-    // TODO Hey a new auction that we can talk to!
+    /**
+     * Processes new connections and notifies
+     * the clients
+     *
+     * @param notification message to handle
+     */
     private void processMessage(BankRequest notification) {
         switch (notification.getType()) {
             case OPENAUCTION:
@@ -477,7 +483,9 @@ public class BankProxy implements BankProcess, Runnable {
         }
     }
 
-
+    /**
+     * @param packetID packet ID
+     */
     private void waitOn(int packetID) {
         synchronized (this) {
             while (!messages.containsKey(packetID)) {
@@ -489,6 +497,5 @@ public class BankProxy implements BankProcess, Runnable {
             }
         }
     }
-
 
 }
