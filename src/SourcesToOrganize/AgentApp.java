@@ -31,7 +31,8 @@ public class AgentApp extends Application{
 
 
     Text selectedItemText = new Text();
-    
+
+    Text notification = new Text();
     
     LinkedList<Bid> bids = new LinkedList<>();
     private VBox bidVBox;
@@ -116,8 +117,6 @@ public class AgentApp extends Application{
         GridPane root = new GridPane();
         root.setAlignment(Pos.CENTER);
 
-        Text notification = new Text();
-
         Button bankLogin = new Button("make new Account");
         bankLogin.setOnAction(e -> {
 
@@ -171,7 +170,7 @@ public class AgentApp extends Application{
         BorderPane root = new BorderPane();
 
         //select auction houses
-        root.setLeft(houseSelectionRoot());
+        root.setLeft(bankAccountRoot());
 
         //select items
         root.setCenter(itemSelectionRoot());
@@ -183,8 +182,6 @@ public class AgentApp extends Application{
         bidVBox = new VBox();
 
         bidScrollPane.setContent(bidScrollPane);
-
-
 
 
         return new Scene(root,500, 500);
@@ -249,6 +246,8 @@ public class AgentApp extends Application{
             bidVBox.getChildren().add(makeBidGroup(bid, selectedItem));
 
             agent.bid(bid);
+
+
         });
 
         
@@ -309,7 +308,7 @@ public class AgentApp extends Application{
 
     private Node bankAccountRoot(){
 
-        GridPane gridPane = new GridPane();
+        GridPane root = new GridPane();
 
         /*
         acc# : ###
@@ -324,13 +323,32 @@ public class AgentApp extends Application{
         Label balanceLabel = new Label("Balance : ");
         Text accountBal = new Text(String.valueOf(agent.getBalance()));
 
-        gridPane.add(accountLabel, 0,0);
-        gridPane.add(accountNum, 1, 0);
 
-        gridPane.add(balanceLabel, 0, 1);
-        gridPane.add(accountBal, 1,1);
+        //add funds input
+        TextField addFundsInput = new TextField("1000");
 
-        return gridPane;
+        Button addFundsButton = new Button("addFunds");
+        addFundsButton.setOnAction(e -> {
+
+            double fundsToAdd = Double.parseDouble(addFundsInput.getText());
+            agent.addFunds(fundsToAdd);
+
+            notification.setText("added " + fundsToAdd + " dollars");
+
+            accountBal.setText(String.valueOf(agent.getBalance()));
+
+        });
+
+        root.add(accountLabel, 0,0);
+        root.add(accountNum, 1, 0);
+
+        root.add(balanceLabel, 0, 1);
+        root.add(accountBal, 1,1);
+
+        root.add(addFundsInput, 1, 3);
+        root.add(addFundsButton, 2, 3);
+
+        return root;
 
     }
 
