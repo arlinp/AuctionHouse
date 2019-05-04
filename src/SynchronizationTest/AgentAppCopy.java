@@ -1,17 +1,5 @@
 package SynchronizationTest;
 
-import AuctionHouse.Item;
-import AuctionHouse.ItemInfo;
-import AuctionProxy.AuctionProxy;
-import BankProxy.BankProxy;
-import SourcesToOrganize.Bid;
-import SourcesToOrganize.Bidder;
-import javafx.application.Application;
-import javafx.stage.Stage;
-
-import java.util.ArrayList;
-import java.util.Scanner;
-
 import static SourcesToOrganize.AgentApp.auctionPort;
 import static SourcesToOrganize.AgentApp.bankPort;
 
