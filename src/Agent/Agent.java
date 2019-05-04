@@ -36,7 +36,7 @@ public class Agent implements BankProcess, AuctionProcess {
      */
     public Agent(String bankHost, int bankPort){
 
-        bankProxy = new BankProxy(bankHost, bankPort);
+        bankProxy = new BankProxy(bankHost, bankPort, this);
     }
 
     /**
@@ -223,4 +223,9 @@ public class Agent implements BankProcess, AuctionProcess {
         return connectedAuctionNetworkDevices;
     }
 
+    public void addAuctionHouse(NetworkDevice auction) {
+
+        System.out.println("add auction");
+        getConnectedAuctionProxys().add(new AuctionProxy(auction.getIpAddress(), auction.getPort()));
+    }
 }

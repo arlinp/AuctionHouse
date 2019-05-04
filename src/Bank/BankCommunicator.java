@@ -178,6 +178,7 @@ public class BankCommunicator implements Runnable {
                     }
                     System.out.println();
                 }
+                response.setNetworkDevices(list);
                 break;
         }
 

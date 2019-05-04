@@ -1,15 +1,18 @@
 package BankProxy;
 
+import Agent.Agent;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import SourcesToOrganize.AgentApp;
 import SourcesToOrganize.NetworkDevice;
+import sun.nio.ch.Net;
 
 /**
  * Proxy design for the Bank
@@ -21,7 +24,7 @@ public class BankProxy implements BankProcess, Runnable {
     private ObjectInputStream is;
     private ObjectOutputStream os;
     private boolean open;
-    private AgentApp client;
+    private Agent client;
 
     /**
      * Proxy design for the BankProxy. Creates a socket from the passed parameters
@@ -30,20 +33,30 @@ public class BankProxy implements BankProcess, Runnable {
      * @param port Port number
      */
 //    public BankProxy(String hostname, int port, AgentApp client) {
-    public BankProxy(String hostname, int port, AgentApp client) {
+    public BankProxy(String hostname, int port, Agent client) {
 
         open = true;
         this.client = client;
-
+        System.out.println("connect to server");
         connectToServer(hostname, port);
 
+        new Thread(this).start();
+
+        System.out.println("connected to server");
         if (this.client != null) {
-            for (NetworkDevice auction : getServers()) {
-                this.client.addAuctionHouse(auction);
+            System.out.println("get servers");
+
+            LinkedBlockingQueue<NetworkDevice> servers = getServers();
+            if (servers != null) {
+                for (NetworkDevice auction : servers) {
+                    System.out.println("get auction");
+
+                    this.client.addAuctionHouse(auction);
+                }
             }
         }
 
-        new Thread(this).start();
+
     }
 
     public BankProxy(String hostname, int port) {
