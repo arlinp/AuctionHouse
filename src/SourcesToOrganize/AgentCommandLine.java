@@ -10,16 +10,19 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Main running command line agent
+ */
 public class AgentCommandLine extends AgentApp{
 
-
     private Agent agent;
-    LinkedBlockingQueue<NetworkDevice> servers;
+    private LinkedBlockingQueue<NetworkDevice> servers;
 
     /**
-     * Main running
+     * Constructs a new Agent controlled through
+     * the command line.
      */
-    AgentCommandLine(){
+    public AgentCommandLine(){
         boolean test = true;
 
         Scanner inScanner = new Scanner(System.in);
@@ -32,11 +35,10 @@ public class AgentCommandLine extends AgentApp{
         input = inScanner.nextLine();
 
         //Initialize the bank and auction proxy
-        BankProxy bankProxy = null;
-        AuctionProxy auctionProxy = null;
+        String bankHost;
+        int portNumber;
 
-//        try {
-
+        try {
 
             if (input.equals("1")) {
 
@@ -44,31 +46,22 @@ public class AgentCommandLine extends AgentApp{
 
             }
 
-//            if (input.equals("2")) {
-//
-//                System.out.println("enter bank host:");
-//                bankProxy = new BankProxy(inScanner.nextLine(), 42071, this);
-//
-//
-//                System.out.println("enter auctionhouse host:");
-//                auctionProxy = new AuctionProxy(inScanner.nextLine(), 42070);
-//
-//                agent = new Agent(bankProxy, auctionProxy);
-//
-//            }
-//
-//            System.out.println(bankProxy);
-            //if (bankProxy == null) throw new ConnectException();
+            if (input.equals("2")) {
 
-            //if (auctionProxy == null) throw new ConnectException();
+                System.out.println("enter bank host:");
+                bankHost = inScanner.nextLine();
 
-//        } catch (ConnectException e) {
-//            System.out.println("A connect exception happened");
-//            e.printStackTrace();
-//
-//        }
 
-        //int accountID = bankProxy.addAccount();
+                System.out.println("enter bank port:");
+                portNumber = inScanner.nextInt();
+
+                agent = new Agent(bankHost, portNumber);
+
+            }
+        }
+        catch (NullPointerException e){
+            return;
+        }
 
         //main loop goes until "exit"
         while (!input.equals("exit"))
@@ -152,11 +145,6 @@ public class AgentCommandLine extends AgentApp{
                     input = inScanner.nextLine();
                     double amount = Double.parseDouble(input);
 
-//                System.out.println("making bid on: " + auctionItems.get(itemIndex) + " " +
-//                        "for : " + amount);
-//
-//                auctionProxy.bid(new Bid(amount,accountID,auctionItems.get(itemIndex).getItemID()));
-
                     agent.bid(new Bid(amount, agent.getAccountID(), itemIndex));
                 }
                     System.out.println("Sorry, no more items in this auction");
@@ -164,22 +152,20 @@ public class AgentCommandLine extends AgentApp{
         }
 
         if(input.equals("exit")){
-            //check if any bids
-            //tryToClose();
-            System.out.println("You quit the program");
+
+            System.out.println("You want to exit the Auction House");
             System.out.println("Let's check to see if there are any bids first");
-            //while(auctionProxy.)
+
         }
     }
 
-
-
-    @Override
-    public void addAuctionHouse(NetworkDevice networkDevice) {
-
-    }
-
+    /**
+     * Runs a new Agent on the command line
+     *
+     * @param args arguments
+     */
     public static void main(String[] args) {
         new AgentCommandLine();
     }
+
 }
