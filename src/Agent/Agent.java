@@ -50,6 +50,11 @@ public class Agent implements BankProcess, AuctionProcess {
         bankProxy = new BankProxy("localhost", bankPort);
     }
 
+    public Agent(String bankhost, int bankport){
+
+        bankProxy = new BankProxy(bankhost, bankport);
+    }
+
 
     public int addAccount(int accountID){
 

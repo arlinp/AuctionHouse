@@ -63,14 +63,15 @@ public class AgentApp extends Application{
 
         //new account taking input text
         TextField bankHostInput = new TextField();
-        TextField auctionHostInput = new TextField();
+//        TextField auctionHostInput = new TextField();
 
         Button labTest = new Button("Lab Test");
         labTest.setOnAction(e -> {
 
-            agent = new Agent(
-                    new BankProxy(bankHostInput.getText(), bankPort),
-                    new AuctionProxy(auctionHostInput.getText(), auctionPort));
+            agent = new Agent(bankHostInput.getText(), 42069);
+//            agent = new Agent(
+//                    new BankProxy(bankHostInput.getText(), bankPort),
+//                    new AuctionProxy(auctionHostInput.getText(), auctionPort));
         });
 
         //test on this computer
@@ -95,7 +96,7 @@ public class AgentApp extends Application{
         root.add(bankHostInput, 1,4);
 
         root.add(new Label("AuctionHost"), 0, 5);
-        root.add(auctionHostInput, 1, 5);
+//        root.add(auctionHostInput, 1, 5);
         root.add(labTest, 1, 6);
 
         root.add(localTest, 1,9);
