@@ -57,8 +57,8 @@ public class AuctionCommunicator implements Runnable{
                 AuctionRequest ar = (AuctionRequest) is.readObject();
                 processMessage(ar);
             } catch (IOException | ClassNotFoundException e) {
-                System.out.print("OH NO");
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.out.println("Agent " + s + " disconnected from ");
                 break;
             }
         }

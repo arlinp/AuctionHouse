@@ -80,14 +80,22 @@ public class Agent implements BankProcess, AuctionProcess {
 
     @Override
     public BidInfo bid(Bid bid) {
-
-        bids.add(bid);
-        return currentAuctionProxy.bid(bid);
+        addToBids(bid);
+        BidInfo info = currentAuctionProxy.bid(bid);
+        return info;
     }
 
     @Override
     public ItemInfo getItemInfo(int itemID) {
         return currentAuctionProxy.getItemInfo(itemID);
+    }
+
+    public synchronized void addToBids(Bid bid){
+        bids.add(bid);
+    }
+
+    public synchronized void removeBid(Bid bid){
+        bids.remove(bid);
     }
 
     @Override

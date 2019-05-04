@@ -1,5 +1,6 @@
 package AuctionProxy;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -21,6 +22,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
 
     private String hostname;
     private int port;
+    private ArrayList<Bid> bids;
 
     /**
      * Proxy design for the Auction House. Creates a socket from the passed parameters
@@ -40,6 +42,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         new Thread(this).start();
 
         System.out.println("Created the proxy");
+        bids = new ArrayList<>();
     }
 
     private void connectToServer(String hostname, int port) {
@@ -76,6 +79,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         // TODO itemID is redundant, as already contained in bid
         AuctionRequest ar = new AuctionRequest(AuctionInfo.BID);
         ar.setBid(bid);
+        bids.add(bid);
 
         // TODO Need to reimplement BID to project specification (e.g. Returns various decisions)
         try {
@@ -88,6 +92,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        bids.remove(bid);
         return BidInfo.REJECTION;
     }
 
@@ -160,7 +165,6 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         try {
             os.writeObject(ar);
 
-            waitOn(ar.getPacketID());
 
             AuctionRequest response = messages.get(ar.getPacketID());
             messages.remove(response.getPacketID());
@@ -236,12 +240,6 @@ public class AuctionProxy implements AuctionProcess, Runnable {
                         break;
                 }
                 break;
-        }
-    }
-
-    public void closeDown(){
-        if(messages.isEmpty()){
-            close();
         }
     }
 
