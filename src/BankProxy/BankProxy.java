@@ -37,6 +37,12 @@ public class BankProxy implements BankProcess, Runnable {
 
         connectToServer(hostname, port);
 
+        if (this.client != null) {
+            for (NetworkDevice auction : getServers()) {
+                this.client.addAuctionHouse(auction);
+            }
+        }
+
         new Thread(this).start();
     }
 
@@ -463,7 +469,6 @@ public class BankProxy implements BankProcess, Runnable {
         synchronized (this) {
             while (!messages.containsKey(packetID)) {
                 try {
-                    System.out.println("Waiting on " + packetID);
                     wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
