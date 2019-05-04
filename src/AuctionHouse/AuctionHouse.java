@@ -13,28 +13,34 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import static SourcesToOrganize.AgentApp.auctionPort;
 import static SourcesToOrganize.AgentApp.bankPort;
 
 public class AuctionHouse implements AuctionProcess {
 
-    public static long waitTime = 50000;
+
+    public static final long ITEM_WAIT_TIME = 25000;
+
+
+//    public AuctionHouse(ClientProxy bankProxy, ServerProxy auctionHouseServer) {
+//    }
+
     private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
-    private LinkedBlockingQueue<Item> itemsNotUpForAuction = new LinkedBlockingQueue<Item>();
-    private LinkedBlockingQueue<ItemInfo> itemInfos = new LinkedBlockingQueue<ItemInfo>();
-    private BankProxy bank;
+    private ArrayList<Item> itemsNotUpForAuction = new ArrayList<Item>();
+    private ArrayList<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
+    private BankProxy bankProxy;
     private int auctionID;
     private BufferedReader bufferedReader;
     private static int counter = 0;
     private boolean alive = true;
 
 
-    public AuctionHouse(int port, String bankName, int bankPort) {
+    public AuctionHouse(int port) {
 
-        bank = new BankProxy("127.0.0.1", bankPort, null);
-        auctionID = bank.addAccount(8697);
+        bankProxy = new BankProxy("127.0.0.1", bankPort, null);
+//        auctionID = bankProxy.addAccount(8697);
+        bankProxy.addAccount();
 
         readInItems();
 
@@ -46,12 +52,18 @@ public class AuctionHouse implements AuctionProcess {
             e.printStackTrace();
         }
 
-        bank.openServer(new NetworkDevice("127.0.0.1",port));
+        bankProxy.openServer(new NetworkDevice("127.0.0.1",port));
 
         while (true) {
             try {
                 Socket s = ss.accept();
                 AuctionCommunicator ac = new AuctionCommunicator(s,this);
+
+                System.out.println("Starting to send");
+//                Thread.sleep(200);
+
+//                ac.notifyBid(BidInfo.OUTBID, 1002, 100.00);
+//                ac.notifyBid(BidInfo.WINNER, 1001, 100.00);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -75,7 +87,7 @@ public class AuctionHouse implements AuctionProcess {
                 lineArr = line.split(" ");
 
                 ItemInfo itemInfo = new ItemInfo(lineArr[0], Integer.parseInt(lineArr[1]), counter++);
-                Item item = new Item(bank, this, itemInfo, auctionID);
+                Item item = new Item(bankProxy, this, itemInfo, auctionID);
 
                 //start the first three item threads
                 if(itemNum < 3){
@@ -113,27 +125,21 @@ public class AuctionHouse implements AuctionProcess {
             items.remove(itemID);
 
             // Add a new item to replace it
-            if (!itemsNotUpForAuction.isEmpty()) {
+            if(!itemsNotUpForAuction.isEmpty()) {
 
-                Item itemUp = null;
-                try {
-                    itemUp = itemsNotUpForAuction.take();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
+                Item itemUp = itemsNotUpForAuction.remove(0);
                 ItemInfo itemInfo = itemUp.getItemInfo();
                 itemInfos.add(itemInfo);
                 System.out.println(itemInfo);
                 items.put(itemUp.getItemID(), itemUp);
                 itemUp.startThread();
 
-            } else {
-                if (items.isEmpty()) {
+            }else{
+                if(items.isEmpty()){
+
                     alive = false;
                 }
-                System.out.println("No more items in the Auction house!");
-            }
+                System.out.println("No more items in the Auction house!");}
         }
     }
 
@@ -167,7 +173,8 @@ public class AuctionHouse implements AuctionProcess {
     public ItemInfo getItemInfo(int itemID) {
         if (items.get(itemID) != null) {
             return items.get(itemID).getItemInfo();
-        } else {
+        }
+        else {
             return null;
         }
     }
@@ -179,11 +186,9 @@ public class AuctionHouse implements AuctionProcess {
      */
     @Override
     public ArrayList<ItemInfo> getItems() {
-        ArrayList<ItemInfo> items = new ArrayList<ItemInfo>();
-        for (ItemInfo item : this.itemInfos) {
-            items.add((ItemInfo) item.clone());
-        }
-        return items;
+
+        return itemInfos;
+
     }
 
     /**
@@ -194,9 +199,14 @@ public class AuctionHouse implements AuctionProcess {
      */
     @Override
     public boolean closeRequest(int accountID) {
+        System.out.println("DID IT EVER EVEN CHECK?");
         for (Item item : items.values()) {
-            if (item.contains(accountID)) return false;
+            if (item.contains(accountID)) {
+                System.out.println("False on" +item);
+                return false;
+            }
         }
+        System.out.println("returned true");
         return true;
     }
 
@@ -204,33 +214,7 @@ public class AuctionHouse implements AuctionProcess {
         return alive;
     }
 
-    /**
-     * Main method that allows the AuctionHouse to be opened up and created
-     *
-     * @param args Takes in 0 or 4 parameters specificated
-     */
     public static void main(String[] args) {
-        if (args.length == 4) {
-
-            int operatingPort;
-            int bankPort;
-
-            try {
-                 operatingPort = Integer.parseInt(args[0]);
-                 bankPort = Integer.parseInt(args[2]);
-                 waitTime = Long.parseLong(args[3]);
-
-            } catch (NumberFormatException e) {
-                System.out.println("Input not correct:\n Correct usage: Auct" +
-                        "ionHouse <Operating Port> <Bank Host> <Bank Port> <" +
-                        "Wait Time>");
-                return;
-            }
-
-            AuctionHouse ah = new AuctionHouse(operatingPort,args[1],bankPort);
-        } else {
-            AuctionHouse ah = new AuctionHouse(auctionPort, "localhost", bankPort);
-        }
-
+        AuctionHouse ah = new AuctionHouse(auctionPort);
     }
 }

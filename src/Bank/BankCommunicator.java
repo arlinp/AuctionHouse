@@ -20,6 +20,8 @@ public class BankCommunicator implements Runnable {
     private ObjectInputStream is;
     private ObjectOutputStream os;
 
+    private boolean auctionCommunicator = false;
+
     /**
      * Thread for communication with a single socket
      *
@@ -149,6 +151,7 @@ public class BankCommunicator implements Runnable {
                 if (Bank.BANKCOMMDEBUG) System.out.println("\tTransferred $" + br.getLockNumber() + " from Account#: " + br.getID() + " to Account#: " + br.getToID());
                 break;
             case OPENAUCTION:
+                auctionCommunicator = true;
                 response.setStatus(true);
                 bank.openServer(br.getNetworkDevice());
 

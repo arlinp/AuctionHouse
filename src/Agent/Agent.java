@@ -20,10 +20,11 @@ public class Agent implements BankProcess, AuctionProcess {
 
     private BankProxy bankProxy = null;
     private AuctionProxy auctionProxy = null;
-    private ArrayList<AuctionProxy> connectedAuctionProxys = new ArrayList<AuctionProxy>();
+    private ArrayList<AuctionProxy> connectedAuctionProxys = new ArrayList<>();
     private AuctionProxy currentAuctionProxy;
 
-    LinkedList<Bid> bids = new LinkedList<>();
+    private LinkedList<Bid> bids = new LinkedList<>();
+    private LinkedBlockingQueue<NetworkDevice> connectedAuctionNetworkDevices;
 
     public Agent(BankProxy bankProxy, AuctionProxy auctionProxy){
 //        this.auctionProxy = auctionProxy;
@@ -42,6 +43,11 @@ public class Agent implements BankProcess, AuctionProcess {
         AuctionProxy auctionProxy = new AuctionProxy("localHost", auctionPort);
         addAuctionProxy(auctionProxy);
         currentAuctionProxy = auctionProxy;
+    }
+
+    public Agent(int bankPort){
+
+        bankProxy = new BankProxy("localhost", bankPort);
     }
 
 
@@ -89,6 +95,11 @@ public class Agent implements BankProcess, AuctionProcess {
 
         return itemInfos;
 
+    }
+
+    public void connectToAuctions(){
+
+        connectedAuctionNetworkDevices = bankProxy.getServers();
     }
 
     public boolean addAuctionProxy(AuctionProxy auctionProxy){
@@ -207,6 +218,11 @@ public class Agent implements BankProcess, AuctionProcess {
 
     public void setAccountID(int accountID) {
         this.accountID = accountID;
+    }
+
+
+    public LinkedBlockingQueue<NetworkDevice> getConnectedAuctionNetworkDevices() {
+        return connectedAuctionNetworkDevices;
     }
 
 }
