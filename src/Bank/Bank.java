@@ -34,6 +34,7 @@ public class Bank implements BankProcess {
     //Flags
     private boolean alive = true;
 
+    //Number of accounts
     private int accountCount = 0;
 
     /**
@@ -121,17 +122,6 @@ public class Bank implements BankProcess {
 
         // Return new Unique ID
         return newAccount.getUniqueID();
-    }
-
-    public int generateAccountID() {
-        // Generate a random ID
-        int number = ran.nextInt(1000);
-
-        if(accounts.containsKey(number)){
-            generateAccountID();
-        }
-        return number;
-
     }
 
     /**
@@ -338,7 +328,6 @@ public class Bank implements BankProcess {
             bc.notifyNewAuction(networkDevice);
         }
     }
-
 
     public static void main(String[] args) {
         if (args.length == 1) {
