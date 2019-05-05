@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -243,6 +244,24 @@ public class AuctionProxy implements AuctionProcess, Runnable {
                 }
                 break;
         }
+    }
+
+    /**
+     * Gets the connection address of the socket
+     *
+     * @return Address of socket
+     */
+    public InetAddress getConnectedAddress() {
+        return s.getInetAddress();
+    }
+
+    /**
+     * Returns the port of the socket
+     *
+     * @return Port of the socket
+     */
+    public int getPort() {
+        return port;
     }
 
     /**

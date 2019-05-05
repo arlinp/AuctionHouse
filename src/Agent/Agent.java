@@ -9,6 +9,7 @@ import BankProxy.BankProcess;
 import SourcesToOrganize.Bid;
 import SourcesToOrganize.NetworkDevice;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -339,7 +340,15 @@ public class Agent implements BankProcess, AuctionProcess {
      */
     public void addAuctionHouse(NetworkDevice auction) {
 
-        System.out.println("add auction");
+        System.out.println("Add auction");
+        for (AuctionProxy ap : getConnectedAuctionProxys()) {
+            InetAddress test = ap.getConnectedAddress();
+
+            if (test.getHostAddress().equalsIgnoreCase(auction.getIpAddress())
+                    && ap.getPort() == auction.getPort()) {
+                return;
+            }
+        }
         getConnectedAuctionProxys().add(new AuctionProxy(auction.getIpAddress(), auction.getPort()));
     }
 }

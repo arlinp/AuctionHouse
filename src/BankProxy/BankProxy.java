@@ -12,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import SourcesToOrganize.AgentApp;
 import SourcesToOrganize.NetworkDevice;
-import sun.nio.ch.Net;
+
 
 /**
  * Proxy design for the Bank
