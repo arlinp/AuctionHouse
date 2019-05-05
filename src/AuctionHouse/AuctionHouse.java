@@ -34,7 +34,7 @@ public class AuctionHouse implements AuctionProcess {
 
 
     public AuctionHouse(int operatingPort, String bankHostname, int bankPort) {
-
+        alive = true;
         bankProxy = new BankProxy(bankHostname, bankPort, null);
 
         //Make a bank account for the auction house

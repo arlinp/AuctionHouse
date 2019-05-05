@@ -24,7 +24,6 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     private ObjectOutputStream os = null;
     private Socket s;
     private boolean open;
-
     private String hostname;
     private int port;
     private ArrayList<Bid> bids;
@@ -46,8 +45,9 @@ public class AuctionProxy implements AuctionProcess, Runnable {
 
         new Thread(this).start();
 
-        System.out.println("Created the proxy");
         bids = new ArrayList<>();
+
+        System.out.println("Created the proxy");
     }
 
     /**
@@ -141,7 +141,6 @@ public class AuctionProxy implements AuctionProcess, Runnable {
 
         try {
             os.writeObject(ar);
-
             waitOn(ar.getPacketID());
 
             AuctionRequest response = messages.get(ar.getPacketID());
@@ -165,7 +164,6 @@ public class AuctionProxy implements AuctionProcess, Runnable {
      */
     @Override
     public boolean closeRequest(int accountID) {
-        System.out.println("Checking request");
         AuctionRequest ar = new AuctionRequest(AuctionInfo.CLOSEREQUEST);
         ar.setItemID(accountID);
 

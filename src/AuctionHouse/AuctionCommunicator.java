@@ -70,7 +70,6 @@ public class AuctionCommunicator implements Runnable{
      * @param ar AuctionRequest to handle
      */
     private void processMessage(AuctionRequest ar) {
-
         AuctionRequest newAR = new AuctionRequest(ar.getType(), ar.getPacketID());
 
         try {
