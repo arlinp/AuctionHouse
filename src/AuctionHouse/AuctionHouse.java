@@ -43,12 +43,14 @@ public class AuctionHouse implements AuctionProcess {
         //Read items this house will sell
         readInItems();
 
-        ServerSocket ss = null;
+        ServerSocket ss;
         try {
             System.out.println(operatingPort);
             ss = new ServerSocket(operatingPort);
         } catch (IOException e) {
+            alive = false;
             e.printStackTrace();
+            return;
         }
 
         bankProxy.openServer(new NetworkDevice("127.0.0.1",operatingPort));
@@ -65,7 +67,9 @@ public class AuctionHouse implements AuctionProcess {
 //                ac.notifyBid(BidInfo.WINNER, 1001, 100.00);
 
             } catch (IOException e) {
+                alive = false;
                 e.printStackTrace();
+                return;
             }
 
         }
@@ -109,6 +113,7 @@ public class AuctionHouse implements AuctionProcess {
             }
         } catch (IOException e){
             e.printStackTrace();
+            return;
         }
     }
 
@@ -163,7 +168,7 @@ public class AuctionHouse implements AuctionProcess {
     /**
      * @param bid bid to synchronously add
      */
-    public synchronized void addBid(Bid bid){
+    private synchronized void addBid(Bid bid){
         bids.add(bid);
     }
 
@@ -230,7 +235,7 @@ public class AuctionHouse implements AuctionProcess {
 
     /**
      * Starts a new Auction House
-     * @param args
+     * @param args arguments
      */
     public static void main(String[] args) {
 

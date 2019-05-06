@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * Stores all the information of an Item
+ *
  * -Item Name
  * -Item prices
  * -Item ID

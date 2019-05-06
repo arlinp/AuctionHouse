@@ -121,7 +121,7 @@ public class BankRequest extends Packet implements Serializable {
     /**
      * @param networkDevices set the network devices
      */
-    public void setNetworkDevices(LinkedBlockingQueue<NetworkDevice> networkDevices) {
+    public void setNetworkDevices(LinkedBlockingQueue<NetworkDevice> networkDevices){
         this.networkDevices = networkDevices;
     }
 

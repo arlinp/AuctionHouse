@@ -20,14 +20,11 @@ public class Bank implements BankProcess {
 
     // Debugging flags
     public static final boolean BANKCOMMDEBUG = true;
-    public static final boolean BANKDEBUG = false;
+    private static final boolean BANKDEBUG = false;
 
     // Used data structures
-    public  Random ran = new Random();
     private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
-    private HashMap<Integer, Double> lockedMoney = new HashMap<Integer, Double>();
     private LinkedBlockingQueue<NetworkDevice> auctionNetworkDevices = new LinkedBlockingQueue<>();
-    // TODO replace with Thread pool
     private LinkedBlockingQueue<BankCommunicator> bankCommunicators = new LinkedBlockingQueue<>();
 
 
@@ -60,14 +57,16 @@ public class Bank implements BankProcess {
         while (isAlive()) {
             try {
                 System.out.println("Accepting Connections...");
-                System.out.printf("Port is: " + port);
-                Socket s = ss.accept();
+                System.out.println("Port is: " + port);
+                Socket s = null;
+                s = ss.accept();
                 BankCommunicator ac = new BankCommunicator(s,this);
                 bankCommunicators.put(ac);
 
                 if (BANKDEBUG) System.out.println("Started new BankCommunicator for: " + s.getRemoteSocketAddress());
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
+                return;
             }
 
         }
@@ -321,7 +320,7 @@ public class Bank implements BankProcess {
     /**
      *  Notifies the connected agent that there is a new
      *  auction
-     * @param networkDevice
+     * @param networkDevice network device to notify
      */
     public void notifyAuction(NetworkDevice networkDevice) {
         for (BankCommunicator bc : bankCommunicators) {
@@ -333,7 +332,7 @@ public class Bank implements BankProcess {
      * Starts a new Bank on a port given as an argument
      * or default on bankPort.
      *
-     * @param args
+     * @param args arguments
      */
     public static void main(String[] args) {
         if (args.length == 1) {

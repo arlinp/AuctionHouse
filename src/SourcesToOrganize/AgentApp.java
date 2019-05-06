@@ -26,15 +26,15 @@ public class AgentApp extends Application{
     private static final double APP_HEIGHT = 500;
     public static int bankPort = 42070;
     public static int auctionPort = 42069;
-    Stage window;
-    public Agent agent;
+    private Stage window;
+    private Agent agent;
 
 
-    Text selectedItemText = new Text();
+    private Text selectedItemText = new Text();
 
-    Text notification = new Text();
+    private Text notification = new Text();
     
-    LinkedList<Bid> bids = new LinkedList<>();
+    private LinkedList<Bid> bids = new LinkedList<>();
     private VBox bidVBox;
 
     @Override
@@ -105,7 +105,7 @@ public class AgentApp extends Application{
      * add funds
      *
      * enter auction
-     * @return
+     * @return Parent
      */
     private Parent bankIntroRoot() {
 
@@ -159,7 +159,7 @@ public class AgentApp extends Application{
 
     /**
      * shows user the items up for auction, allows user to bid on items
-     * @return
+     * @return Parent
      */
     private Parent auctionRoot() {
 
@@ -187,7 +187,7 @@ public class AgentApp extends Application{
     /**
      * displays all items from all connected auction and allows
      * user to bid on an item
-     * @return
+     * @return GridPane
      */
     private GridPane itemSelectionRoot() {
 
@@ -209,12 +209,14 @@ public class AgentApp extends Application{
         tableView.getColumns().add(itemCol);
 
         //price columns
-        TableColumn<ItemInfo, String> priceCol = new TableColumn<>("Price");
+        TableColumn<ItemInfo, String> priceCol =
+                new TableColumn<>("Price");
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
         tableView.getColumns().add(priceCol);
 
         //description column
-        TableColumn<ItemInfo, String> descCol = new TableColumn<>("Description");
+        TableColumn<ItemInfo, String> descCol =
+                new TableColumn<>("Description");
         descCol.setCellValueFactory(new PropertyValueFactory<>("desc"));
         tableView.getColumns().add(descCol);
 
@@ -225,7 +227,8 @@ public class AgentApp extends Application{
         
         //select Item
         tableView.setOnMouseClicked(e -> {
-            ItemInfo selectedItem = tableView.getSelectionModel().getSelectedItem();
+            ItemInfo selectedItem =
+                    tableView.getSelectionModel().getSelectedItem();
             selectedItemText.setText(selectedItem.getName());
 
         });
@@ -239,13 +242,15 @@ public class AgentApp extends Application{
         Button bidButton = new Button("Bid");
         bidButton.setOnAction(e -> {
             //get selected item
-            ItemInfo selectedItem = tableView.getSelectionModel().getSelectedItem();
+            ItemInfo selectedItem =
+                    tableView.getSelectionModel().getSelectedItem();
 
             //get amount to start bid
             Double amount = Double.parseDouble(amountInput.getText());
 
             //create bid to send to house
-            Bid bid = new Bid(amount, agent.getAccountID(), selectedItem.getItemID());
+            Bid bid = new Bid(amount, agent.getAccountID(),
+                    selectedItem.getItemID());
 
             displayNewBid(bid);
 
@@ -342,6 +347,7 @@ public class AgentApp extends Application{
 
     public void addAuctionHouse(NetworkDevice networkDevice) {
 
-        System.out.println("I am theoretically going to add an auctionhouse for " + networkDevice);
+        System.out.println("I am theoretically going to add an auctionhouse for "
+                + networkDevice);
     }
 }
