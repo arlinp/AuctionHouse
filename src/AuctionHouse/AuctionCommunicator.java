@@ -82,7 +82,6 @@ public class AuctionCommunicator implements Runnable{
                     Bid bid = ar.getBid();
                     bid.setAc(this);
                     BidInfo status = auctionHouse.bid(bid);
-                    System.out.println(status);
                     resp.setBidStatus(status);
 
                     System.out.println("\tBid on item #" + bid.getItemID() +

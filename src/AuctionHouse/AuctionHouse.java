@@ -45,7 +45,6 @@ public class AuctionHouse implements AuctionProcess {
 
         ServerSocket ss = null;
         try {
-            System.out.println(operatingPort);
             ss = new ServerSocket(operatingPort);
         } catch (IOException e) {
             e.printStackTrace();
@@ -128,7 +127,6 @@ public class AuctionHouse implements AuctionProcess {
                 Item itemUp = itemsNotUpForAuction.remove(0);
                 ItemInfo itemInfo = itemUp.getItemInfo();
                 itemInfos.add(itemInfo);
-                System.out.println(itemInfo);
                 items.put(itemUp.getItemID(), itemUp);
                 itemUp.startThread();
 

@@ -51,13 +51,6 @@ public class Bid implements Serializable {
     }
 
     /**
-     * @param itemID set item that bid is on
-     */
-    public void setItemID(int itemID) {
-        this.itemID = itemID;
-    }
-
-    /**
      * @return get lock
      */
     public int getLockID() {
