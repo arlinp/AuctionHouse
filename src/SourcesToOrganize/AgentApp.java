@@ -2,6 +2,7 @@ package SourcesToOrganize;
 
 import Agent.Agent;
 import AuctionHouse.ItemInfo;
+import AuctionProxy.BidInfo;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -281,8 +282,12 @@ public class AgentApp extends Application{
                 // Display new bid to be updated with the reference to
                 // that Infos AHP
 
-                agent.bid(selectedItemInfo.getProxy(), bid);
+                BidInfo status = agent.bid(selectedItemInfo.getProxy(), bid);
+                if (status == BidInfo.REJECTION) {
+                    newPopUp("Your bid on the item was rejected!");
+                }
                 selectedItem = null;
+                selectedItemText.setText("");
                 refreshTableView();
                 refreshBalance();
             }
@@ -464,6 +469,9 @@ public class AgentApp extends Application{
             comp.getChildren().add(str);
             newStage.setScene(stageScene);
             newStage.show();
+
+            // Refresh the balance
+            refreshBalance();
         });
     }
 }
