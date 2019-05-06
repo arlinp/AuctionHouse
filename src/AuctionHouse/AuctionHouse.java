@@ -59,12 +59,6 @@ public class AuctionHouse implements AuctionProcess {
                 Socket s = ss.accept();
                 AuctionCommunicator ac = new AuctionCommunicator(s,this);
 
-                System.out.println("Starting to send");
-//                Thread.sleep(200);
-
-//                ac.notifyBid(BidInfo.OUTBID, 1002, 100.00);
-//                ac.notifyBid(BidInfo.WINNER, 1001, 100.00);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -216,7 +210,6 @@ public class AuctionHouse implements AuctionProcess {
                 return false;
             }
         }
-        System.out.println("returned true");
         return true;
     }
 

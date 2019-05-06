@@ -226,7 +226,9 @@ public class AgentApp extends Application{
         //select Item
         tableView.setOnMouseClicked(e -> {
             ItemInfo selectedItem = tableView.getSelectionModel().getSelectedItem();
-            selectedItemText.setText(selectedItem.getName());
+            if (selectedItemText != null) {
+                selectedItemText.setText(selectedItem.getName());
+            }
 
         });
 
