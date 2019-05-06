@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import SourcesToOrganize.AgentApp;
 import SourcesToOrganize.Bid;
 import AuctionHouse.ItemInfo;
 
@@ -27,6 +28,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     private String hostname;
     private int port;
     private ArrayList<Bid> bids;
+    private AgentApp agentApp;
 
     /**
      * Proxy design for the Auction House. Creates a socket from the passed parameters
@@ -34,7 +36,8 @@ public class AuctionProxy implements AuctionProcess, Runnable {
      * @param hostname host name
      * @param port port number
      */
-    public AuctionProxy(String hostname, int port) {
+    public AuctionProxy(String hostname, int port, AgentApp agentApp) {
+        this.agentApp = agentApp;
         open = true;
         System.out.println("Creating the proxy");
 
@@ -230,14 +233,14 @@ public class AuctionProxy implements AuctionProcess, Runnable {
                         int itemID = newAr.getItemID();
                         double amount = newAr.getNewAmount();
 
-                        System.out.println("You were outbid on item# " +
+                        agentApp.newPopUp("You were outbid on item# " +
                                 itemID + ". The new bid is " + amount);
                         break;
                     case WINNER:
                         int itemWon = newAr.getItemID();
                         double amountPaid = newAr.getNewAmount();
 
-                        System.out.println("You won item# " + itemWon + ". T" +
+                        agentApp.newPopUp("You won item# " + itemWon + ". T" +
                                 "here was $" + amountPaid + " transferred fr" +
                                 "om your bank account. Please allow 6-8 week" +
                                 "s in delivery for your item to arrive");

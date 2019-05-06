@@ -42,7 +42,7 @@ public class AgentCommandLine extends AgentApp{
 
             if (input.equals("1")) {
 
-                agent = new Agent("localhost", 42069);
+                agent = new Agent("localhost", 42069, null);
 
             }
 
@@ -55,7 +55,7 @@ public class AgentCommandLine extends AgentApp{
                 System.out.println("enter bank port:");
                 portNumber = inScanner.nextInt();
 
-                agent = new Agent(bankHost, portNumber);
+                agent = new Agent(bankHost, portNumber, null);
 
             }
         }

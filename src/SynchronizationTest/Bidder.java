@@ -18,7 +18,7 @@ public class Bidder implements Runnable{
     public Bidder(int accountID, int bankPort, int aucPort) {
 
         bankProxy = new BankProxy("127.0.0.1", bankPort, null);
-        auctionProxy = new AuctionProxy("127.0.0.1", aucPort);
+        auctionProxy = new AuctionProxy("127.0.0.1", aucPort, null);
         account = bankProxy.addAccount(accountID);
         bankProxy.addFunds(account, 10000000.00);
 

@@ -6,6 +6,7 @@ import AuctionProxy.AuctionProcess;
 import AuctionProxy.BidInfo;
 import BankProxy.BankProxy;
 import BankProxy.BankProcess;
+import SourcesToOrganize.AgentApp;
 import SourcesToOrganize.Bid;
 import SourcesToOrganize.NetworkDevice;
 
@@ -29,14 +30,17 @@ public class Agent implements BankProcess, AuctionProcess {
     //bids made on items
     private LinkedList<Bid> bids = new LinkedList<>();
 
+    // AgentApp
+    private AgentApp agentApp;
+
 
     /**
      * connect to the bank to make an account and receive auction info
      * @param bankHost host name
      * @param bankPort port number
      */
-    public Agent(String bankHost, int bankPort){
-
+    public Agent(String bankHost, int bankPort, AgentApp agentApp) {
+        this.agentApp = agentApp;
         bankProxy = new BankProxy(bankHost, bankPort, this);
     }
 
@@ -156,7 +160,7 @@ public class Agent implements BankProcess, AuctionProcess {
 
         for ( NetworkDevice n : bankProxy.getServers()){
 
-            connectedAuctionProxys.add(new AuctionProxy(n.getIpAddress(), n.getPort()));
+            connectedAuctionProxys.add(new AuctionProxy(n.getIpAddress(), n.getPort(), agentApp));
         }
     }
 
@@ -179,7 +183,7 @@ public class Agent implements BankProcess, AuctionProcess {
     public boolean addAuctionProxy(String host, int port){
 
         try{
-            connectedAuctionProxys.add(new AuctionProxy(host, port));
+            connectedAuctionProxys.add(new AuctionProxy(host, port, agentApp));
         } catch (Exception e){
             return false;
         }
@@ -367,7 +371,7 @@ public class Agent implements BankProcess, AuctionProcess {
      */
     public void addAuctionHouse(NetworkDevice auction) {
 
-        System.out.println("Add auction");
+        System.out.println("Add auction " + auction);
         for (AuctionProxy ap : getConnectedAuctionProxys()) {
             InetAddress test = ap.getConnectedAddress();
 
@@ -376,7 +380,7 @@ public class Agent implements BankProcess, AuctionProcess {
                 return;
             }
         }
-        getConnectedAuctionProxys().add(new AuctionProxy(auction.getIpAddress(), auction.getPort()));
+        getConnectedAuctionProxys().add(new AuctionProxy(auction.getIpAddress(), auction.getPort(), agentApp));
     }
 
     public BidInfo bid(AuctionProxy proxy, Bid bid) {

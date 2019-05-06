@@ -4,6 +4,7 @@ import Agent.Agent;
 import AuctionHouse.ItemInfo;
 import AuctionProxy.AuctionProxy;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -30,11 +31,8 @@ public class AgentApp extends Application{
     Stage window;
     public Agent agent;
 
-
     Text selectedItemText = new Text();
-
     Text notification = new Text();
-    
     LinkedList<Bid> bids = new LinkedList<>();
     private VBox bidVBox = new VBox();
 
@@ -71,14 +69,14 @@ public class AgentApp extends Application{
         Button labTestButton = new Button("Lab Test");
         labTestButton.setOnAction(e -> {
 
-            agent = new Agent(bankHostInput.getText(), 42069);
+            agent = new Agent(bankHostInput.getText(), 42069, this);
         });
 
         //test on this computer
         Button localTestButton = new Button("localhost Test");
         localTestButton.setOnAction(e -> {
 
-            agent = new Agent("localhost", bankPort);
+            agent = new Agent("localhost", bankPort, this);
 
             window.setScene( new Scene(bankIntroRoot(), APP_WIDTH, APP_HEIGHT));
         });
@@ -220,7 +218,9 @@ public class AgentApp extends Application{
 //        tableView.getColumns().add(descCol);
 
         for (ItemInfo info : itemInfos){
-            tableView.getItems().add(info);
+            if(!tableView.getItems().contains(info)){
+                tableView.getItems().add(info);
+            }
         }
 
         
@@ -343,5 +343,16 @@ public class AgentApp extends Application{
     public void addAuctionHouse(NetworkDevice networkDevice) {
 
         System.out.println("I am theoretically going to add an auctionhouse for " + networkDevice);
+    }
+
+    public void newPopUp(String s) {
+        Platform.runLater(() -> {
+            PopupControl popup = new PopupControl();
+            Text t = new Text(s);
+            VBox v = new VBox(t);
+            popup.getScene().setRoot(v);
+            popup.show(v.getScene().getWindow());
+        });
+
     }
 }
