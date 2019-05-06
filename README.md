@@ -1,4 +1,4 @@
-# Auction House
+-# Auction House
 
 This java program is to simulate a system of multiple auction houses selling items, 
 multiple agents buying items from multiple auction houses, and a bank to keep track of everyone’s funds. 
@@ -115,8 +115,43 @@ This was made using Java SDK 1.8
 
 ## Authors
 
-* **Connor Frost** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/frostc/)
-* **Gavin McGuire** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/mcguireg/)
+
 * **Arlin Pedregon** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/arlin/)
-
-
+    - Compile the Jars for the final product
+    - Helped proofread and append final edits to the Documentation
+        - Create the ReadMe and help fill out crucial information 
+    - Primarily created the following 
+    - Coordinated with parter to expand network capabilities within Bank:
+        - This includes key edits to Bank, Account, and working with Connor to provide changes to the Bank
+    - Implement the handling of exceptions from unexpected exits within the program
+    - Helped implement the AuctionHouse and Bank functions
+        - This include transferring of funds from the bank 
+    - Primarily cleaned up code to conform to CS351 Project standards
+    - Implemented the closing of AuctionHouse upon no objects
+    - Implemented AuctionHouse's limited timed items functionality
+* **Connor Frost** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/frostc/)
+    - Created the AuctionProxy and BankProxy Network Design structure, which involved the following complexities:
+        - The Proxies use Object streams for transportation of serialized objects, (AuctionRequest and BankRequest)
+        - Each of the Proxies and Communicators make use of two theoretical threads:
+            - One of which processes and responds to the inoming messages
+            - The second is to asynchronously notify/get notified the user
+    - Primarily created and handled the synchronization of the AuctionHouse
+    - Helped create the Bank class to handle accounts
+    - Created Interfaces of AuctionHouse and Bank to better facilitate network transfer / centralized understanding
+        - Implemented the interfaces in most of the classes
+    - Took over GUI to implement the following:
+        - Implement the changing of screens for non-local testing
+        - Implemented timed updates of the items that are being bid upon
+        - Implemented notifications and the closeRequest feature
+        - Updated the GUI format to look better
+    - Implemented the dynamic adding of AuctionHouses upon notification and request within the Bank
+    - Helped clean up the code and make it compliant with CS351 Code Standards
+        - Capitalize the first letter of each sentence 
+    - Create the documentation and graphs for the Object Design
+        - Create the guide section within the readme.me
+* **Gavin McGuire** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/mcguireg/)
+    - some changes with the ItemID for an auction
+    - some of the GUI
+    - most of the CLI (not working)
+    - created AgentApp
+    - was going to help compile and finish the GUI
