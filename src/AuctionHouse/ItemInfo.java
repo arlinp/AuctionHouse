@@ -76,7 +76,8 @@ public class ItemInfo implements Serializable {
     public boolean equals(Object o) {
         ItemInfo item = (ItemInfo) o;
 
-        return itemID == item.getItemID();
+        return itemID == item.getItemID() && proxy == item.getProxy();
+
     }
 
     /**

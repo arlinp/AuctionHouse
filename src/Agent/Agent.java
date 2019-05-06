@@ -23,7 +23,7 @@ public class Agent implements BankProcess, AuctionProcess {
     int accountID = 0;
 
     //connected auctions
-    private ArrayList<AuctionProxy> connectedAuctionProxys = new ArrayList<>();
+    private ArrayList<AuctionProxy> connAP = new ArrayList<>();
     private LinkedBlockingQueue<NetworkDevice> connectedAuctionNetworkDevices;
     private AuctionProxy currentAuctionProxy;
 
@@ -59,8 +59,8 @@ public class Agent implements BankProcess, AuctionProcess {
      * Getter for auction proxies
      * @return arraylist of all connected auctions proxies
      */
-    public ArrayList<AuctionProxy> getConnectedAuctionProxys() {
-        return connectedAuctionProxys;
+    public ArrayList<AuctionProxy> getConnAP() {
+        return connAP;
     }
 
     /**
@@ -137,15 +137,16 @@ public class Agent implements BankProcess, AuctionProcess {
         ArrayList<ItemInfo> auctionsItems;
 
         //add all infos form all auctions
-        for (AuctionProxy auctionProxy : connectedAuctionProxys){
+        for (AuctionProxy auctionProxy : connAP) {
 
             //set each infos proxy so the agent can get updates for GUI and etc
             auctionsItems = auctionProxy.getItems();
-            for (ItemInfo info : auctionsItems){
-                info.setProxy(auctionProxy);
+//            for (ItemInfo info : auctionsItems){
+//                info.setProxy(auctionProxy);
+//            }
+            if (auctionsItems != null) {
+                itemInfos.addAll(auctionsItems);
             }
-
-            itemInfos.addAll(auctionsItems);
         }
 
         return itemInfos;
@@ -158,9 +159,8 @@ public class Agent implements BankProcess, AuctionProcess {
      */
     public void connectToAuctions(){
 
-        for ( NetworkDevice n : bankProxy.getServers()){
-
-            connectedAuctionProxys.add(new AuctionProxy(n.getIpAddress(), n.getPort(), agentApp));
+        for (NetworkDevice n : bankProxy.getServers()){
+            addAuctionHouse(n);
         }
     }
 
@@ -169,7 +169,7 @@ public class Agent implements BankProcess, AuctionProcess {
      * @return was it able to be added
      */
     public boolean addAuctionProxy(AuctionProxy auctionProxy){
-        connectedAuctionProxys.add(auctionProxy);
+        connAP.add(auctionProxy);
         return true;
     }
 
@@ -183,7 +183,7 @@ public class Agent implements BankProcess, AuctionProcess {
     public boolean addAuctionProxy(String host, int port){
 
         try{
-            connectedAuctionProxys.add(new AuctionProxy(host, port, agentApp));
+            connAP.add(new AuctionProxy(host, port, agentApp));
         } catch (Exception e){
             return false;
         }
@@ -372,7 +372,7 @@ public class Agent implements BankProcess, AuctionProcess {
     public void addAuctionHouse(NetworkDevice auction) {
 
         System.out.println("Add auction " + auction);
-        for (AuctionProxy ap : getConnectedAuctionProxys()) {
+        for (AuctionProxy ap : getConnAP()) {
             InetAddress test = ap.getConnectedAddress();
 
             if (test.getHostAddress().equalsIgnoreCase(auction.getIpAddress())
@@ -380,7 +380,7 @@ public class Agent implements BankProcess, AuctionProcess {
                 return;
             }
         }
-        getConnectedAuctionProxys().add(new AuctionProxy(auction.getIpAddress(), auction.getPort(), agentApp));
+        getConnAP().add(new AuctionProxy(auction.getIpAddress(), auction.getPort(), agentApp));
     }
 
     public BidInfo bid(AuctionProxy proxy, Bid bid) {

@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -33,8 +34,10 @@ public class AgentApp extends Application{
 
     Text selectedItemText = new Text();
     Text notification = new Text();
+    ItemInfo selectedItem;
     LinkedList<Bid> bids = new LinkedList<>();
     private VBox bidVBox = new VBox();
+    TableView<ItemInfo> tableView;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -152,7 +155,6 @@ public class AgentApp extends Application{
 
         root.add(notification,1,9);
 
-
         return root;
     }
 
@@ -192,13 +194,12 @@ public class AgentApp extends Application{
 
         GridPane auctionItemRoot = new GridPane();
 
-
         ArrayList<ItemInfo> itemInfos = agent.getItems();
 
         //table view
         ScrollPane scrollTable = new ScrollPane();
 
-        TableView<ItemInfo> tableView = new TableView<>();
+        tableView = new TableView<>();
         scrollTable.setContent(tableView);
 
         //add columns to table
@@ -212,11 +213,6 @@ public class AgentApp extends Application{
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
         tableView.getColumns().add(priceCol);
 
-//        //description column
-//        TableColumn<ItemInfo, String> descCol = new TableColumn<>("Description");
-//        descCol.setCellValueFactory(new PropertyValueFactory<>("desc"));
-//        tableView.getColumns().add(descCol);
-
         for (ItemInfo info : itemInfos){
             if(!tableView.getItems().contains(info)){
                 tableView.getItems().add(info);
@@ -226,9 +222,10 @@ public class AgentApp extends Application{
         
         //select Item
         tableView.setOnMouseClicked(e -> {
-            ItemInfo selectedItem = tableView.getSelectionModel().getSelectedItem();
-            selectedItemText.setText(selectedItem.getName());
-
+            selectedItem = tableView.getSelectionModel().getSelectedItem();
+            if (selectedItemText != null && selectedItem != null) {
+                selectedItemText.setText(selectedItem.getName());
+            }
         });
 
 
@@ -253,7 +250,7 @@ public class AgentApp extends Application{
 //            bidVBox.getChildren().add(bidGroup);
 
             agent.bid(selectedItemInfo.getProxy(), bid);
-
+            selectedItem = null;
         });
 
         System.out.println("Where");
@@ -264,7 +261,40 @@ public class AgentApp extends Application{
         auctionItemRoot.add(amountInput, 1, 4);
         auctionItemRoot.add(bidButton,   1, 5);
 
+
+        Thread one = new Thread(() -> {
+            while (true) {
+                try{
+                    Thread.sleep(2000);
+                    refreshTableView();
+                } catch(InterruptedException v) {
+                    System.out.println(v);
+                }
+            }
+        });
+        one.start();
+
+
         return auctionItemRoot;
+    }
+
+    private void refreshTableView() {
+
+        if (selectedItem == null) {
+            System.out.println("Refreshing");
+            ArrayList<ItemInfo> itemInfos = agent.getItems();
+
+            System.out.println(itemInfos);
+
+            tableView.getItems().clear();
+            System.out.println(itemInfos);
+            for (ItemInfo info : itemInfos){
+                System.out.println(info);
+                if (!tableView.getItems().contains(info)){
+                    tableView.getItems().add(info);
+                }
+            }
+        }
     }
 
     private Group displayNewBid(Bid bid, AuctionProxy proxy) {
@@ -287,7 +317,7 @@ public class AgentApp extends Application{
 
 
     private Node bankAccountRoot(){
-
+        StackPane leftPane = new StackPane();
         GridPane root = new GridPane();
 
         /*
@@ -327,8 +357,8 @@ public class AgentApp extends Application{
 
         root.add(addFundsInput, 1, 3);
         root.add(addFundsButton, 2, 3);
-
-        return root;
+        leftPane.getChildren().add(root);
+        return leftPane;
 
     }
 
@@ -347,11 +377,14 @@ public class AgentApp extends Application{
 
     public void newPopUp(String s) {
         Platform.runLater(() -> {
-            PopupControl popup = new PopupControl();
-            Text t = new Text(s);
-            VBox v = new VBox(t);
-            popup.getScene().setRoot(v);
-            popup.show(v.getScene().getWindow());
+            Stage newStage = new Stage();
+            StackPane comp = new StackPane();
+            Text str = new Text(s);
+            comp.getChildren().add(str);
+
+            Scene stageScene = new Scene(comp);
+            newStage.setScene(stageScene);
+            newStage.show();
         });
 
     }

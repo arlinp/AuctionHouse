@@ -21,11 +21,11 @@ import static SourcesToOrganize.AgentApp.bankPort;
 
 public class AuctionHouse implements AuctionProcess {
 
-    public static long waitTime = 50000;
+    public static long waitTime = 20000;
 
     private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
     private ArrayList<Item> itemsNotUpForAuction = new ArrayList<Item>();
-    private ArrayList<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
+    private LinkedBlockingQueue<ItemInfo> itemInfos = new LinkedBlockingQueue<ItemInfo>();
     private LinkedBlockingQueue<Bid> bids = new LinkedBlockingQueue<>();
     private BankProxy bankProxy;
     private int auctionID;
@@ -192,8 +192,12 @@ public class AuctionHouse implements AuctionProcess {
      */
     @Override
     public ArrayList<ItemInfo> getItems() {
+        ArrayList<ItemInfo> items = new ArrayList<ItemInfo>();
+        for (ItemInfo item : this.itemInfos) {
+            items.add((ItemInfo) item.clone());
+        }
+        return items;
 
-        return itemInfos;
 
     }
 
