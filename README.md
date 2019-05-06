@@ -141,7 +141,6 @@ This was made using Java SDK 1.8
         - Implemented the interfaces in most of the classes
     - Took over GUI to implement the following:
         - Implement the changing of screens for non-local testing
-        - Updated the 
         - Implemented timed updates of the items that are being bid upon
         - Implemented notifications and the closeRequest feature
         - Updated the GUI format to look better
