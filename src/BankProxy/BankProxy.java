@@ -180,6 +180,31 @@ public class BankProxy implements BankProcess, Runnable {
     }
 
     /**
+     * Gets the total balance, including the locked amount
+     *
+     * @param AccountID Unique Identifier of Account
+     * @return Amount of money
+     */
+    @Override
+    public double getTotalBalance(int AccountID) {
+        BankRequest request = new BankRequest(BankInfo.GETTOTALBALANCE);
+        request.setID(AccountID);
+
+        try {
+            os.writeObject(request);
+            waitOn(request.getPacketID());
+
+            BankRequest response = messages.get(request.getPacketID());
+            messages.remove(response.getPacketID());
+            return response.getAmount();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
      * Add the funds to the specified account number
      *  @param AccountID Unique Identifier of Account
      * @param amount    Amount of Money

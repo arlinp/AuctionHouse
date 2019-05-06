@@ -18,16 +18,9 @@ import static SourcesToOrganize.AgentApp.bankPort;
  */
 public class Bank implements BankProcess {
 
-    // Debugging flags
-    public static final boolean BANKCOMMDEBUG = true;
-    public static final boolean BANKDEBUG = false;
-
     // Used data structures
-    public  Random ran = new Random();
     private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
-    private HashMap<Integer, Double> lockedMoney = new HashMap<Integer, Double>();
     private LinkedBlockingQueue<NetworkDevice> auctionNetworkDevices = new LinkedBlockingQueue<>();
-    // TODO replace with Thread pool
     private LinkedBlockingQueue<BankCommunicator> bankCommunicators = new LinkedBlockingQueue<>();
 
 
@@ -48,24 +41,21 @@ public class Bank implements BankProcess {
         ServerSocket ss = null;
         try {
             ss = new ServerSocket(port);
-            if (BANKDEBUG) System.out.println("Started a server on port: " + port);
+            System.out.println("Started a server on port: " + port);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if (BANKDEBUG){ System.out.println("Accepting Connections...");
-        System.out.println("Port is: " + port);}
+        System.out.println("Accepting Connections...");
 
         // Accept connections while true
         while (isAlive()) {
             try {
-                System.out.println("Accepting Connections...");
-                System.out.printf("Port is: " + port);
                 Socket s = ss.accept();
                 BankCommunicator ac = new BankCommunicator(s,this);
                 bankCommunicators.put(ac);
 
-                if (BANKDEBUG) System.out.println("Started new BankCommunicator for: " + s.getRemoteSocketAddress());
+                System.out.println("Started new BankCommunicator for: " + s.getRemoteSocketAddress());
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -138,13 +128,30 @@ public class Bank implements BankProcess {
 //        }
 
         if (!accounts.containsKey(AccountID)) {
-            System.out.println("CAN'T FIND THAT ACCOUNT");
             return -1.0;
         }
 
         // Get the balance of an account!
         Account account = accounts.get(AccountID);
         return account.getBalance();
+    }
+
+    /**
+     * Gets the total balance, including the locked amount
+     *
+     * @param AccountID Unique Identifier of Account
+     * @return Amount of money
+     */
+    @Override
+    public double getTotalBalance(int AccountID) {
+
+        if (!accounts.containsKey(AccountID)) {
+            return -1.0;
+        }
+
+        // Get the balance of an account!
+        Account account = accounts.get(AccountID);
+        return account.getTotalBalance();
     }
 
     /**
@@ -321,7 +328,7 @@ public class Bank implements BankProcess {
     /**
      *  Notifies the connected agent that there is a new
      *  auction
-     * @param networkDevice
+     * @param networkDevice network device to notify
      */
     public void notifyAuction(NetworkDevice networkDevice) {
         for (BankCommunicator bc : bankCommunicators) {

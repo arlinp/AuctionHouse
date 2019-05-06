@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class BankApp extends Application{
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setScene(introScene());
@@ -20,8 +21,6 @@ public class BankApp extends Application{
     }
 
     public static void main(String[] args) {
-
-
 
     }
 

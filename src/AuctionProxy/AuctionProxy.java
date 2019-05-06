@@ -190,7 +190,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     public void run() {
         while (isOpen()) {
             // Attempt to read in an AR from the input stream
-            AuctionRequest newAr = null;
+            AuctionRequest newAr;
             try {
                 newAr = (AuctionRequest) is.readObject();
 
@@ -205,6 +205,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
 
             } catch (IOException | ClassNotFoundException e) {
                 System.out.println("An agent has left the auction house");
+                open = false;
                 //e.printStackTrace();
                 return;
             }
@@ -277,7 +278,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
      *
      * @param packetID Wait until messages contains key
      */
-    public void waitOn(int packetID) {
+    private void waitOn(int packetID) {
         synchronized (this) {
             while (!messages.containsKey(packetID)) {
                 try {

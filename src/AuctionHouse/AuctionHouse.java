@@ -59,12 +59,6 @@ public class AuctionHouse implements AuctionProcess {
                 Socket s = ss.accept();
                 AuctionCommunicator ac = new AuctionCommunicator(s,this);
 
-                System.out.println("Starting to send");
-//                Thread.sleep(200);
-
-//                ac.notifyBid(BidInfo.OUTBID, 1002, 100.00);
-//                ac.notifyBid(BidInfo.WINNER, 1001, 100.00);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -164,7 +158,7 @@ public class AuctionHouse implements AuctionProcess {
     /**
      * @param bid bid to synchronously add
      */
-    public void addBid(Bid bid){
+    private void addBid(Bid bid){
         bids.add(bid);
     }
 
@@ -211,14 +205,11 @@ public class AuctionHouse implements AuctionProcess {
      */
     @Override
     public boolean closeRequest(int accountID) {
-        System.out.println("DID IT EVER EVEN CHECK?");
         for (Item item : items.values()) {
             if (item.contains(accountID)) {
-                System.out.println("False on" +item);
                 return false;
             }
         }
-        System.out.println("returned true");
         return true;
     }
 
