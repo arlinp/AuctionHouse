@@ -5,6 +5,8 @@ import AuctionHouse.ItemInfo;
 import AuctionProxy.AuctionProxy;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -12,21 +14,20 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Stack;
 
 public class AgentApp extends Application{
 
-    private static final double APP_WIDTH = 500;
-    private static final double APP_HEIGHT = 500;
+    private static final double APP_WIDTH = 800;
+    private static final double APP_HEIGHT = 650;
     public static int bankPort = 42070;
     public static int auctionPort = 42069;
     Stage window;
@@ -38,6 +39,9 @@ public class AgentApp extends Application{
     LinkedList<Bid> bids = new LinkedList<>();
     private VBox bidVBox = new VBox();
     TableView<ItemInfo> tableView;
+    Text accountBal;
+    Text totalBal;
+    private boolean atAuction = false;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -48,6 +52,18 @@ public class AgentApp extends Application{
         window.setMinWidth(700);
 
         primaryStage.setScene( new Scene(introRoot(), APP_WIDTH, APP_HEIGHT));
+        primaryStage.setOnCloseRequest(t -> {
+            t.consume();
+            if (agent.closeRequest()) {
+                primaryStage.close();
+                Platform.exit();
+                System.exit(0);
+            } else {
+                newPopUp("You have an item being bid upon! NO LEAVING!");
+            }
+
+        });
+
         // default value = n
         primaryStage.show();
     }
@@ -114,25 +130,24 @@ public class AgentApp extends Application{
         GridPane root = new GridPane();
         root.setAlignment(Pos.CENTER);
 
-        Button bankLoginButton = new Button("make new Account");
+        Button bankLoginButton = new Button("Make new Account");
         bankLoginButton.setOnAction(e -> {
-
             agent.addAccount();
-
+            notification.setText("Created an account: ID# " + agent.getAccountID());
         });
 
 
         //add funds input
-        TextField addFundsInput = new TextField("1000");
+        TextField addFundsInput = new TextField("10000");
 
         //add funds to account
-        Button addFundsButton = new Button("addFunds");
+        Button addFundsButton = new Button("Deposit Funds");
         addFundsButton.setOnAction(e -> {
 
             double fundsToAdd = Double.parseDouble(addFundsInput.getText());
             agent.addFunds(fundsToAdd);
 
-            notification.setText("added " + fundsToAdd + " dollars");
+            notification.setText("Added " + fundsToAdd + " dollars");
         });
 
         //gets auction from bank to start bidding
@@ -163,7 +178,7 @@ public class AgentApp extends Application{
      * @return
      */
     private Parent auctionRoot() {
-
+        atAuction = true;
 
         BorderPane root = new BorderPane();
 
@@ -193,7 +208,7 @@ public class AgentApp extends Application{
     private GridPane itemSelectionRoot() {
 
         GridPane auctionItemRoot = new GridPane();
-
+        auctionItemRoot.setMaxWidth(400);
         ArrayList<ItemInfo> itemInfos = agent.getItems();
 
         //table view
@@ -201,17 +216,22 @@ public class AgentApp extends Application{
 
         tableView = new TableView<>();
         scrollTable.setContent(tableView);
+        scrollTable.setMaxWidth(250);
+        scrollTable.setMinWidth(250);
 
         //add columns to table
         //name column
         TableColumn<ItemInfo, String> itemCol = new TableColumn<>("Item");
         itemCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        itemCol.setMinWidth(120);
         tableView.getColumns().add(itemCol);
 
         //price columns
         TableColumn<ItemInfo, String> priceCol = new TableColumn<>("Price");
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+        priceCol.setMinWidth(60);
         tableView.getColumns().add(priceCol);
+
 
         for (ItemInfo info : itemInfos){
             if(!tableView.getItems().contains(info)){
@@ -238,29 +258,48 @@ public class AgentApp extends Application{
         bidButton.setOnAction(e -> {
             //get selected item
             ItemInfo selectedItemInfo = tableView.getSelectionModel().getSelectedItem();
-
+            Double amount = 0.0;
             //get amount to start bid
-            Double amount = Double.parseDouble(amountInput.getText());
-
+            try {
+                amount = Double.parseDouble(amountInput.getText());
+            } catch (NumberFormatException error) {
+                tableView.getSelectionModel().select(-1);
+                selectedItem = null;
+                return;
+            }
+            Bid bid;
             //create bid to send to house
-            Bid bid = new Bid(amount, agent.getAccountID(), selectedItemInfo.getItemID());
+            if (selectedItemInfo != null) {
+                bid = new Bid(amount, agent.getAccountID(), selectedItemInfo.getItemID());
+                //display new bid to be updated with the reference to that Infos AHP
 
-            //display new bid to be updated with the reference to that Infos AHP
-            Group bidGroup = displayNewBid(bid, selectedItemInfo.getProxy());
-//            bidVBox.getChildren().add(bidGroup);
+                agent.bid(selectedItemInfo.getProxy(), bid);
+                selectedItem = null;
+                refreshTableView();
+                refreshBalance();
+            }
 
-            agent.bid(selectedItemInfo.getProxy(), bid);
+        });
+        Button resetButton = new Button("Reset Selection");
+        resetButton.setOnAction(e -> {
+            tableView.getSelectionModel().select(-1);
             selectedItem = null;
+            return;
         });
 
+
+        HBox buttons = new HBox(bidButton, resetButton);
         System.out.println("Where");
+        Text title = new Text("Items");
+        title.setFont(Font.font(50));
+        auctionItemRoot.add(title, 1, 0);
         auctionItemRoot.add(scrollTable, 1, 1);
         auctionItemRoot.add(selectedItemText, 1,3);
-
         auctionItemRoot.add(amountLabel, 0, 4);
         auctionItemRoot.add(amountInput, 1, 4);
-        auctionItemRoot.add(bidButton,   1, 5);
-
+        auctionItemRoot.add(buttons,   1, 5);
+        auctionItemRoot.setHgap(5);
+        auctionItemRoot.setVgap(5);
 
         Thread one = new Thread(() -> {
             while (true) {
@@ -317,7 +356,7 @@ public class AgentApp extends Application{
 
 
     private Node bankAccountRoot(){
-        StackPane leftPane = new StackPane();
+        StackPane pane = new StackPane();
         GridPane root = new GridPane();
 
         /*
@@ -330,38 +369,61 @@ public class AgentApp extends Application{
         Text accountNum = new Text(String.valueOf(agent.getAccountID()));
 
 
-        Label balanceLabel = new Label("Balance : ");
-        Text accountBal = new Text(String.valueOf(agent.getBalance()));
+        Label balanceLabel = new Label("Available Balance : ");
+        accountBal = new Text(String.valueOf(agent.getBalance()));
+
+        Label totalLabel = new Label("Available Balance : ");
+        totalBal = new Text(String.valueOf(agent.getTotalBalance()));
 
 
         //add funds input
-        TextField addFundsInput = new TextField("1000");
+        TextField addFundsInput = new TextField("100");
 
-        Button addFundsButton = new Button("addFunds");
+        Button addFundsButton = new Button("Add Funds");
         addFundsButton.setOnAction(e -> {
-
-            double fundsToAdd = Double.parseDouble(addFundsInput.getText());
+            double fundsToAdd;
+            try {
+                fundsToAdd = Double.parseDouble(addFundsInput.getText());
+            } catch (NumberFormatException error) {
+                notification.setText("Enter a number");
+                return;
+            }
             agent.addFunds(fundsToAdd);
 
-            notification.setText("added " + fundsToAdd + " dollars");
+            notification.setText("Added $" + fundsToAdd + " to Account# " + agent.getAccountID());
 
-            accountBal.setText(String.valueOf(agent.getBalance()));
-
+            refreshBalance();
         });
 
-        root.add(accountLabel, 0,0);
-        root.add(accountNum, 1, 0);
+        Text title = new Text("Bank");
+        title.setFont(Font.font(50));
+        root.add(title,0,0);
 
-        root.add(balanceLabel, 0, 1);
-        root.add(accountBal, 1,1);
+        root.add(accountLabel, 0,1);
+        root.add(accountNum, 1, 1);
 
-        root.add(addFundsInput, 1, 3);
-        root.add(addFundsButton, 2, 3);
-        leftPane.getChildren().add(root);
-        return leftPane;
+        root.add(balanceLabel, 0, 2);
+        root.add(accountBal, 1,2);
+
+        root.add(totalLabel, 0, 3);
+        root.add(totalBal, 1,3);
+
+        root.add(addFundsInput, 1, 4);
+        root.add(addFundsButton, 2, 4);
+        root.setAlignment(Pos.CENTER);
+        root.setVgap(10.0);
+        root.setHgap(5.0);
+        pane.setAlignment(Pos.CENTER);
+        pane.getChildren().add(root);
+        pane.setPadding(new Insets(50));
+        return pane;
 
     }
 
+    private void refreshBalance() {
+        accountBal.setText(String.valueOf(agent.getBalance()));
+        totalBal.setText(String.valueOf(agent.getTotalBalance()));
+    }
 
 
     public static void main(String[] args) {
@@ -377,6 +439,7 @@ public class AgentApp extends Application{
 
     public void newPopUp(String s) {
         Platform.runLater(() -> {
+            refreshBalance();
             Stage newStage = new Stage();
             StackPane comp = new StackPane();
             Text str = new Text(s);

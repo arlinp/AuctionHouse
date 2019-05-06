@@ -198,8 +198,19 @@ public class Agent implements BankProcess, AuctionProcess {
      */
     @Override
     public boolean closeRequest(int accountID) {
+        for (AuctionProxy ap : connAP) {
+            if (!ap.closeRequest(accountID)) return false;
+        }
+        return true;
+    }
 
-        return currentAuctionProxy.closeRequest(accountID);
+    /**
+     * Check to see if the close is allowed
+     *
+     * @return True if no active bids, false if active bids
+     */
+    public boolean closeRequest() {
+        return closeRequest(accountID);
     }
 
 
@@ -213,6 +224,7 @@ public class Agent implements BankProcess, AuctionProcess {
     public double getBalance(int AccountID) {
         return bankProxy.getBalance(AccountID);
     }
+
 
     /**
      * Get balance method used to get balance
@@ -235,7 +247,14 @@ public class Agent implements BankProcess, AuctionProcess {
         return bankProxy.getTotalBalance(AccountID);
     }
 
-
+    /**
+     * Calls interfaced function
+     *
+     * @return double
+     */
+    public double getTotalBalance() {
+        return getTotalBalance(accountID);
+    }
     /**
      * Add the funds to the specified account number
      *
@@ -386,4 +405,5 @@ public class Agent implements BankProcess, AuctionProcess {
     public BidInfo bid(AuctionProxy proxy, Bid bid) {
         return proxy.bid(bid);
     }
+
 }
