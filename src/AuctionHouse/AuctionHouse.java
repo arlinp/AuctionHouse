@@ -14,6 +14,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static SourcesToOrganize.AgentApp.auctionPort;
 import static SourcesToOrganize.AgentApp.bankPort;
@@ -25,7 +26,7 @@ public class AuctionHouse implements AuctionProcess {
     private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
     private ArrayList<Item> itemsNotUpForAuction = new ArrayList<Item>();
     private ArrayList<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
-    private ArrayList<Bid> bids;
+    private LinkedBlockingQueue<Bid> bids = new LinkedBlockingQueue<>();
     private BankProxy bankProxy;
     private int auctionID;
     private BufferedReader bufferedReader;
@@ -163,7 +164,7 @@ public class AuctionHouse implements AuctionProcess {
     /**
      * @param bid bid to synchronously add
      */
-    public synchronized void addBid(Bid bid){
+    public void addBid(Bid bid){
         bids.add(bid);
     }
 

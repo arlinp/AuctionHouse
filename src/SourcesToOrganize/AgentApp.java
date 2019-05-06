@@ -213,10 +213,10 @@ public class AgentApp extends Application{
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
         tableView.getColumns().add(priceCol);
 
-        //description column
-        TableColumn<ItemInfo, String> descCol = new TableColumn<>("Description");
-        descCol.setCellValueFactory(new PropertyValueFactory<>("desc"));
-        tableView.getColumns().add(descCol);
+//        //description column
+//        TableColumn<ItemInfo, String> descCol = new TableColumn<>("Description");
+//        descCol.setCellValueFactory(new PropertyValueFactory<>("desc"));
+//        tableView.getColumns().add(descCol);
 
         for (ItemInfo info : itemInfos){
             tableView.getItems().add(info);
@@ -250,14 +250,16 @@ public class AgentApp extends Application{
             displayNewBid(bid);
 
             bids.add(bid);
-
+            System.out.println("Got here");
             agent.bid(selectedItem.getProxy(), bid);
+            System.out.println("1");
             bids.add(bid);
+            System.out.println("2");
             bidVBox.getChildren().add(makeBidGroup(bid, selectedItem));
-
+            System.out.println("3");
         });
 
-        
+        System.out.println("Where");
         auctionItemRoot.add(scrollTable, 1, 1);
         auctionItemRoot.add(selectedItemText, 1,3);
 
