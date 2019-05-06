@@ -15,7 +15,7 @@ public class ItemInfo implements Serializable {
     private String name;
     private double price;
     private int itemID;
-    public transient AuctionProxy proxy;
+    private transient AuctionProxy proxy;
 
     /**
      * Constructor for an Item's ino

@@ -2,13 +2,10 @@ package Bank;
 
 import BankProxy.BankProcess;
 import SourcesToOrganize.NetworkDevice;
-
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import static SourcesToOrganize.AgentApp.bankPort;
@@ -20,8 +17,10 @@ public class Bank implements BankProcess {
 
     // Used data structures
     private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
-    private LinkedBlockingQueue<NetworkDevice> auctionNetworkDevices = new LinkedBlockingQueue<>();
-    private LinkedBlockingQueue<BankCommunicator> bankCommunicators = new LinkedBlockingQueue<>();
+    private LinkedBlockingQueue<NetworkDevice> auctionNetworkDevices =
+            new LinkedBlockingQueue<>();
+    private LinkedBlockingQueue<BankCommunicator> bankCommunicators =
+            new LinkedBlockingQueue<>();
 
 
     //Flags
@@ -55,7 +54,8 @@ public class Bank implements BankProcess {
                 BankCommunicator ac = new BankCommunicator(s,this);
                 bankCommunicators.put(ac);
 
-                System.out.println("Started new BankCommunicator for: " + s.getRemoteSocketAddress());
+                System.out.println("Started new BankCommunicator for: " +
+                        s.getRemoteSocketAddress());
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -239,7 +239,8 @@ public class Bank implements BankProcess {
      * @param amount Amount of Money
      */
     @Override
-    public synchronized boolean transferFunds(int fromID, int toID, double amount) {
+    public synchronized boolean transferFunds(int fromID, int toID,
+                                              double amount) {
         // Run check that would cause crash
         if (!accounts.containsKey(fromID) && !accounts.containsKey(toID)) {
             return false;
@@ -266,9 +267,12 @@ public class Bank implements BankProcess {
      * @param lockID Lock identifier
      */
     @Override
-    public synchronized boolean transferFunds(int fromID, int toID, int lockID) {
+    public synchronized boolean transferFunds(int fromID, int toID,
+                                              int lockID) {
         // Run check that would cause crash
-        if (!accounts.containsKey(fromID) && !accounts.containsKey(toID)) return false;
+        if (!accounts.containsKey(fromID) && !accounts.containsKey(toID)) {
+            return false;
+        }
 
         // Get the accounts
         Account account1 = accounts.get(fromID);
@@ -340,7 +344,7 @@ public class Bank implements BankProcess {
      * Starts a new Bank on a port given as an argument
      * or default on bankPort.
      *
-     * @param args
+     * @param args Args
      */
     public static void main(String[] args) {
         if (args.length == 1) {

@@ -20,7 +20,6 @@ public class AuctionRequest extends Packet implements Serializable {
     private ArrayList<ItemInfo> items = null;
     private boolean contains = false;
     private int itemID = 0;
-    private String message = "";
     private BidInfo bidStatus;
     private double newAmount = 0;
 
@@ -94,7 +93,7 @@ public class AuctionRequest extends Packet implements Serializable {
     /**
      * @param contains boolean
      */
-    public void setContains(boolean contains) {
+    public void setRequest(boolean contains) {
         this.contains = contains;
     }
 
@@ -111,20 +110,6 @@ public class AuctionRequest extends Packet implements Serializable {
     public void setItems(ArrayList<ItemInfo> items) {
         if (items == null) this.items = null;
         else this.items = items;
-    }
-
-    /**
-     * @return message being sent
-     */
-    public String getMessage() {
-        return message;
-    }
-
-    /**
-     * @param message message to save
-     */
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     /**

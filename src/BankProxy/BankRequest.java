@@ -1,11 +1,8 @@
 package BankProxy;
 
-import BankProxy.BankProxy;
 import SourcesToOrganize.NetworkDevice;
 import SourcesToOrganize.Packet;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -15,12 +12,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class BankRequest extends Packet implements Serializable {
 
     private BankInfo type;
-
     private int ID;
     private int ID1;
     private double amount;
     private int lockNumber;
-    private boolean isSuccess;
     private LinkedBlockingQueue<NetworkDevice> networkDevices;
 
     /**
@@ -121,7 +116,8 @@ public class BankRequest extends Packet implements Serializable {
     /**
      * @param networkDevices set the network devices
      */
-    public void setNetworkDevices(LinkedBlockingQueue<NetworkDevice> networkDevices){
+    public void setNetworkDevices(LinkedBlockingQueue<NetworkDevice>
+                                          networkDevices) {
         this.networkDevices = networkDevices;
     }
 
@@ -133,16 +129,6 @@ public class BankRequest extends Packet implements Serializable {
         else return null;
     }
 
-    /**
-     * Add a new network device to list using ip and port #
-     *
-     * @param ipAddress address of new network device
-     * @param port new network device port
-     */
-    public void addNetworkDevices(String ipAddress, int port) {
-        NetworkDevice networkDevice = new NetworkDevice(ipAddress, port);
-        networkDevices.add(networkDevice);
-    }
 
     /**
      * Add a new network device object to list
@@ -150,7 +136,9 @@ public class BankRequest extends Packet implements Serializable {
      * @param networkDevice network device to add
      */
     public void addNetworkDevices(NetworkDevice networkDevice) {
-        if (networkDevices == null) networkDevices = new LinkedBlockingQueue<>();
+        if (networkDevices == null) {
+            networkDevices = new LinkedBlockingQueue<>();
+        }
         networkDevices.add(networkDevice);
     }
 

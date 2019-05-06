@@ -29,7 +29,6 @@ public class Account {
      * @return Amount of money
      */
     public synchronized double getBalance() {
-
         return balance;
     }
 
@@ -58,8 +57,7 @@ public class Account {
      * @return Random/Unique Integer of lock, for later retrieval
      */
     public synchronized int lockFunds(Double amount) {
-        // Generates a random pin/lockID used for retrieval
-        // of the funds later
+        // Generates a random pin/lockID used for retrieval of the funds later
         Random ran = new Random();
         int lockID = ran.nextInt(Integer.MAX_VALUE);
 
@@ -84,10 +82,8 @@ public class Account {
     public synchronized boolean unlockFunds(int lockID) {
         // Check that locked ID is contained
         if (!lockedMoney.containsKey(lockID))  {
-            System.out.println("Doesnt contain it");
             return false;
         }
-        System.out.println("Readding funds $" + lockedMoney.get(lockID));
         // Add locked money back into the account
         addFunds(lockedMoney.get(lockID));
         lockedMoney.remove(lockID);
@@ -102,13 +98,6 @@ public class Account {
      * @return Value of getting it from a HashMap
      */
     public synchronized double getLockedFunds(int lockID) {
-        System.out.println("PASSED LOCK: " + lockID);
-        System.out.println(lockedMoney.get(lockID));
-        for (int lock : lockedMoney.keySet()) {
-            System.out.print(lock + " " + lockedMoney.get(lock) + "   ");
-
-        }
-        System.out.println();
         return lockedMoney.get(lockID);
     }
 
@@ -121,13 +110,6 @@ public class Account {
     public synchronized int getUniqueID() {
         return uniqueID;
     }
-
-
-    /**
-     * Sets the ID @param ID
-     * extra method in case needed
-     */
-    public synchronized void setUniqueID(int ID) { uniqueID = ID; }
 
     /**
      * Gets the total balance, including the locked money

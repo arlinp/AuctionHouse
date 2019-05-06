@@ -20,7 +20,9 @@ public class Packet implements Serializable {
     }
 
     /**
-     * @return
+     * Gets the status
+     *
+     * @return status
      */
     public Boolean getStatus() {
         return status;
@@ -28,28 +30,36 @@ public class Packet implements Serializable {
 
 
     /**
-     * @return
+     * Get the ack
+     *
+     * @return ack
      */
     public Boolean getAck() {
         return ack;
     }
 
     /**
-     * @param ack
+     * Set the ack
+     *
+     * @param ack Acknowledgement required
      */
     public void setAck(Boolean ack) {
         this.ack = ack;
     }
 
     /**
-     * @return
+     * Get the packet ID
+     *
+     * @return Packet ID
      */
     public int getPacketID() {
         return packetID;
     }
 
     /**
-     * @param packetID
+     * Set the packet ID
+     *
+     * @param packetID PacketID
      */
     public void setPacketID(int packetID) {
         this.packetID = packetID;

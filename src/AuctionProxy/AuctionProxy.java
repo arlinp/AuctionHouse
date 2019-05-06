@@ -20,7 +20,8 @@ import AuctionHouse.ItemInfo;
  */
 public class AuctionProxy implements AuctionProcess, Runnable {
 
-    private ConcurrentHashMap<Integer, AuctionRequest> messages = new ConcurrentHashMap<Integer, AuctionRequest>();
+    private ConcurrentHashMap<Integer, AuctionRequest> messages =
+            new ConcurrentHashMap<Integer, AuctionRequest>();
     private ObjectInputStream is = null;
     private ObjectOutputStream os = null;
     private Socket s;
@@ -31,7 +32,8 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     private AgentApp agentApp;
 
     /**
-     * Proxy design for the Auction House. Creates a socket from the passed parameters
+     * Proxy design for the Auction House. Creates a socket from the
+     * passed parameters
      *
      * @param hostname host name
      * @param port port number
@@ -39,7 +41,6 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     public AuctionProxy(String hostname, int port, AgentApp agentApp) {
         this.agentApp = agentApp;
         open = true;
-        System.out.println("Creating the proxy");
 
         this.hostname = hostname;
         this.port = port;
@@ -49,8 +50,6 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         new Thread(this).start();
 
         bids = new ArrayList<>();
-
-        System.out.println("Created the proxy");
     }
 
     /**
@@ -61,13 +60,10 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     private void connectToServer(String hostname, int port) {
         try {
             s = new Socket(hostname, port);
-            System.out.println("Created the socket " + s.toString() + " " + s.getInputStream());
 
             os = new ObjectOutputStream(s.getOutputStream());
-            System.out.println("Created the OS and IS");
 
             is = new ObjectInputStream(s.getInputStream());
-            System.out.println("Created the IS + " + is);
 
         } catch (IOException e) {
             try {
@@ -88,7 +84,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     @Override
     public BidInfo bid(Bid bid) {
 
-        //auction request
+        // Auction request
         AuctionRequest ar = new AuctionRequest(AuctionInfo.BID);
         ar.setBid(bid);
         bids.add(bid);
@@ -230,20 +226,20 @@ public class AuctionProxy implements AuctionProcess, Runnable {
             case BID:
                 switch (newAr.getBidStatus()) {
                     case OUTBID:
-                        int itemID = newAr.getItemID();
+                        ItemInfo item = newAr.getItem();
                         double amount = newAr.getNewAmount();
 
-                        agentApp.newPopUp("You were outbid on item# " +
-                                itemID + ". The new bid is " + amount);
+                        agentApp.newPopUp("You were outbid on " +
+                                item.getName()+ ". The new bid is " + amount);
                         break;
                     case WINNER:
-                        int itemWon = newAr.getItemID();
+                        ItemInfo itemWon = newAr.getItem();
                         double amountPaid = newAr.getNewAmount();
 
-                        agentApp.newPopUp("You won item# " + itemWon + ". T" +
-                                "here was $" + amountPaid + " transferred fr" +
-                                "om your bank account. Please allow 6-8 week" +
-                                "s in delivery for your item to arrive");
+                        agentApp.newPopUp("You won " + itemWon.getName() +
+                                ". There was $" + amountPaid + " transferred " +
+                                "from your bank account. Please allow 6-8 wee" +
+                                "ks in delivery for your item to arrive");
 
                         break;
                 }

@@ -3,10 +3,8 @@ package AuctionHouse;
 import AuctionProxy.AuctionProcess;
 import AuctionProxy.BidInfo;
 import BankProxy.BankProxy;
-import SourcesToOrganize.AgentApp;
 import SourcesToOrganize.Bid;
 import SourcesToOrganize.NetworkDevice;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,21 +13,22 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-
 import static SourcesToOrganize.AgentApp.auctionPort;
 import static SourcesToOrganize.AgentApp.bankPort;
 
 public class AuctionHouse implements AuctionProcess {
 
-    public static long waitTime = 20000;
+    // User can set this in the parameters
+    public static long waitTime = 50000;
 
-    private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
+    private ConcurrentHashMap<Integer, Item> items =
+            new ConcurrentHashMap<Integer, Item>();
     private ArrayList<Item> itemsNotUpForAuction = new ArrayList<Item>();
-    private LinkedBlockingQueue<ItemInfo> itemInfos = new LinkedBlockingQueue<ItemInfo>();
+    private LinkedBlockingQueue<ItemInfo> itemInfos =
+            new LinkedBlockingQueue<ItemInfo>();
     private LinkedBlockingQueue<Bid> bids = new LinkedBlockingQueue<>();
     private BankProxy bankProxy;
-    private int auctionID;
-    private BufferedReader bufferedReader;
+    private int auctionID = 0;
     private static int counter = 0;
     private boolean alive;
 
@@ -38,10 +37,10 @@ public class AuctionHouse implements AuctionProcess {
         alive = true;
         bankProxy = new BankProxy(bankHostname, bankPort, null);
 
-        //Make a bank account for the auction house
+        // Make a bank account for the auction house
         bankProxy.addAccount();
 
-        //Read items this house will sell
+        // Read items this house will sell
         readInItems();
 
         ServerSocket ss = null;
@@ -52,15 +51,17 @@ public class AuctionHouse implements AuctionProcess {
             e.printStackTrace();
         }
 
-        bankProxy.openServer(new NetworkDevice("127.0.0.1",operatingPort));
+        bankProxy.openServer(
+                new NetworkDevice("127.0.0.1",operatingPort));
 
         while (true) {
             try {
                 Socket s = ss.accept();
-                AuctionCommunicator ac = new AuctionCommunicator(s,this);
+                AuctionCommunicator ac =
+                        new AuctionCommunicator(s,this);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Socket failed.");
             }
 
         }
@@ -75,21 +76,24 @@ public class AuctionHouse implements AuctionProcess {
      */
     private void readInItems() {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("resources/items.txt"));
-            bufferedReader = br;
+            BufferedReader br = new BufferedReader(
+                    new FileReader("resources/items.txt"));
+
             String line;
             String[] lineArr;
 
             int itemNum = 0;
 
+            // Read in the items
             while ((line = br.readLine()) != null){
 
                 lineArr = line.split(" ");
 
-                ItemInfo itemInfo = new ItemInfo(lineArr[0], Integer.parseInt(lineArr[1]), counter++);
-                Item item = new Item(bankProxy, this, itemInfo, auctionID);
+                ItemInfo itemInfo = new ItemInfo(lineArr[0],
+                        Integer.parseInt(lineArr[1]), counter++);
+                Item item = new Item(bankProxy, this,itemInfo,auctionID);
 
-                //start the first three item threads
+                // Start the first three item threads
                 if(itemNum < 3){
                     itemInfos.add(itemInfo);
                     System.out.println(itemInfo);
@@ -108,6 +112,7 @@ public class AuctionHouse implements AuctionProcess {
     }
 
     /**
+     * Remove an item when done
      *
      * @param itemID Item ID
      */
@@ -129,7 +134,8 @@ public class AuctionHouse implements AuctionProcess {
 
             }
             else {
-                System.out.println("Auction House says: No more items in the Auction house!");
+                System.out.println("Auction House says: No more items in the " +
+                        "Auction house!");
             }
         }
     }
@@ -156,17 +162,12 @@ public class AuctionHouse implements AuctionProcess {
     }
 
     /**
+     * Add the bid
+     *
      * @param bid bid to synchronously add
      */
     private void addBid(Bid bid){
         bids.add(bid);
-    }
-
-    /**
-     * @param bid bid to synchronously remove
-     */
-    public synchronized void removeBid(Bid bid){
-        bids.remove(bid);
     }
 
     /**
@@ -226,7 +227,7 @@ public class AuctionHouse implements AuctionProcess {
 
     /**
      * Starts a new Auction House
-     * @param args
+     * @param args Args to take
      */
     public static void main(String[] args) {
 
@@ -248,8 +249,10 @@ public class AuctionHouse implements AuctionProcess {
             }
 
             AuctionHouse ah = new AuctionHouse(operatingPort,args[1],bankPort);
+
         } else {
-            AuctionHouse ah = new AuctionHouse(auctionPort, "localhost", bankPort);
+            AuctionHouse ah = new AuctionHouse(auctionPort, "localhost",
+                    bankPort);
         }
 
     }

@@ -1,16 +1,12 @@
 package BankProxy;
 
 import Agent.Agent;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import SourcesToOrganize.AgentApp;
 import SourcesToOrganize.NetworkDevice;
 
 
@@ -19,7 +15,8 @@ import SourcesToOrganize.NetworkDevice;
  */
 public class BankProxy implements BankProcess, Runnable {
 
-    private ConcurrentHashMap<Integer, BankRequest> messages = new ConcurrentHashMap<Integer, BankRequest>();
+    private ConcurrentHashMap<Integer, BankRequest> messages =
+            new ConcurrentHashMap<Integer, BankRequest>();
     private Socket s = null;
     private ObjectInputStream is;
     private ObjectOutputStream os;
@@ -27,7 +24,8 @@ public class BankProxy implements BankProcess, Runnable {
     private Agent client;
 
     /**
-     * Proxy design for the BankProxy. Creates a socket from the passed parameters
+     * Proxy design for the BankProxy. Creates a socket from the\
+     * passed parameters
      *
      * @param hostname Hostname or IP
      * @param port Port number
@@ -37,20 +35,15 @@ public class BankProxy implements BankProcess, Runnable {
 
         open = true;
         this.client = client;
-        System.out.println("connect to server");
         connectToServer(hostname, port);
 
         new Thread(this).start();
 
-        System.out.println("connected to server");
+        // Attempt to get the servers of the bank.
         if (this.client != null) {
-            System.out.println("get servers");
-
             LinkedBlockingQueue<NetworkDevice> servers = getServers();
             if (servers != null) {
                 for (NetworkDevice auction : servers) {
-                    System.out.println("get auction");
-
                     this.client.addAuctionHouse(auction);
                 }
             }
@@ -60,7 +53,8 @@ public class BankProxy implements BankProcess, Runnable {
     }
 
     /**
-     * Proxy design for the BankProxy. Creates a socket from the passed parameters
+     * Proxy design for the BankProxy. Creates a socket from the
+     * passed parameters
      *
      * @param hostname Hostname or IP
      * @param port Port number
@@ -84,10 +78,7 @@ public class BankProxy implements BankProcess, Runnable {
     private void connectToServer(String hostname, int port) {
         try {
             while (s == null) {
-                System.out.println("jmkj with " + port + " " + hostname);
                 s = new Socket(hostname, port);
-
-                System.out.println("Connected: " + s.isConnected());
 
                 os = new ObjectOutputStream(s.getOutputStream());
                 is = new ObjectInputStream(s.getInputStream());
@@ -499,15 +490,19 @@ public class BankProxy implements BankProcess, Runnable {
                 // We ignore if we are a proxy
                 if (client != null) {
                     client.addAuctionHouse(notification.getNetworkDevice());
-                    System.out.println("New server to add " + notification.getNetworkDevice());
+                    System.out.println("New server to add " +
+                            notification.getNetworkDevice());
                 } else {
-                    System.out.println("No new server to add because I am already an auction");
+                    System.out.println("No new server to add because I am al" +
+                            "ready an auction");
                 }
                 break;
         }
     }
 
     /**
+     * Wait on randomly generate packet ID
+     *
      * @param packetID packet ID
      */
     private void waitOn(int packetID) {

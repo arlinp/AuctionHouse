@@ -4,7 +4,6 @@ import AuctionProxy.AuctionInfo;
 import AuctionProxy.AuctionRequest;
 import AuctionProxy.BidInfo;
 import SourcesToOrganize.Bid;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -24,7 +23,7 @@ public class AuctionCommunicator implements Runnable{
      * @param s Socket for communication
      * @param auctionHouse AuctionHouse reference
      */
-    public AuctionCommunicator(Socket s, AuctionHouse auctionHouse) {
+    AuctionCommunicator(Socket s, AuctionHouse auctionHouse) {
         this.s = s;
         this.auctionHouse = auctionHouse;
 
@@ -34,7 +33,8 @@ public class AuctionCommunicator implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (auctionCommDebug) System.out.println("Created auction communicator class for " + s.getRemoteSocketAddress());
+        System.out.println("Created auction communicator class for " +
+                s.getRemoteSocketAddress());
         new Thread(this).start();
     }
 
@@ -51,7 +51,8 @@ public class AuctionCommunicator implements Runnable{
      */
     @Override
     public void run() {
-        if (auctionCommDebug) System.out.println("Starting thread for " + s.getInetAddress() + " on thread: " + Thread.currentThread().getName());
+        System.out.println("Starting thread for " + s.getInetAddress() +
+                " on thread: " + Thread.currentThread().getName());
         while(s.isConnected() && auctionHouse.isAlive()) {
             try {
                 AuctionRequest ar = (AuctionRequest) is.readObject();
@@ -71,53 +72,62 @@ public class AuctionCommunicator implements Runnable{
      */
     private void processMessage(AuctionRequest ar) {
         System.out.println("THE TYPE OF REQUEST IS: " + ar.getType());
-        AuctionRequest newAR = new AuctionRequest(ar.getType(), ar.getPacketID());
+        AuctionRequest resp =new AuctionRequest(ar.getType(),ar.getPacketID());
 
         try {
+            // Switch on the types
             switch (ar.getType()) {
                 case BID:
+                    // Bid the item and print results
                     Bid bid = ar.getBid();
                     bid.setAc(this);
                     BidInfo status = auctionHouse.bid(bid);
                     System.out.println(status);
-                    newAR.setBidStatus(status);
+                    resp.setBidStatus(status);
 
-                    System.out.println("\tBid on item #" + bid.getItemID() + " with $" + bid.getAmount());
+                    System.out.println("\tBid on item #" + bid.getItemID() +
+                            " with $" + bid.getAmount());
                     System.out.println("\tThe bid was " + status);
                     break;
                 case GET:
-                    newAR.setItemInfo(auctionHouse.getItemInfo(ar.getItemID()));
-                    System.out.println("\tThe item #" + ar.getItemID() + " was gotten");
+                    // Get the items and display process
+                    resp.setItemInfo(auctionHouse.getItemInfo(ar.getItemID()));
+                    System.out.println("\tThe item #" + ar.getItemID() +
+                            " was gotten");
                     break;
                 case GETALL:
-                    newAR.setItems(auctionHouse.getItems());
+                    // Get the items and display process
+                    resp.setItems(auctionHouse.getItems());
                     System.out.println("\tAll of the items were gotten");
                     break;
                 case CLOSEREQUEST:
-                    newAR.setContains(auctionHouse.closeRequest(ar.getItemID()));
+                    // Request to close the client
+                    resp.setRequest(auctionHouse.closeRequest(ar.getItemID()));
                     System.out.println("\tChecked if " + ar.getItemID() +
                             " can leave");
                     break;
             }
 
             // Write out the object
-            os.writeObject(newAR);
+            os.writeObject(resp);
             System.out.println("\tSent the response\n");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Socket was disconnected");
         }
     }
 
     /**
+     * Notify the recipient of bid status
+     *
      * @param status bid status
-     * @param itemID item bid on
+     * @param info item bid on
      * @param amount Amount of the bid
      */
-    public void notifyBid(BidInfo status, int itemID, double amount) {
+    public void notifyBid(BidInfo status, ItemInfo info, double amount) {
         AuctionRequest ar = new AuctionRequest(AuctionInfo.BID);
         ar.setAck(false);
         ar.setBidStatus(status);
-        ar.setItemID(itemID);
+        ar.setItemInfo(info);
         ar.setNewAmount(amount);
 
         try {

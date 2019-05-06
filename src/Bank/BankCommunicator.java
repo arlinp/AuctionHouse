@@ -3,7 +3,6 @@ package Bank;
 import BankProxy.BankInfo;
 import BankProxy.BankRequest;
 import SourcesToOrganize.NetworkDevice;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -19,7 +18,6 @@ public class BankCommunicator implements Runnable {
     private Bank bank;
     private ObjectInputStream is;
     private ObjectOutputStream os;
-    private boolean auctionCommunicator = false;
 
     /**
      * Thread for communication with a single socket
@@ -27,7 +25,7 @@ public class BankCommunicator implements Runnable {
      * @param s Socket for communication
      * @param bank AuctionHouse reference
      */
-    public BankCommunicator(Socket s, Bank bank) {
+    BankCommunicator(Socket s, Bank bank) {
 
         // Create sockets that are passed
         this.s = s;
@@ -53,7 +51,8 @@ public class BankCommunicator implements Runnable {
      */
     @Override
     public void run() {
-        System.out.println("Starting thread for " + s.getInetAddress() + " on thread: " + Thread.currentThread().getName());
+        System.out.println("Starting thread for " + s.getInetAddress() +
+                " on thread: " + Thread.currentThread().getName());
 
         // Check for connection and aliveness
         while(s.isConnected() && bank.isAlive()) {
@@ -106,51 +105,66 @@ public class BankCommunicator implements Runnable {
                 double balance = bank.getBalance(br.getID());
                 response.setAmount(balance);
 
-                System.out.println("\tBalance for Account#: " + br.getID() + " is $" + balance);
+                System.out.println("\tBalance for Account#: " + br.getID() +
+                        " is $" + balance);
                 break;
             case GETTOTALBALANCE:
                 double total = bank.getTotalBalance(br.getID());
                 response.setAmount(total);
 
-                System.out.println("\tTotal balance for Account#: " + br.getID() + " is $" + total);
+                System.out.println("\tTotal balance for Account#: " +
+                        br.getID() + " is $" + total);
                 break;
             case ADD: // AddFunds to a given Account
                 double bal1 = bank.getBalance(br.getID());
                 response.setStatus(bank.addFunds(br.getID(), br.getAmount()));
                 double bal2 = bank.getBalance(br.getID());
 
-                System.out.println("\tAdded funds to Account#: " + br.getID() + " | Amount Added: $" + br.getAmount() + " | Old Balance: $" + bal1 + " | New Balance: $" + bal2);
+                System.out.println("\tAdded funds to Account#: " + br.getID() +
+                        " | Amount Added: $" + br.getAmount() + " | Old Bala" +
+                        "nce: $" + bal1 + " | New Balance: $" + bal2);
                 break;
             case REMOVE: // RemoveFunds from given account
                 double bal3 = bank.getBalance(br.getID());
                 response.setStatus(bank.removeFunds(br.getID(),br.getAmount()));
                 double bal4 = bank.getBalance(br.getID());
 
-                System.out.println("\tAdded funds to Account#: " + br.getID() + " | Amount Added: $" + br.getAmount() + " | Old Balance: $" + bal3 + " | New Balance: $" + bal4);
+                System.out.println("\tAdded funds to Account#: " + br.getID() +
+                        " | Amount Added: $" + br.getAmount() + " | Old Bala" +
+                        "nce: $" + bal3 + " | New Balance: $" + bal4);
                 break;
             case LOCK: // Lock funds of the given account
                 int lockNumber = bank.lockFunds(br.getID(), br.getAmount());
                 response.setLockNumber(lockNumber);
 
-                System.out.println("\tLocked funds to Account#: " + br.getID() + " | Amount locked: $" + br.getAmount() + " | Lock Number: $" + lockNumber);
+                System.out.println("\tLocked funds to Account#: " + br.getID() +
+                        " | Amount locked: $" + br.getAmount() + " | Lock Num" +
+                        "ber: $" + lockNumber);
                 break;
             case UNLOCK: // Unlock funds of the given account
-                response.setStatus(bank.unlockFunds(br.getID(), br.getLockNumber()));
+                response.setStatus(bank.unlockFunds(br.getID(),
+                        br.getLockNumber()));
 
-                System.out.println("\tUnlocked funds for Account#: " + br.getID());
+                System.out.println("\tUnlocked funds for Account#: " +
+                        br.getID());
                 break;
             case TRANSFER: // Transfer funds from account1 to account2
-                response.setStatus(bank.transferFunds(br.getID(), br.getToID(), br.getAmount()));
+                response.setStatus(bank.transferFunds(br.getID(), br.getToID(),
+                        br.getAmount()));
 
-                System.out.println("\tTransferred $" + br.getAmount() + " from Account#: " + br.getID() + " to Account#: " + br.getToID());
+                System.out.println("\tTransferred $" + br.getAmount() + " fro" +
+                        "m Account#: " + br.getID() + " to Account#: " +
+                        br.getToID());
                 break;
             case TRANSFERFROMLOCK: // Transfer funds based on a lock
-                response.setStatus(bank.transferFunds(br.getID(), br.getToID(), br.getLockNumber()));
+                response.setStatus(bank.transferFunds(br.getID(), br.getToID(),
+                        br.getLockNumber()));
 
-                System.out.println("\tTransferred $" + br.getLockNumber() + " from Account#: " + br.getID() + " to Account#: " + br.getToID());
+                System.out.println("\tTransferred $" + br.getLockNumber() +
+                        " from Account#: " + br.getID() + " to Account#: " +
+                        br.getToID());
                 break;
             case OPENAUCTION:
-                auctionCommunicator = true;
                 response.setStatus(true);
                 bank.openServer(br.getNetworkDevice());
 
@@ -162,7 +176,8 @@ public class BankCommunicator implements Runnable {
                 response.setStatus(true);
                 bank.closeServer(br.getNetworkDevice());
 
-                System.out.println("\tStopped distributing the server of " + br.getNetworkDevice());
+                System.out.println("\tStopped distributing the server of " +
+                        br.getNetworkDevice());
                 break;
             case GETAUCTIONS:
                 LinkedBlockingQueue<NetworkDevice> auctions = bank.getServers();
@@ -201,7 +216,6 @@ public class BankCommunicator implements Runnable {
             os.writeObject(ar);
         } catch (IOException e) {
             e.printStackTrace();
-            return;
         }
     }
 

@@ -1,14 +1,11 @@
 package BankProxy;
 
-//import SourcesToOrganize.BankProxy;
-
 import SourcesToOrganize.NetworkDevice;
-
-import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Bank Functionality offered, which is to be implemented by the Bank and the ClientProxy/ServerProxy
+ * Bank Functionality offered, which is to be implemented by the Bank and the
+ * ClientProxy/ServerProxy
  */
 public interface BankProcess {
 

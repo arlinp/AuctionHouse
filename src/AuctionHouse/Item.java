@@ -18,12 +18,12 @@ public class Item implements Runnable {
      * Item to be created from qualifying information
      *
      * @param bank Bank reference
-     * @param auction
-     * @param itemInfo
-     * @param auctionID
+     * @param auction AuctionHouse reference
+     * @param itemInfo ItemInfo
+     * @param auctionID AuctionID
      */
-    public Item(BankProxy bank, AuctionHouse auction, ItemInfo itemInfo,
-                int auctionID) {
+    Item(BankProxy bank, AuctionHouse auction, ItemInfo itemInfo,
+         int auctionID) {
         this.bank = bank;
         this.auction = auction;
         this.itemInfo = itemInfo;
@@ -47,21 +47,26 @@ public class Item implements Runnable {
      * @return Status of the bid
      */
     public synchronized BidInfo setBid(Bid bid) {
+        // Check if item is open
         if (!open) return BidInfo.REJECTION;
+        // Check prices
         else if (bid.getAmount() > itemInfo.getPrice()) {
+            // Lock funds
             int lockID = bank.lockFunds(bid.getAccount(), bid.getAmount());
 
+            // Check lock
             if (lockID == -1) return BidInfo.REJECTION;
             else if (this.bid != null) {
                 bank.unlockFunds(this.bid.getAccount(), this.bid.getLockID());
             }
 
+            // Synchronously change itemInfo
             synchronized (itemInfo) { itemInfo.setPrice(bid.getAmount()); }
 
             // Check nullity
             if (this.bid != null) {
                 AuctionCommunicator ac = this.bid.getAc();
-                ac.notifyBid(BidInfo.OUTBID, itemID, bid.getAmount());
+                ac.notifyBid(BidInfo.OUTBID, itemInfo, bid.getAmount());
             }
 
             // Set values of the bid
@@ -150,7 +155,6 @@ public class Item implements Runnable {
             if (bid == currentBid) {
                 open = false;
                 endAuction();
-                return;
             }
         }
     }
@@ -166,8 +170,9 @@ public class Item implements Runnable {
         synchronized (bid) {
             if (bid != null) {
                 System.out.println("THE ITEM " + itemInfo + " WAS SOLD");
-                bid.getAc().notifyBid(BidInfo.WINNER, itemID, bid.getAmount());
-                bank.transferFunds(bid.getAccount(), auctionID, bid.getLockID());
+                bid.getAc().notifyBid(BidInfo.WINNER, itemInfo,bid.getAmount());
+                bank.transferFunds(bid.getAccount(), auctionID,
+                        bid.getLockID());
                 auction.removeItem(itemID);
                 //auction.bids.remove(bid);
             }
@@ -176,14 +181,12 @@ public class Item implements Runnable {
 
 
     /**
-     * Checks a bid's reference to an
-     * Agent
+     * Checks a bid's reference to an Agent
      *
      * @param accountID The ID of the bidder
      * @return is it this account's bid?
      */
     public boolean contains(int accountID) {
-        if (open && bid != null && bid.getAccount() == accountID) return true;
-        else return false;
+        return open && bid != null && bid.getAccount() == accountID;
     }
 }
