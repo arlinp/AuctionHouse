@@ -44,8 +44,7 @@ public class AgentApp extends Application{
     private boolean atAuction = false;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-
+    public void start(Stage primaryStage) {
 
         window = primaryStage;
         window.setTitle("Distributed Auctions - Agent");
@@ -54,7 +53,7 @@ public class AgentApp extends Application{
         primaryStage.setScene( new Scene(introRoot(), APP_WIDTH, APP_HEIGHT));
         primaryStage.setOnCloseRequest(t -> {
             t.consume();
-            if (agent.closeRequest()) {
+            if (!atAuction || agent.closeRequest()) {
                 primaryStage.close();
                 Platform.exit();
                 System.exit(0);
@@ -64,7 +63,6 @@ public class AgentApp extends Application{
 
         });
 
-        // default value = n
         primaryStage.show();
     }
 
@@ -421,8 +419,10 @@ public class AgentApp extends Application{
     }
 
     private void refreshBalance() {
-        accountBal.setText(String.valueOf(agent.getBalance()));
-        totalBal.setText(String.valueOf(agent.getTotalBalance()));
+        if (accountBal != null && totalBal != null) {
+            accountBal.setText(String.valueOf(agent.getBalance()));
+            totalBal.setText(String.valueOf(agent.getTotalBalance()));
+        }
     }
 
 
