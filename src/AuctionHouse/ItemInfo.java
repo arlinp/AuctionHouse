@@ -5,6 +5,7 @@ import AuctionProxy.AuctionProxy;
 
 /**
  * Stores all the information of an Item
+ *
  * -Item Name
  * -Item prices
  * -Item ID

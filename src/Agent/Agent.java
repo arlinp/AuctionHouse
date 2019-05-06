@@ -18,8 +18,8 @@ public class Agent implements BankProcess, AuctionProcess {
 
 
     //manage bank account and get auction connections
-    private BankProxy bankProxy = null;
-    int accountID = 0;
+    private BankProxy bankProxy;
+    private int accountID = 0;
 
     //connected auctions
     private ArrayList<AuctionProxy> connectedAuctionProxys = new ArrayList<>();
@@ -103,7 +103,7 @@ public class Agent implements BankProcess, AuctionProcess {
      * Synchronized way of adding a bid to list
      * @param bid the bid to add
      */
-    public synchronized void addToBids(Bid bid){
+    private synchronized void addToBids(Bid bid){
         bids.add(bid);
     }
 
@@ -158,7 +158,7 @@ public class Agent implements BankProcess, AuctionProcess {
      *
      * @param host host name
      * @param port port number
-     * @return
+     * @return was it possible to add
      */
     public boolean addAuctionProxy(String host, int port){
 
@@ -335,7 +335,7 @@ public class Agent implements BankProcess, AuctionProcess {
      *
      * @param accountID Account number
      */
-    public void setAccountID(int accountID) {
+    private void setAccountID(int accountID) {
         this.accountID = accountID;
     }
 

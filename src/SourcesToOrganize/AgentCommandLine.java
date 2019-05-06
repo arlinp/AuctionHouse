@@ -130,7 +130,8 @@ public class AgentCommandLine extends AgentApp{
                         System.out.println(info);
                     }
 
-                    System.out.println("Please enter a number to make bid\nOr type \"Menu\" to exit to the menu");
+                    System.out.println("Please enter a number to make bid\n" +
+                            "Or type \"Menu\" to exit to the menu");
 
 
                     input = inScanner.nextLine();

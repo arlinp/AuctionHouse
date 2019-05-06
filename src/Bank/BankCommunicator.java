@@ -39,6 +39,7 @@ public class BankCommunicator implements Runnable {
             os = new ObjectOutputStream(s.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
 
         // Start new thread for processing messages
