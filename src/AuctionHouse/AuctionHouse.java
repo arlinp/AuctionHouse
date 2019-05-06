@@ -164,7 +164,7 @@ public class AuctionHouse implements AuctionProcess {
     /**
      * @param bid bid to synchronously add
      */
-    public void addBid(Bid bid){
+    private void addBid(Bid bid){
         bids.add(bid);
     }
 

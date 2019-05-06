@@ -22,7 +22,6 @@ public class Bank implements BankProcess {
     private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
     private HashMap<Integer, Double> lockedMoney = new HashMap<Integer, Double>();
     private LinkedBlockingQueue<NetworkDevice> auctionNetworkDevices = new LinkedBlockingQueue<>();
-    // TODO replace with Thread pool
     private LinkedBlockingQueue<BankCommunicator> bankCommunicators = new LinkedBlockingQueue<>();
 
 
@@ -330,7 +329,7 @@ public class Bank implements BankProcess {
     /**
      *  Notifies the connected agent that there is a new
      *  auction
-     * @param networkDevice
+     * @param networkDevice network device to notify
      */
     public void notifyAuction(NetworkDevice networkDevice) {
         for (BankCommunicator bc : bankCommunicators) {

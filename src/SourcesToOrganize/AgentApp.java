@@ -26,15 +26,15 @@ public class AgentApp extends Application{
     private static final double APP_HEIGHT = 500;
     public static int bankPort = 42070;
     public static int auctionPort = 42069;
-    Stage window;
-    public Agent agent;
+    private Stage window;
+    private Agent agent;
 
 
-    Text selectedItemText = new Text();
+    private Text selectedItemText = new Text();
 
-    Text notification = new Text();
+    private Text notification = new Text();
     
-    LinkedList<Bid> bids = new LinkedList<>();
+    private LinkedList<Bid> bids = new LinkedList<>();
     private VBox bidVBox;
 
     @Override
