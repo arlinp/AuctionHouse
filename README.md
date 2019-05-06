@@ -115,9 +115,23 @@ This was made using Java SDK 1.8
 
 ## Authors
 
-* **Connor Frost** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/frostc/)
-    - Here
-* **Gavin McGuire** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/mcguireg/)
+
 * **Arlin Pedregon** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/arlin/)
+    - Compile the Jars for the final product
+    - Helped proofread and append final edits to the Documentation
+    - Primarily created the following 
+    - Coordinated with parter to expand network capabilities within Bank:
+        - This includes key edits to Bank, Account, and working with Connor to provide changes to the Bank
+    - Coordinated to handle exceptions from unexpected exits within the program
+* **Connor Frost** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/frostc/)
+    - Created the AuctionProxy and BankProxy Network Design structure, which involved the following complexities:
+        - The Proxies use Object streams for transportation of serialized objects, (AuctionRequest and BankRequest)
+        - 
 
-
+    
+* **Gavin McGuire** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/mcguireg/)
+    - Some changes with the ItemID for an auction
+    - Some of the GUI
+    - Most of the CommandLine Interface (Not working)
+    - Created AgentApp
+    - Was going to help compile
