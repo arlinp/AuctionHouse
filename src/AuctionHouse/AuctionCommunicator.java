@@ -70,6 +70,7 @@ public class AuctionCommunicator implements Runnable{
      * @param ar AuctionRequest to handle
      */
     private void processMessage(AuctionRequest ar) {
+        System.out.println("THE TYPE OF REQUEST IS: " + ar.getType());
         AuctionRequest newAR = new AuctionRequest(ar.getType(), ar.getPacketID());
 
         try {
@@ -80,21 +81,28 @@ public class AuctionCommunicator implements Runnable{
                     BidInfo status = auctionHouse.bid(bid);
                     System.out.println(status);
                     newAR.setBidStatus(status);
+
+                    System.out.println("\tBid on item #" + bid.getItemID() + " with $" + bid.getAmount());
+                    System.out.println("\tThe bid was " + status);
                     break;
                 case GET:
                     newAR.setItemInfo(auctionHouse.getItemInfo(ar.getItemID()));
+                    System.out.println("\tThe item #" + ar.getItemID() + " was gotten");
                     break;
                 case GETALL:
                     newAR.setItems(auctionHouse.getItems());
+                    System.out.println("\tAll of the items were gotten");
                     break;
                 case CLOSEREQUEST:
                     newAR.setContains(auctionHouse.closeRequest(ar.getItemID()));
+                    System.out.println("\tChecked if " + ar.getItemID() +
+                            " can leave");
                     break;
             }
 
             // Write out the object
             os.writeObject(newAR);
-
+            System.out.println("\tSent the response\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

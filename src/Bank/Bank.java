@@ -20,7 +20,6 @@ public class Bank implements BankProcess {
 
     // Used data structures
     private HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
-    private HashMap<Integer, Double> lockedMoney = new HashMap<Integer, Double>();
     private LinkedBlockingQueue<NetworkDevice> auctionNetworkDevices = new LinkedBlockingQueue<>();
     // TODO replace with Thread pool
     private LinkedBlockingQueue<BankCommunicator> bankCommunicators = new LinkedBlockingQueue<>();

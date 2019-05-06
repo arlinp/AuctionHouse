@@ -211,10 +211,8 @@ public class AuctionHouse implements AuctionProcess {
      */
     @Override
     public boolean closeRequest(int accountID) {
-        System.out.println("DID IT EVER EVEN CHECK?");
         for (Item item : items.values()) {
             if (item.contains(accountID)) {
-                System.out.println("False on" +item);
                 return false;
             }
         }
