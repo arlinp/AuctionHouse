@@ -351,4 +351,8 @@ public class Agent implements BankProcess, AuctionProcess {
         }
         getConnectedAuctionProxys().add(new AuctionProxy(auction.getIpAddress(), auction.getPort()));
     }
+
+    public void bid(AuctionProxy proxy, Bid bid) {
+        proxy.bid(bid);
+    }
 }

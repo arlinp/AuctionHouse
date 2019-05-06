@@ -251,7 +251,7 @@ public class AgentApp extends Application{
 
             bids.add(bid);
 
-            agent.bid(bid);
+            agent.bid(selectedItem.getProxy(), bid);
             bids.add(bid);
             bidVBox.getChildren().add(makeBidGroup(bid, selectedItem));
 

@@ -145,7 +145,9 @@ public class AuctionProxy implements AuctionProcess, Runnable {
 
             AuctionRequest response = messages.get(ar.getPacketID());
             messages.remove(ar.getPacketID());
-
+            for (ItemInfo items : response.getItems()) {
+                items.setProxy(this);
+            }
             return response.getItems();
 
         } catch (IOException e) {
