@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Stack;
 
+/**
+ * Agent app for the user to connect to the servers
+ */
 public class AgentApp extends Application{
 
     private static final double APP_WIDTH = 800;
@@ -36,8 +39,6 @@ public class AgentApp extends Application{
     Text selectedItemText = new Text();
     Text notification = new Text();
     ItemInfo selectedItem;
-    LinkedList<Bid> bids = new LinkedList<>();
-    private VBox bidVBox = new VBox();
     TableView<ItemInfo> tableView;
     Text accountBal;
     Text totalBal;
@@ -82,19 +83,25 @@ public class AgentApp extends Application{
         //new account taking input text
         TextField bankHostInput = new TextField();
 
+        //new account taking input text
+        TextField bankPortInput = new TextField();
+
         //connect to bank host on port 42069
         Button labTestButton = new Button("Lab Test");
         labTestButton.setOnAction(e -> {
-
-            agent = new Agent(bankHostInput.getText(), 42069, this);
+            int port;
+            try {
+                port = Integer.parseInt(bankPortInput.getText());
+            } catch (NumberFormatException error) {
+                return;
+            }
+            agent = new Agent(bankHostInput.getText(), port, this);
         });
 
         //test on this computer
-        Button localTestButton = new Button("localhost Test");
+        Button localTestButton = new Button("LocalHost Test");
         localTestButton.setOnAction(e -> {
-
             agent = new Agent("localhost", bankPort, this);
-
             window.setScene( new Scene(bankIntroRoot(), APP_WIDTH, APP_HEIGHT));
         });
 
@@ -104,8 +111,10 @@ public class AgentApp extends Application{
 
         root.add(title,1,1);
 
-        root.add(new Label("Bank Host"), 0, 4);
+        root.add(new Label("Bank Host  "), 0, 4);
         root.add(bankHostInput, 1,4);
+        root.add(new Label("Bank Port  "), 0, 5);
+        root.add(bankPortInput, 1,5);
 
         root.add(labTestButton, 1, 6);
 
@@ -189,8 +198,6 @@ public class AgentApp extends Application{
         //manage bids
 
         ScrollPane bidScrollPane = new ScrollPane();
-
-        bidVBox = new VBox();
 
         bidScrollPane.setContent(bidScrollPane);
 
