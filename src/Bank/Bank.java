@@ -138,13 +138,30 @@ public class Bank implements BankProcess {
 //        }
 
         if (!accounts.containsKey(AccountID)) {
-            System.out.println("CAN'T FIND THAT ACCOUNT");
             return -1.0;
         }
 
         // Get the balance of an account!
         Account account = accounts.get(AccountID);
         return account.getBalance();
+    }
+
+    /**
+     * Gets the total balance, including the locked amount
+     *
+     * @param AccountID Unique Identifier of Account
+     * @return Amount of money
+     */
+    @Override
+    public double getTotalBalance(int AccountID) {
+
+        if (!accounts.containsKey(AccountID)) {
+            return -1.0;
+        }
+
+        // Get the balance of an account!
+        Account account = accounts.get(AccountID);
+        return account.getTotalBalance();
     }
 
     /**

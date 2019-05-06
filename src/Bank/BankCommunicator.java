@@ -19,7 +19,6 @@ public class BankCommunicator implements Runnable {
     private Bank bank;
     private ObjectInputStream is;
     private ObjectOutputStream os;
-
     private boolean auctionCommunicator = false;
 
     /**
@@ -76,8 +75,6 @@ public class BankCommunicator implements Runnable {
                         e1.printStackTrace();
                         return;
                     }
-
-
                 }
                 break;
             }
@@ -113,6 +110,12 @@ public class BankCommunicator implements Runnable {
                 response.setAmount(balance);
 
                 if (Bank.BANKCOMMDEBUG) System.out.println("\tBalance for Account#: " + br.getID() + " is $" + balance);
+                break;
+            case GETTOTALBALANCE:
+                double total = bank.getTotalBalance(br.getID());
+                response.setAmount(total);
+
+                if (Bank.BANKCOMMDEBUG) System.out.println("\tTotal balance for Account#: " + br.getID() + " is $" + total);
                 break;
             case ADD: // AddFunds to a given Account
                 double bal1 = bank.getBalance(br.getID());

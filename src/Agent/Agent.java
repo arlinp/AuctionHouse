@@ -195,6 +195,17 @@ public class Agent implements BankProcess, AuctionProcess {
     }
 
     /**
+     * Gets the total balance, including the locked amount
+     *
+     * @param AccountID Unique Identifier of Account
+     * @return Amount of money
+     */
+    @Override
+    public double getTotalBalance(int AccountID) {
+        return bankProxy.getTotalBalance(AccountID);
+    }
+
+    /**
      * Get balance method used to get balance
      * of an Agent instance
      *
@@ -352,6 +363,12 @@ public class Agent implements BankProcess, AuctionProcess {
         getConnectedAuctionProxys().add(new AuctionProxy(auction.getIpAddress(), auction.getPort()));
     }
 
+    /**
+     * Bid on the specified auction proxy
+     *
+     * @param proxy Proxy to bid pon
+     * @param bid Bid in question
+     */
     public void bid(AuctionProxy proxy, Bid bid) {
         proxy.bid(bid);
     }
