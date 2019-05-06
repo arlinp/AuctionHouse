@@ -1,7 +1,7 @@
 # Auction House
 
 This java program is to simulate a system of multiple auction houses selling items, 
-multiple agents buying items, and a bank to keep track of everyone’s funds. 
+multiple agents buying items from multiple auction houses, and a bank to keep track of everyone’s funds. 
 The bank will exist on one machine at a static known address, the agents and auction houses will be dynamically created on other machines.
 
 ## Getting Started
@@ -16,17 +16,20 @@ This application was built using java SDK 1.8 and JavaFx
 
 Running the jar, the first window has a couple options:
 
-- 
-- 
+- https://i.imgur.com/74jczka.png
+- https://i.imgur.com/0ltvDRl.png
+- https://i.imgur.com/jlgL8ue.png
 
 As you can see from the following screenshots...
 
 ## Algorithm Explanation
 
-
+This is further explained in the documentation found in /docs/
 
 ## Bugs and Assumptions
 
+* There are times inbetween when a auctionHouse unexpectedly closes and the item list updates that a player can hang onto the last result until the next refresh (Around 2 seconds)
+* Everytime a socket gets disconnected, the AuctionProxy/BankProxy fails in a controlling manner to reduce the impact
 * Assumed Bank is never closed.
 
 ## Built With
