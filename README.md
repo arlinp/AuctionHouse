@@ -151,8 +151,8 @@ This was made using Java SDK 1.8
     - Create the documentation and graphs for the Object Design
         - Create the guide section within the readme.me
 * **Gavin McGuire** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/mcguireg/)
-    -some changes with the ItemID for an auction
-    -some of the GUI
-    -most of the CLI (not working)
-    -created AgentApp
-    -was going to help compile and finish the GUI
+    - some changes with the ItemID for an auction
+    - some of the GUI
+    - most of the CLI (not working)
+    - created AgentApp
+    - was going to help compile and finish the GUI
