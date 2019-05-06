@@ -83,9 +83,12 @@ public class Agent implements BankProcess, AuctionProcess {
      */
     @Override
     public BidInfo bid(Bid bid) {
-        addToBids(bid);
-        BidInfo info = currentAuctionProxy.bid(bid);
-        return info;
+//        addToBids(bid);
+//        BidInfo info = bid.getAuctionProxy().bid(bid);
+//        return info;
+
+        //ret
+        return null;
     }
 
     /**
@@ -122,10 +125,23 @@ public class Agent implements BankProcess, AuctionProcess {
      */
     @Override
     public synchronized ArrayList<ItemInfo> getItems() {
+
+        //infos from all auctions
         ArrayList<ItemInfo> itemInfos = new ArrayList<>();
 
+        //get infos from each auction
+        ArrayList<ItemInfo> auctionsItems;
+
+        //add all infos form all auctions
         for (AuctionProxy auctionProxy : connectedAuctionProxys){
-            itemInfos.addAll(auctionProxy.getItems());
+
+            //set each infos proxy so the agent can get updates for GUI and etc
+            auctionsItems = auctionProxy.getItems();
+            for (ItemInfo info : auctionsItems){
+                info.setProxy(auctionProxy);
+            }
+
+            itemInfos.addAll(auctionsItems);
         }
 
         return itemInfos;
@@ -352,7 +368,7 @@ public class Agent implements BankProcess, AuctionProcess {
         getConnectedAuctionProxys().add(new AuctionProxy(auction.getIpAddress(), auction.getPort()));
     }
 
-    public void bid(AuctionProxy proxy, Bid bid) {
-        proxy.bid(bid);
+    public BidInfo bid(AuctionProxy proxy, Bid bid) {
+        return proxy.bid(bid);
     }
 }

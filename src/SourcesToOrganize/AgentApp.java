@@ -2,6 +2,7 @@ package SourcesToOrganize;
 
 import Agent.Agent;
 import AuctionHouse.ItemInfo;
+import AuctionProxy.AuctionProxy;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -35,7 +36,7 @@ public class AgentApp extends Application{
     Text notification = new Text();
     
     LinkedList<Bid> bids = new LinkedList<>();
-    private VBox bidVBox;
+    private VBox bidVBox = new VBox();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -239,24 +240,20 @@ public class AgentApp extends Application{
         Button bidButton = new Button("Bid");
         bidButton.setOnAction(e -> {
             //get selected item
-            ItemInfo selectedItem = tableView.getSelectionModel().getSelectedItem();
+            ItemInfo selectedItemInfo = tableView.getSelectionModel().getSelectedItem();
 
             //get amount to start bid
             Double amount = Double.parseDouble(amountInput.getText());
 
             //create bid to send to house
-            Bid bid = new Bid(amount, agent.getAccountID(), selectedItem.getItemID());
+            Bid bid = new Bid(amount, agent.getAccountID(), selectedItemInfo.getItemID());
 
-            displayNewBid(bid);
+            //display new bid to be updated with the reference to that Infos AHP
+            Group bidGroup = displayNewBid(bid, selectedItemInfo.getProxy());
+//            bidVBox.getChildren().add(bidGroup);
 
-            bids.add(bid);
-            System.out.println("Got here");
-            agent.bid(selectedItem.getProxy(), bid);
-            System.out.println("1");
-            bids.add(bid);
-            System.out.println("2");
-            bidVBox.getChildren().add(makeBidGroup(bid, selectedItem));
-            System.out.println("3");
+            agent.bid(selectedItemInfo.getProxy(), bid);
+
         });
 
         System.out.println("Where");
@@ -270,10 +267,11 @@ public class AgentApp extends Application{
         return auctionItemRoot;
     }
 
-    private void displayNewBid(Bid bid) {
+    private Group displayNewBid(Bid bid, AuctionProxy proxy) {
 
+        Thread groupUdater = new Thread();
 
-
+        return null;
     }
 
     private Group makeBidGroup(Bid bid, ItemInfo info) {

@@ -85,6 +85,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
     @Override
     public BidInfo bid(Bid bid) {
 
+        //auction request
         AuctionRequest ar = new AuctionRequest(AuctionInfo.BID);
         ar.setBid(bid);
         bids.add(bid);
