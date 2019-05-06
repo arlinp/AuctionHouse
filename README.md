@@ -50,18 +50,54 @@ For running the jar, the auction proxy needs to be ran with the following argume
 Output of the Bank will be of similar format to the AuctionHouse
 
 ```
+THE TYPE OF REQUEST IS: LOCK
+	Locked funds to Account#: 1 | Amount locked: $1000.0 | Lock Number: $499111566
+	Sent Message!
 
+THE TYPE OF REQUEST IS: GETBALANCE
+	Balance for Account#: 1 is $9000.0
+	Sent Message!
+
+THE TYPE OF REQUEST IS: GETTOTALBALANCE
+	Total balance for Account#: 1 is $10000.0
+	Sent Message!
+	
+THE TYPE OF REQUEST IS: ADD
+	Added funds to Account#: 1 | Amount Added: $10000.0 | Old Balance: $0.0 | New Balance: $10000.0
+	Sent Message!
 ```
 
-This text details the requests made from the multiple clients. Since the Bank offers different functionality than the Auction House, the commands will differ
+This text details the requests made from the multiple clients and auction houses. Since the Bank offers different functionality than the Auction House, the commands will differ
 
 Please note: Since System.out.println() is used, messages may appear in jumbled order under strenuous circumstances
 
+### Client
 
+Upon loading the Jar (or Source code). The user will see a following page:
+
+![Main Menu](https://i.imgur.com/jlgL8ue.png)
+
+Upon inspection, the user will be able to specify a hostname and port or be able to locally test the program
+
+![Bank](https://i.imgur.com/0ltvDRl.png)
+
+Upon entering in a valid configuration. The user will be forwarded to a nice page where he can request a bank account and add however much money is wanted
 
 ![Main page](https://i.imgur.com/74jczka.png)
-![Bank](https://i.imgur.com/0ltvDRl.png)
-![Main Menu](https://i.imgur.com/jlgL8ue.png)
+
+After entering the auction house, the user will be able to view the items automatically pulled from the AuctionHouses. The user can then add funds and then bid on the items by clicking them from the table on the right.
+
+After bidding on an item, the user must wait for the entire duration of the bid, or until the user gets notified that he was outbid.
+
+Notifications work in the following way:
+* A user gets notified if his bid was initially rejected
+* A user gets notified when a past bid was outbid.
+* A user gets notified when an item is won
+* A user gets notified when he attempts to illegally leave
+
+Notifications come in the form of popup windows.
+
+Happy bidding!
 
 ## Algorithm Explanation
 
