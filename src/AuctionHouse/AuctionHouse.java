@@ -3,7 +3,6 @@ package AuctionHouse;
 import AuctionProxy.AuctionProcess;
 import AuctionProxy.BidInfo;
 import BankProxy.BankProxy;
-import SourcesToOrganize.Bid;
 import SourcesToOrganize.NetworkDevice;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,8 +12,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-import static SourcesToOrganize.AgentApp.auctionPort;
-import static SourcesToOrganize.AgentApp.bankPort;
+import static Agent.AgentApp.auctionPort;
+import static Agent.AgentApp.bankPort;
 
 public class AuctionHouse implements AuctionProcess {
 
@@ -32,7 +31,13 @@ public class AuctionHouse implements AuctionProcess {
     private static int counter = 0;
     private boolean alive;
 
-
+    /**
+     * Constructor initializing an AuctionHouse
+     *
+     * @param operatingPort Port of auctionhouse
+     * @param bankHostname Bank's hostname
+     * @param bankPort Bank's port
+     */
     public AuctionHouse(int operatingPort, String bankHostname, int bankPort) {
         alive = true;
         bankProxy = new BankProxy(bankHostname, bankPort, null);

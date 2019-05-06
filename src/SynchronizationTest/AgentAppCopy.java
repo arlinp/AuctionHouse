@@ -1,7 +1,7 @@
 package SynchronizationTest;
 
-import static SourcesToOrganize.AgentApp.auctionPort;
-import static SourcesToOrganize.AgentApp.bankPort;
+import static Agent.AgentApp.auctionPort;
+import static Agent.AgentApp.bankPort;
 
 public class AgentAppCopy{
 

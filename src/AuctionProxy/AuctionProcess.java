@@ -1,9 +1,12 @@
 package AuctionProxy;
-import SourcesToOrganize.Bid;
-import AuctionHouse.ItemInfo;
 
+import AuctionHouse.Bid;
+import AuctionHouse.ItemInfo;
 import java.util.ArrayList;
 
+/**
+ * Functions for the Auction
+ */
 public interface AuctionProcess {
 
     /**

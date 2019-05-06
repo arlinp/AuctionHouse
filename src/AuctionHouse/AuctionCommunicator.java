@@ -3,7 +3,6 @@ package AuctionHouse;
 import AuctionProxy.AuctionInfo;
 import AuctionProxy.AuctionRequest;
 import AuctionProxy.BidInfo;
-import SourcesToOrganize.Bid;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,7 +14,6 @@ public class AuctionCommunicator implements Runnable{
     private AuctionHouse auctionHouse;
     private ObjectInputStream is;
     private ObjectOutputStream os;
-    private static boolean auctionCommDebug = true;
 
     /**
      * Thread for communication with a single socket

@@ -1,13 +1,8 @@
 package SynchronizationTest;
 
-import AuctionHouse.Item;
-import AuctionHouse.ItemInfo;
 import AuctionProxy.AuctionProxy;
 import BankProxy.BankProxy;
-import SourcesToOrganize.Bid;
-
-import java.sql.SQLOutput;
-import java.util.ArrayList;
+import AuctionHouse.Bid;
 
 public class Bidder implements Runnable{
 

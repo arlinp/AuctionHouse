@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static SourcesToOrganize.AgentApp.bankPort;
+import static Agent.AgentApp.bankPort;
 
 /**
  * Runs a Bank where accounts can be interacted with through a socket connection

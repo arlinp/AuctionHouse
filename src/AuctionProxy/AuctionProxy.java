@@ -1,6 +1,5 @@
 package AuctionProxy;
 
-import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -8,10 +7,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
 
-import SourcesToOrganize.AgentApp;
-import SourcesToOrganize.Bid;
+import Agent.AgentApp;
+import AuctionHouse.Bid;
 import AuctionHouse.ItemInfo;
 
 /**
@@ -54,6 +52,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
 
     /**
      * Used for connecting to a server
+     *
      * @param hostname host name
      * @param port (int) port number
      */
@@ -90,6 +89,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         bids.add(bid);
 
         try {
+            // Write the object and wait upon the return
             os.writeObject(ar);
             waitOn(ar.getPacketID());
 
@@ -115,6 +115,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         ar.setItemID(itemID);
 
         try {
+            // Write the object and wait upon the return
             os.writeObject(ar);
             waitOn(ar.getPacketID());
 
@@ -140,6 +141,7 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         ar.setItems(null);
 
         try {
+            // Write the object and wait upon the return
             os.writeObject(ar);
             waitOn(ar.getPacketID());
 
@@ -170,8 +172,8 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         ar.setItemID(accountID);
 
         try {
+            // Write the object and wait upon the return
             os.writeObject(ar);
-
             waitOn(ar.getPacketID());
 
             AuctionRequest response = messages.get(ar.getPacketID());
@@ -185,6 +187,10 @@ public class AuctionProxy implements AuctionProcess, Runnable {
         return false;
     }
 
+    /**
+     * Run that reads in objects and then either returns the response or
+     * processes the notification
+     */
     @Override
     public void run() {
         while (isOpen()) {

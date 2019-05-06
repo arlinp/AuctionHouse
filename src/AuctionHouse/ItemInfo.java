@@ -30,6 +30,8 @@ public class ItemInfo implements Serializable {
     }
 
     /**
+     * Get the name of the item
+     *
      * @return item's name
      */
     public String getName() {
@@ -37,6 +39,8 @@ public class ItemInfo implements Serializable {
     }
 
     /**
+     * Gets the current price
+     *
      * @return item's price
      */
     public double getPrice() {
@@ -44,6 +48,8 @@ public class ItemInfo implements Serializable {
     }
 
     /**
+     * Get the Item ID
+     *
      * @return item's ID
      */
     public int getItemID() {
@@ -51,6 +57,8 @@ public class ItemInfo implements Serializable {
     }
 
     /**
+     * Set the price of the ItemInfo
+     *
      * @param price price of item
      */
     public void setPrice(double price) { this.price = price; }
@@ -61,6 +69,8 @@ public class ItemInfo implements Serializable {
     }
 
     /**
+     * Clone an object
+     *
      * @return cloned ItemInfo
      */
     @Override
@@ -69,6 +79,8 @@ public class ItemInfo implements Serializable {
     }
 
     /**
+     * Overwrite equals to check for equality
+     *
      * @param o object
      * @return equality
      */
@@ -77,7 +89,6 @@ public class ItemInfo implements Serializable {
         ItemInfo item = (ItemInfo) o;
 
         return itemID == item.getItemID() && proxy == item.getProxy();
-
     }
 
     /**

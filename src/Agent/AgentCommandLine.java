@@ -1,11 +1,9 @@
-package SourcesToOrganize;
+package Agent;
 
-import Agent.Agent;
+import AuctionHouse.Bid;
 import AuctionHouse.ItemInfo;
-import AuctionProxy.AuctionProxy;
-import BankProxy.BankProxy;
+import SourcesToOrganize.NetworkDevice;
 
-import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -13,17 +11,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Main running command line agent
  */
-public class AgentCommandLine extends AgentApp{
+public class AgentCommandLine extends AgentApp {
 
     private Agent agent;
-    private LinkedBlockingQueue<NetworkDevice> servers;
 
     /**
      * Constructs a new Agent controlled through
      * the command line.
      */
     public AgentCommandLine(){
-        boolean test = true;
 
         Scanner inScanner = new Scanner(System.in);
         String input;
@@ -34,25 +30,19 @@ public class AgentCommandLine extends AgentApp{
 
         input = inScanner.nextLine();
 
-        //Initialize the bank and auction proxy
+        // Initialize the bank and auction proxy
         String bankHost;
         int portNumber;
 
         try {
-
             if (input.equals("1")) {
-
                 agent = new Agent("localhost", 42069, null);
+            } else if (input.equals("2")) {
 
-            }
-
-            if (input.equals("2")) {
-
-                System.out.println("enter bank host:");
+                System.out.println("Enter bank host:");
                 bankHost = inScanner.nextLine();
 
-
-                System.out.println("enter bank port:");
+                System.out.println("Enter bank port:");
                 portNumber = inScanner.nextInt();
 
                 agent = new Agent(bankHost, portNumber, null);
@@ -63,45 +53,35 @@ public class AgentCommandLine extends AgentApp{
             return;
         }
 
-        //main loop goes until "exit"
-        while (!input.equals("exit"))
-        {
+        // Main loop goes until "exit"
+        while (!input.equals("Exit")) {
 
-            //access bank or access auction
-            System.out.println("what would you like to do?");
+            // Access bank or access action
+            System.out.println("What would you like to do?");
             System.out.println("1. Access bank.");
             System.out.println("2. Access auction house.");
-            System.out.println("exit. to end program");
+            System.out.println("Exit. to end program");
 
             input = inScanner.nextLine();
 
-            //if bank, get balance
+            // if bank, get balance
             if (input.equals("1")) {
 
+                // Create the account
                 if (agent.getAccountID() == 0) {
 
-//                    System.out.println("Your Account ID is: ");
-//                    System.out.println(" or nothing...");
-//                    input = inScanner.nextLine();
-//
-//                    if (input.equals("")) {
-                        agent.addAccount();
-//                    } else {
-//                        agent.addAccount(Integer.parseInt(input));
-//                    }
-
-
-
+                    agent.addAccount();
 
                     System.out.println("Account ID=" + agent.getAccountID());
-                    System.out.println("account balance = "
+                    System.out.println("Account balance = "
                             + agent.getBalance());
                 }
 
+                // Access the bank
                 while (!input.equals("0")) {
 
-                    System.out.println("1. add to funds.");
-                    System.out.println("0. to exit bank");
+                    System.out.println("1. Add to funds.");
+                    System.out.println("0. Exit bank");
                     input = inScanner.nextLine();
 
                     if (input.equals("1")) {
@@ -118,13 +98,14 @@ public class AgentCommandLine extends AgentApp{
 
             }
 
-            //if auction, make bid
+            // If auction, make bid and view the available items
             if (input.equals("2")) {
 
-
+                // Get the items
                 ArrayList<ItemInfo> auctionItems = agent.getItems();
 
-                while(!auctionItems.isEmpty()) {
+                //
+                while (!auctionItems.isEmpty()) {
                     System.out.println("Items for auction: ");
                     for (ItemInfo info : auctionItems) {
                         System.out.println(info);

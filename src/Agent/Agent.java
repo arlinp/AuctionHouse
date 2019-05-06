@@ -6,8 +6,7 @@ import AuctionProxy.AuctionProcess;
 import AuctionProxy.BidInfo;
 import BankProxy.BankProxy;
 import BankProxy.BankProcess;
-import SourcesToOrganize.AgentApp;
-import SourcesToOrganize.Bid;
+import AuctionHouse.Bid;
 import SourcesToOrganize.NetworkDevice;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -134,6 +133,7 @@ public class Agent implements BankProcess, AuctionProcess {
      */
     @Override
     public boolean closeRequest(int accountID) {
+        // Loop through the AuctionProxies and check each one
         for (AuctionProxy ap : connAP) {
             if (!ap.closeRequest(accountID)) return false;
         }
@@ -330,6 +330,7 @@ public class Agent implements BankProcess, AuctionProcess {
      */
     public void addAuctionHouse(NetworkDevice auction) {
 
+        // Add an Auction House if not equal
         for (AuctionProxy ap : getConnAP()) {
             InetAddress test = ap.getConnectedAddress();
 
@@ -338,6 +339,7 @@ public class Agent implements BankProcess, AuctionProcess {
                 return;
             }
         }
+        // If not contained, add new proxy
         getConnAP().add(new AuctionProxy(auction.getIpAddress(), auction.getPort(), agentApp));
     }
 

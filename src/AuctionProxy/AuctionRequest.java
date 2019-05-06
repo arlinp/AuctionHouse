@@ -1,5 +1,5 @@
 package AuctionProxy;
-import SourcesToOrganize.Bid;
+import AuctionHouse.Bid;
 import AuctionHouse.ItemInfo;
 import SourcesToOrganize.Packet;
 
@@ -25,6 +25,8 @@ public class AuctionRequest extends Packet implements Serializable {
 
 
     /**
+     * Constructor for AuctionRequest
+     *
      * @param type Type of request
      */
     public AuctionRequest(AuctionInfo type) {
@@ -34,6 +36,8 @@ public class AuctionRequest extends Packet implements Serializable {
     }
 
     /**
+     * Constructor for AuctionRequest
+     *
      * @param type type of request
      * @param ID request ID
      */
@@ -44,6 +48,8 @@ public class AuctionRequest extends Packet implements Serializable {
     }
 
     /**
+     * Gets the item ID
+     *
      * @return item ID
      */
     public int getItemID() {
@@ -51,6 +57,8 @@ public class AuctionRequest extends Packet implements Serializable {
     }
 
     /**
+     * Sets the ItemID
+     *
      * @param itemID ID to assign
      */
     public void setItemID(int itemID) {

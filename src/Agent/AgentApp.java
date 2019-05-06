@@ -1,8 +1,8 @@
-package SourcesToOrganize;
+package Agent;
 
-import Agent.Agent;
 import AuctionHouse.ItemInfo;
 import AuctionProxy.BidInfo;
+import AuctionHouse.Bid;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -23,11 +23,13 @@ import java.util.ArrayList;
  */
 public class AgentApp extends Application{
 
-    // Global variables which involve selection and static variables
+    // Static variables for default settings
     private static final double APP_WIDTH = 800;
     private static final double APP_HEIGHT = 650;
     public static int bankPort = 42070;
     public static int auctionPort = 42069;
+
+    // Global GUI elements for selection
     private Stage window;
     public Agent agent;
     private Text selectedItemText = new Text();
@@ -36,6 +38,8 @@ public class AgentApp extends Application{
     private TableView<ItemInfo> tableView;
     private Text accountBal;
     private Text totalBal;
+
+    // Global variable for main use
     private boolean atAuction = false;
 
 
@@ -47,18 +51,23 @@ public class AgentApp extends Application{
     @Override
     public void start(Stage primaryStage) {
 
+        // Set the stage
         window = primaryStage;
         window.setTitle("Distributed Auctions - Agent");
         window.setMinWidth(700);
 
+        // Set the behavior of the close button to check with AuctionProxies
         primaryStage.setScene( new Scene(introRoot(), APP_WIDTH, APP_HEIGHT));
         primaryStage.setOnCloseRequest(t -> {
             t.consume();
+            // If the GUI is not in an auction or cleared by closeRequest,
+            // then the user can't leave
             if (!atAuction || agent.closeRequest()) {
                 primaryStage.close();
                 Platform.exit();
                 System.exit(0);
             } else {
+                // Notify of not being able to leave
                 newPopUp("You have an item being bid upon! NO LEAVING!");
             }
 
@@ -76,26 +85,32 @@ public class AgentApp extends Application{
 
         GridPane root = new GridPane();
 
-        //title
+        // Title
         Text title = new Text("Agent");
         title.setFont(Font.font(50));
 
-        //new account taking input text
+        // New account taking input text
         TextField bankHostInput = new TextField();
 
-        //new account taking input text
+        // New account taking input text
         TextField bankPortInput = new TextField();
 
-        //connect to bank host on port 42069
+        // Connect to bank host on port 42069
         Button labTestButton = new Button("Lab Test");
         labTestButton.setOnAction(e -> {
             int port;
+
+            // Try to parse the integer
             try {
                 port = Integer.parseInt(bankPortInput.getText());
             } catch (NumberFormatException error) {
                 return;
             }
+
+            // Create the agent with the given port
             agent = new Agent(bankHostInput.getText(), port, this);
+
+            // Start the GUI
             window.setScene( new Scene(bankIntroRoot(), APP_WIDTH, APP_HEIGHT));
 
         });
@@ -213,7 +228,7 @@ public class AgentApp extends Application{
         auctionItemRoot.setMaxWidth(400);
         ArrayList<ItemInfo> itemInfos = agent.getItems();
 
-        //table view
+        // Table View
         ScrollPane scrollTable = new ScrollPane();
 
         tableView = new TableView<>();
@@ -280,7 +295,7 @@ public class AgentApp extends Application{
                 bid = new Bid(amount, agent.getAccountID(),
                         selectedItemInfo.getItemID());
                 // Display new bid to be updated with the reference to
-                // that Infos AHP
+                // that Infos AuctionProxy
 
                 BidInfo status = agent.bid(selectedItemInfo.getProxy(), bid);
                 if (status == BidInfo.REJECTION) {
@@ -333,11 +348,16 @@ public class AgentApp extends Application{
         return auctionItemRoot;
     }
 
+    /**
+     * Refresh the table's graphical elements
+     */
     private void refreshTableView() {
 
+        // Check for selected item
         if (selectedItem == null) {
             ArrayList<ItemInfo> itemInfos = agent.getItems();
 
+            // Get the items and refresh them
             tableView.getItems().clear();
             for (ItemInfo info : itemInfos) {
                 if (!tableView.getItems().contains(info)) {
@@ -397,6 +417,7 @@ public class AgentApp extends Application{
         title.setFont(Font.font(50));
         root.add(title,0,0);
 
+        // Add the various components into the Grid
         root.add(accountLabel, 0,1);
         root.add(accountNum, 1, 1);
 

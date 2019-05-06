@@ -2,8 +2,10 @@ package AuctionHouse;
 
 import AuctionProxy.BidInfo;
 import BankProxy.BankProxy;
-import SourcesToOrganize.Bid;
 
+/**
+ * Item class that is ran for bidding to be places upon
+ */
 public class Item implements Runnable {
 
     private BankProxy bank;
