@@ -220,6 +220,17 @@ public class Agent implements BankProcess, AuctionProcess {
         return bankProxy.getBalance(accountID);
     }
 
+    /**
+     * Gets the total balance, including the locked amount
+     *
+     * @param AccountID Unique Identifier of Account
+     * @return Amount of money
+     */
+    @Override
+    public double getTotalBalance(int AccountID) {
+        return bankProxy.getTotalBalance(AccountID);
+    }
+
 
     /**
      * Add the funds to the specified account number
