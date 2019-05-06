@@ -14,6 +14,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static SourcesToOrganize.AgentApp.auctionPort;
 import static SourcesToOrganize.AgentApp.bankPort;
@@ -25,7 +26,7 @@ public class AuctionHouse implements AuctionProcess {
     private ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<Integer, Item>();
     private ArrayList<Item> itemsNotUpForAuction = new ArrayList<Item>();
     private ArrayList<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
-    private ArrayList<Bid> bids;
+    private LinkedBlockingQueue<Bid> bids = new LinkedBlockingQueue<>();
     private BankProxy bankProxy;
     private int auctionID;
     private BufferedReader bufferedReader;
@@ -43,14 +44,12 @@ public class AuctionHouse implements AuctionProcess {
         //Read items this house will sell
         readInItems();
 
-        ServerSocket ss;
+        ServerSocket ss = null;
         try {
             System.out.println(operatingPort);
             ss = new ServerSocket(operatingPort);
         } catch (IOException e) {
-            alive = false;
             e.printStackTrace();
-            return;
         }
 
         bankProxy.openServer(new NetworkDevice("127.0.0.1",operatingPort));
@@ -67,9 +66,7 @@ public class AuctionHouse implements AuctionProcess {
 //                ac.notifyBid(BidInfo.WINNER, 1001, 100.00);
 
             } catch (IOException e) {
-                alive = false;
                 e.printStackTrace();
-                return;
             }
 
         }
@@ -113,7 +110,6 @@ public class AuctionHouse implements AuctionProcess {
             }
         } catch (IOException e){
             e.printStackTrace();
-            return;
         }
     }
 
@@ -168,7 +164,7 @@ public class AuctionHouse implements AuctionProcess {
     /**
      * @param bid bid to synchronously add
      */
-    private synchronized void addBid(Bid bid){
+    public void addBid(Bid bid){
         bids.add(bid);
     }
 
@@ -235,7 +231,7 @@ public class AuctionHouse implements AuctionProcess {
 
     /**
      * Starts a new Auction House
-     * @param args arguments
+     * @param args
      */
     public static void main(String[] args) {
 

@@ -28,6 +28,14 @@ public interface BankProcess {
     double getBalance(int AccountID);
 
     /**
+     * Gets the total balance, including the locked amount
+     *
+     * @param AccountID Unique Identifier of Account
+     * @return Amount of money
+     */
+    double getTotalBalance(int AccountID);
+
+    /**
      * Add the funds to the specified account number
      *
      * @param AccountID Unique Identifier of Account

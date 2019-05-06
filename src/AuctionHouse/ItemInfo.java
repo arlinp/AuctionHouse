@@ -1,6 +1,7 @@
 package AuctionHouse;
 
 import java.io.Serializable;
+import AuctionProxy.AuctionProxy;
 
 /**
  * Stores all the information of an Item
@@ -14,6 +15,7 @@ public class ItemInfo implements Serializable {
     private String name;
     private double price;
     private int itemID;
+    public transient AuctionProxy proxy;
 
     /**
      * Constructor for an Item's ino
@@ -75,5 +77,23 @@ public class ItemInfo implements Serializable {
         ItemInfo item = (ItemInfo) o;
 
         return itemID == item.getItemID();
+    }
+
+    /**
+     * Gets the auction proxy
+     *
+     * @return Auction proxy
+     */
+    public AuctionProxy getProxy() {
+        return proxy;
+    }
+
+    /**
+     * Sets the auction proxy
+     *
+     * @param proxy Auction Proxy
+     */
+    public void setProxy(AuctionProxy proxy) {
+        this.proxy = proxy;
     }
 }

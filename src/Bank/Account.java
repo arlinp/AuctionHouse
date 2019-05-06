@@ -129,4 +129,19 @@ public class Account {
      */
     public synchronized void setUniqueID(int ID) { uniqueID = ID; }
 
+    /**
+     * Gets the total balance, including the locked money
+     *
+     * @return amount
+     */
+    public double getTotalBalance() {
+        double total = balance;
+
+        // Add up all of the locked money
+        for (Double amount : lockedMoney.values()) {
+            total += amount;
+        }
+
+        return total;
+    }
 }
