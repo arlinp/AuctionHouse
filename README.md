@@ -16,9 +16,9 @@ This application was built using java SDK 1.8 and JavaFx
 
 Running the jar, the first window has a couple options:
 
-- https://i.imgur.com/74jczka.png
-- https://i.imgur.com/0ltvDRl.png
-- https://i.imgur.com/jlgL8ue.png
+![Main page](https://i.imgur.com/74jczka.png)
+![Bank](https://i.imgur.com/0ltvDRl.png)
+![Main Menu](https://i.imgur.com/jlgL8ue.png)
 
 As you can see from the following screenshots...
 
