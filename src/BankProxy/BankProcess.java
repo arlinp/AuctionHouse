@@ -1,6 +1,6 @@
 package BankProxy;
 
-import SourcesToOrganize.NetworkDevice;
+import Network.NetworkDevice;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**

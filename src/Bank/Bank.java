@@ -1,7 +1,7 @@
 package Bank;
 
 import BankProxy.BankProcess;
-import SourcesToOrganize.NetworkDevice;
+import Network.NetworkDevice;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -23,10 +23,10 @@ public class Bank implements BankProcess {
             new LinkedBlockingQueue<>();
 
 
-    //Flags
+    // Flags
     private boolean alive = true;
 
-    //Number of accounts
+    // Number of accounts
     private int accountCount = 0;
 
     /**
@@ -83,7 +83,6 @@ public class Bank implements BankProcess {
 
         // Add a new account to the existing accounts. New account
         // created with a random number.
-        //int generatedID = generateAccountID();
         Account newAccount = new Account(ID);
 
         //Save the Account ID and Account to HashTable
@@ -103,7 +102,6 @@ public class Bank implements BankProcess {
 
         // Add a new account to the existing accounts. New account
         // created with a random number.
-        //int generatedID = generateAccountID();
         Account newAccount = new Account(accountCount);
         accountCount++;
 
@@ -123,10 +121,6 @@ public class Bank implements BankProcess {
     @Override
     public synchronized double getBalance(int AccountID) {
         // Run check that would cause crash
-//        for (Integer accountNum : accounts.keySet()){
-//            System.out.println(accountNum);
-//        }
-
         if (!accounts.containsKey(AccountID)) {
             return -1.0;
         }

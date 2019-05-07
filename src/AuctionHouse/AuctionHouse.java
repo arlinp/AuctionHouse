@@ -3,7 +3,7 @@ package AuctionHouse;
 import AuctionProxy.AuctionProcess;
 import AuctionProxy.BidInfo;
 import BankProxy.BankProxy;
-import SourcesToOrganize.NetworkDevice;
+import Network.NetworkDevice;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

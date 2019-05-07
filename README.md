@@ -145,9 +145,11 @@ This was made using Java SDK 1.8
         - Implemented timed updates of the items that are being bid upon
         - Implemented notifications and the closeRequest feature
         - Updated the GUI format to look better
+    - Fixed most of the AgentAppGUI by making it more than a static GUI
+    - Correctly implemented the functions involving dynamic Auctions within the Agent class
     - Implemented the dynamic adding of AuctionHouses upon notification and request within the Bank
     - Helped clean up the code and make it compliant with CS351 Code Standards
-        - Capitalize the first letter of each sentence 
+        - Capitalized the first letter of each sentence
     - Create the documentation and graphs for the Object Design
         - Create the guide section within the readme.me
 * **Gavin McGuire** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/mcguireg/)

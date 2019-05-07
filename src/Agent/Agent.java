@@ -7,7 +7,7 @@ import AuctionProxy.BidInfo;
 import BankProxy.BankProxy;
 import BankProxy.BankProcess;
 import AuctionHouse.Bid;
-import SourcesToOrganize.NetworkDevice;
+import Network.NetworkDevice;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;

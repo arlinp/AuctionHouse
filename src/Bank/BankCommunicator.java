@@ -2,7 +2,7 @@ package Bank;
 
 import BankProxy.BankInfo;
 import BankProxy.BankRequest;
-import SourcesToOrganize.NetworkDevice;
+import Network.NetworkDevice;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -67,6 +67,7 @@ public class BankCommunicator implements Runnable {
                 processMessage(br);
             } catch (IOException | ClassNotFoundException e) {
                 try {
+                    // Attempt to close the socket
                     System.out.println("Closing " + s);
                     s.close();
                 } catch (IOException e1) {

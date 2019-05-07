@@ -7,7 +7,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-import SourcesToOrganize.NetworkDevice;
+import Network.NetworkDevice;
 
 
 /**
@@ -77,6 +77,7 @@ public class BankProxy implements BankProcess, Runnable {
      */
     private void connectToServer(String hostname, int port) {
         try {
+            // Attempt to establish the socket
             while (s == null) {
                 s = new Socket(hostname, port);
 
@@ -107,7 +108,8 @@ public class BankProxy implements BankProcess, Runnable {
         BankRequest request = new BankRequest(BankInfo.NEWACCOUNT);
         request.setID(ID);
 
-        try{
+        try {
+            // Attempt to write out the object and retrieve it
             os.writeObject(request);
             waitOn(request.getPacketID());
 
@@ -130,7 +132,8 @@ public class BankProxy implements BankProcess, Runnable {
     public int addAccount() {
         BankRequest request = new BankRequest(BankInfo.NEWACCOUNT);
 
-        try{
+        try {
+            // Attempt to write out the object and retrieve it
             os.writeObject(request);
             waitOn(request.getPacketID());
 
@@ -157,6 +160,7 @@ public class BankProxy implements BankProcess, Runnable {
         request.setID(AccountID);
 
         try {
+            // Attempt to write out the object and retrieve it
             os.writeObject(request);
             waitOn(request.getPacketID());
 
@@ -207,6 +211,7 @@ public class BankProxy implements BankProcess, Runnable {
         request.setAmount(amount);
 
         try {
+            // Attempt to write out the object and retrieve it
             os.writeObject(request);
             waitOn(request.getPacketID());
 
@@ -262,6 +267,7 @@ public class BankProxy implements BankProcess, Runnable {
         request.setAmount(amount);
 
         try {
+            // Attempt to write out the object and retrieve it
             os.writeObject(request);
             waitOn(request.getPacketID());
 
@@ -287,6 +293,7 @@ public class BankProxy implements BankProcess, Runnable {
         request.setLockNumber(lockID);
 
         try {
+            // Attempt to write out the object and retrieve it
             os.writeObject(request);
             waitOn(request.getPacketID());
 
@@ -315,6 +322,7 @@ public class BankProxy implements BankProcess, Runnable {
         request.setAmount(amount);
 
         try {
+            // Attempt to write out the object and retrieve it
             os.writeObject(request);
             waitOn(request.getPacketID());
 
@@ -343,6 +351,7 @@ public class BankProxy implements BankProcess, Runnable {
         request.setLockNumber(lockID);
 
         try {
+            // Attempt to write out the object and retrieve it
             os.writeObject(request);
             waitOn(request.getPacketID());
 
@@ -370,6 +379,7 @@ public class BankProxy implements BankProcess, Runnable {
         request.addNetworkDevices(networkDevice);
 
         try {
+            // Attempt to write out the object and retrieve it
             os.writeObject(request);
             waitOn(request.getPacketID());
 
@@ -397,6 +407,7 @@ public class BankProxy implements BankProcess, Runnable {
         request.addNetworkDevices(networkDevice);
 
         try {
+            // Attempt to write out the object and retrieve it
             os.writeObject(request);
             waitOn(request.getPacketID());
 
@@ -421,6 +432,7 @@ public class BankProxy implements BankProcess, Runnable {
         BankRequest request = new BankRequest(BankInfo.GETAUCTIONS);
 
         try {
+            // Attempt to write out the object and retrieve it
             os.writeObject(request);
             waitOn(request.getPacketID());
 
@@ -506,6 +518,7 @@ public class BankProxy implements BankProcess, Runnable {
      * @param packetID packet ID
      */
     private void waitOn(int packetID) {
+        // Wait on the ID
         synchronized (this) {
             while (!messages.containsKey(packetID)) {
                 try {

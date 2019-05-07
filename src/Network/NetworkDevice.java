@@ -1,4 +1,4 @@
-package SourcesToOrganize;
+package Network;
 
 import java.io.Serializable;
 
@@ -25,6 +25,8 @@ public class NetworkDevice implements Serializable {
     }
 
     /**
+     * Gets the IP address of the device
+     *
      * @return ip address of the connection
      */
     public String getIpAddress() {
@@ -32,13 +34,8 @@ public class NetworkDevice implements Serializable {
     }
 
     /**
-     * @param ipAddress ip address to be assigned
-     */
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
-
-    /**
+     * Gets the port of the device
+     *
      * @return port number
      */
     public int getPort() {
@@ -46,23 +43,24 @@ public class NetworkDevice implements Serializable {
     }
 
     /**
-     * @param port port number to be set
+     * Make string representation
+     *
+     * @return String representation
      */
-    public void setPort(int port) {
-        this.port = port;
-    }
-
     @Override
     public String toString() {
         return ipAddress + ":" + port;
     }
 
     /**
+     * Checks the equality of the object
+     *
      * @param obj Checks for object equality
-     * @return
+     * @return true if equal
      */
     @Override
     public boolean equals(Object obj) {
+        // Check the equality of the objects
         if (obj == null || obj.getClass() != getClass()) {
             return false;
         } else {

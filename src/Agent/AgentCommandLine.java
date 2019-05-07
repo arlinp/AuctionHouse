@@ -2,11 +2,9 @@ package Agent;
 
 import AuctionHouse.Bid;
 import AuctionHouse.ItemInfo;
-import SourcesToOrganize.NetworkDevice;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Main running command line agent

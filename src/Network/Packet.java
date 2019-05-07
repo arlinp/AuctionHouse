@@ -1,9 +1,9 @@
-package SourcesToOrganize;
+package Network;
 
 import java.io.Serializable;
 
 /**
- *
+ * Packet that is extended and shared by AuctionRequest and BankRequest
  */
 public class Packet implements Serializable {
 
@@ -13,6 +13,8 @@ public class Packet implements Serializable {
     // Troubleshooting stuff goes here
 
     /**
+     * Set status of the Packet
+     *
      * @param status
      */
     public void setStatus(Boolean status) {
@@ -20,9 +22,9 @@ public class Packet implements Serializable {
     }
 
     /**
-     * Gets the status
+     * Gets the status of the packet
      *
-     * @return status
+     * @return Depends on type response
      */
     public Boolean getStatus() {
         return status;
@@ -30,16 +32,16 @@ public class Packet implements Serializable {
 
 
     /**
-     * Get the ack
+     * Get whether or not this is currently a response
      *
-     * @return ack
+     * @return true if response, false if notification
      */
     public Boolean getAck() {
         return ack;
     }
 
     /**
-     * Set the ack
+     * Set the Acknowledgement receipt
      *
      * @param ack Acknowledgement required
      */

@@ -1,7 +1,7 @@
 package AuctionProxy;
 import AuctionHouse.Bid;
 import AuctionHouse.ItemInfo;
-import SourcesToOrganize.Packet;
+import Network.Packet;
 
 import java.io.Serializable;
 import java.util.ArrayList;
