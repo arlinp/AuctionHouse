@@ -117,23 +117,24 @@ This was made using Java SDK 1.8
 
 
 * **Arlin Pedregon** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/arlin/)
-    - Compile the Jars for the final product
-    - Helped proofread and append final edits to the Documentation
-        - Create the ReadMe and help fill out crucial information 
-    - Primarily created the following 
-    - Coordinated with parter to expand network capabilities within Bank:
+    - Primarily created the following: 
+    - Coordinated with partner to expand network capabilities within Bank:
         - This includes key edits to Bank, Account, and working with Connor to provide changes to the Bank
     - Implement the handling of exceptions from unexpected exits within the program
-    - Helped implement the AuctionHouse and Bank functions
-        - This include transferring of funds from the bank 
+    - Helped implement the AuctionHouse, Bank, and Account functions
+        - This included the transferring of funds from the bank
+        - Also included the synchronization of fund transactions 
     - Primarily cleaned up code to conform to CS351 Project standards
     - Implemented the closing of AuctionHouse upon no objects
     - Implemented AuctionHouse's limited timed items functionality
+    - Helped proofread and append final edits to the Documentation
+            - Create the ReadMe and helped fill out crucial information
+    - Compiled the Jars for the final product
 * **Connor Frost** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/frostc/)
     - Created the AuctionProxy and BankProxy Network Design structure, which involved the following complexities:
         - The Proxies use Object streams for transportation of serialized objects, (AuctionRequest and BankRequest)
         - Each of the Proxies and Communicators make use of two theoretical threads:
-            - One of which processes and responds to the inoming messages
+            - One of which processes and responds to the incoming messages
             - The second is to asynchronously notify/get notified the user
     - Primarily created and handled the synchronization of the AuctionHouse
     - Helped create the Bank class to handle accounts
