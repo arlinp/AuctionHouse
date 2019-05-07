@@ -1,4 +1,4 @@
--# Auction House
+# Auction House
 
 This java program is to simulate a system of multiple auction houses selling items, 
 multiple agents buying items from multiple auction houses, and a bank to keep track of everyone’s funds. 
@@ -151,8 +151,15 @@ This was made using Java SDK 1.8
     - Create the documentation and graphs for the Object Design
         - Create the guide section within the readme.me
 * **Gavin McGuire** - *Developing work* - [CS351 Project 5 Group 6](https://csgit.cs.unm.edu/mcguireg/)
-    - some changes with the ItemID for an auction
-    - some of the GUI
-    - most of the CLI (not working)
-    - created AgentApp
-    - was going to help compile and finish the GUI
+    - Some changes with the ItemID for an auction
+    - Most of the Agent App GUI
+    - Comments for GUI 
+    - Commented Agent
+    - Agent Command Line Interface
+    - Created Agent
+    - Implemented Interface methods for Agent
+        - getItems, addAccount, addAuction
+        - handling multiple AuctionHouses
+        - implementing these methods into the Auction and Bank Proxy
+    - Created AgentApp
+    - Helped compile the GUI
