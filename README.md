@@ -108,6 +108,8 @@ This is further explained in the documentation found in /docs/
 * There are times inbetween when a auctionHouse unexpectedly closes and the item list updates that a player can hang onto the last result until the next refresh (Around 2 seconds)
 * Everytime a socket gets disconnected, the AuctionProxy/BankProxy fails in a controlling manner to reduce the impact
 * Assumed Bank is never closed.
+* Bug: There is a chance that errors aren't fully caught when Auctions are closed
+* Bug: An old bug popped up where the IP address received from the Bank is the loopback, so the IP transferred around is that of the loopback, this can be fixed with .getLocalAddress() instead of current configuration.
 
 ## Built With
 This was made using Java SDK 1.8
